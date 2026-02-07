@@ -1,12 +1,13 @@
 import pygame
 import random
 from enemy import Enemie
-from settings import Settings
-from UIManager import UIManager
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from main import App
 
 class WaveManager():
-    def __init__(self, game: object):
+    def __init__(self, game: "App"):
         # Cree un instance de notre app
         self.game = game
         self.last_spawn_time = pygame.time.get_ticks() # heure de demarage (ms)
@@ -39,8 +40,8 @@ class WaveManager():
             self.spawn_wave()
 
             # Chamgement de difficulter si quota de vague atteint <<<<  A REVOIR CAR COMME IL FAUT 
-            if self.wave_number in Settings.DIFFICULTY:
-                self.wave_difficulty = Settings.DIFFICULTY[self.wave_number]
+            if self.wave_number in self.game.st.DIFFICULTY:
+                self.wave_difficulty = self.game.st.DIFFICULTY[self.wave_number]
 
             # On set les nouveau reperes
             self.last_spawn_time = current_time
@@ -70,13 +71,13 @@ class WaveManager():
         # Securiter pour ne pas avoir d'ennemis sur le joueur
         while not good_pos:
             # Position aleatoire
-            posx = random.randint(Settings.CELL_SIZE, Settings.SCREEN_WIDTH - Settings.CELL_SIZE)
-            posy = random.randint(Settings.CELL_SIZE, Settings.SCREEN_HEIGHT - Settings.CELL_SIZE)
+            posx = random.randint(self.game.st.CELL_SIZE, self.game.st.SCREEN_WIDTH - self.game.st.CELL_SIZE)
+            posy = random.randint(self.game.st.CELL_SIZE, self.game.st.SCREEN_HEIGHT - self.game.st.CELL_SIZE)
 
             # Verifier que l'ennemis n'est pas trop procher du joueur
             distance0 = pygame.math.Vector2((posx, posy)).distance_to(self.game.player.pos)
             distance1 = pygame.math.Vector2((posx, posy)).distance_to(self.game.kernel.pos)
-            if distance0 > Settings.SECURITY_ZONE and distance1 > Settings.SECURITY_ZONE:
+            if distance0 > self.game.st.SECURITY_ZONE and distance1 > self.game.st.SECURITY_ZONE:
                 good_pos = True
 
         # size aleatoire
@@ -84,7 +85,7 @@ class WaveManager():
         size = radius * 2, radius * 2
 
         # Retourner l'objet ennemi
-        return Enemie(posx, posy, size)
+        return Enemie(posx, posy, size, self.game)
     
 
     def reset(self):

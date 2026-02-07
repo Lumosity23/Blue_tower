@@ -1,14 +1,18 @@
 import pygame
-from settings import Settings
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from main import App
 
 class UIManager():
     
-    def __init__(self):
+    def __init__(self, game: "App"):
         pygame.font.init()
-        self.font = pygame.font.Font(Settings.PATH_FONT, 50)
+        self.game = game
+        self.font = pygame.font.Font(self.game.st.PATH_FONT, 50)
         # On sauvgarde le text deja "Render" pour eviter de le refaire (OPTIMISATION)
         self.cache_text = {}
+        self.sprite_cache = {}
     
     def draw_text(self, surface: pygame.Surface, text: str, x: int, y: int, color: tuple=(255,255,255), align: str='topleft'):
         '''
@@ -88,3 +92,43 @@ class UIManager():
         if ratio < 0.3: color = (255, 0, 0) # Rouge si critique
         
         pygame.draw.rect(surface, color, fill_rect)
+
+
+    def get_custom_sprite(self, path: str, size: tuple, shape: str='square'): 
+        """   
+            Charge une image, la redimensionne et applique une forme.\n
+        
+            path: chemin vers le sprite en png\n
+            size: tuple de taille (x,y)\n
+            shape: 'square' ou 'circle'
+        """
+        # 1. Gestion du cache (clé unique basée sur path et size)
+        cache_key = (path, size, shape)
+        if cache_key in self.sprite_cache:
+            return self.sprite_cache[cache_key].copy()
+        
+        # 2. Chargement et redimensionnement
+        try:
+            image = pygame.image.load(path).convert_alpha()
+        except FileNotFoundError:
+            print(f"Erreur: Image non trouvée {path}")
+            return pygame.Surface(size, (0,255,0)) # Retourne une surface vide ou rose par défaut
+        
+        image = pygame.transform.scale(image, size)
+        
+        # 3. Application de la forme
+        if shape == 'circle':
+            # Créer une surface vide transparente
+            final_surf = pygame.Surface(size, pygame.SRCALPHA)
+            # Dessiner le masque (cercle blanc)
+            radius = min(size[0], size[1]) // 2
+            pygame.draw.circle(final_surf, (255, 255, 255), (radius, radius), radius)
+            # Appliquer l'image sur le masque
+            final_surf.blit(image, (0, 0), special_flags=pygame.BLEND_RGBA_MIN)
+            image = final_surf
+    
+        # (Si 'square', on garde l'image redimensionnée telle quelle)
+        
+          # 4. Sauvegarder dans le cache et retourner
+        self.sprite_cache[cache_key] = image
+        return image

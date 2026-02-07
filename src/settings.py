@@ -20,6 +20,12 @@ class Settings:
     KERNEL_SIZE = 64 * 2
     KERNEL_HP = 40
 
+    #### TURRET ####
+    TURRET = 2
+
+    #### BANK ####
+    BANK = 3
+    
     #### WAVE ####
     DIFFICULTY = {
         1: 3, # EASY
@@ -64,6 +70,12 @@ class Settings:
         EMPTY: 1,
         WALL: 50,
         BUILDING: 100
+    }
+
+    TYPE_COST = {
+        WALL: 50,
+        TURRET: 200,
+        BANK: 300,
     }
 
     MODE = {

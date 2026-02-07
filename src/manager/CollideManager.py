@@ -1,12 +1,13 @@
 import pygame
-from settings import Settings
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from main import App
 
 class CollideManager():
     
-    def __init__(self):
-        pass
-
+    def __init__(self, game: "App"):
+        self.game = game
 
     def check_collisions(self, attaker, defendres, dokill1: bool, dokill2: bool):
         '''

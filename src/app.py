@@ -1,16 +1,17 @@
 import pygame
 from pygame.locals import *
 from settings import Settings
-from player import Player
-from wall import Wall
-from bullet import Bullet
-from WaveManager import WaveManager
-from UIManager import UIManager
-from CollideManager import CollideManager
-from Cursor import Cursor
+from entities.player import Player
+from entities.bullet import Bullet
+from manager.WaveManager import WaveManager
+from manager.UIManager import UIManager
+from manager.CollideManager import CollideManager
+from entities.Cursor import Cursor
 from grid import Grid
-from kernel import Kernel
-from wallet import Wallet
+from entities.kernel import Kernel
+from manager.WalletManager import WalletManager
+from manager.EventManager import EventManager
+from manager.BuildManager import BuildManager
 
 
 class App:
@@ -28,24 +29,27 @@ class App:
     def on_init(self):
         pygame.init()
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
-        self.kernel = Kernel()
-        self.grid = Grid(self.kernel.pos)
+        self.eventManager = EventManager()
         self.wave_manager = WaveManager(self)
-        self.ui_manager = UIManager()
-        self.collider = CollideManager()
-        self.cursor = Cursor()
-        self.wallet = Wallet('EASY')
+        self.ui_manager = UIManager(self)
+        self.collider = CollideManager(self)
+        self.buildManager = BuildManager(self)
+        self.kernel = Kernel(self)
+        self.grid = Grid(self)
+        self.cursor = Cursor(self)
+        self.walletManager = WalletManager(self)
         self.all_sprites = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
-        self.player = Player()
+        self.player = Player(self)
         self.all_sprites.add(self.player, self.kernel)
         self._running = True
         self.game_over = False
         self.edit = False
         self.debug = False
         self.last_time_shoot = - self.st.BULLET_COOLDOWN
+        self.mode = "CREATIF"
     
 
     # Boucle qui va recupree les event
@@ -66,7 +70,8 @@ class App:
             # Systeme de build        
             if self.edit:
                 if m3 and self.cursor.cell_isOccupied == False:
-                    # Verifier qu'on a asser d'argent
+                    self.buildManager.attemp_build(pygame.mouse.get_pos(), self.st.WALL)
+                    '''# Verifier qu'on a asser d'argent
                     if self.wallet.buy(self.st.cell_cost[self.st.WALL]):
                         mx, my = pygame.mouse.get_pos()
                         self.grid.set_cell_value(mx, my, self.st.WALL)
@@ -78,7 +83,7 @@ class App:
                         self.walls.add(wall)
                         self.all_sprites.add(wall)
                         # Mettre a jour la heatmap avec le nouveau mur
-                        self.grid.update_flow_field(self.kernel.pos)
+                        self.grid.update_flow_field(self.kernel.pos)'''
         # Restart
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE or event.key == pygame.K_r:

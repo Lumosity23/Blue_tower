@@ -1,21 +1,20 @@
 import pygame
 import math
-from grid import Grid
 from settings import Settings
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x: int, y: int):
+    def __init__(self, x: int, y: int, size: tuple=(Settings.BULLET_SIZE, 1/3 * Settings.BULLET_SIZE), velocity: int=Settings.BULLET_VELOCITY, target_pos: tuple=pygame.mouse.get_pos()):
         super().__init__()
-        self.size = (Settings.BULLET_SIZE, 1/3 * Settings.BULLET_SIZE)
+        self.size = size
         self.image = pygame.Surface(self.size)
         self.color = self.image.fill(('Yellow'))
         self.pos = pygame.math.Vector2(x, y)
-        self.velocity = Settings.BULLET_VELOCITY
-        mx, my = pygame.mouse.get_pos()
-        target_pos = pygame.math.Vector2(mx, my)
+        self.velocity = velocity
+        mx, my = target_pos
+        self.target_pos = pygame.math.Vector2(mx, my)
         
-        self.direction_vector = target_pos - self.pos
+        self.direction_vector = self.target_pos - self.pos
         if self.direction_vector.length() > 0:
             self.direction_vector = self.direction_vector.normalize()
             
@@ -27,7 +26,7 @@ class Bullet(pygame.sprite.Sprite):
         self.current_hp = self.damage
     
 
-    def update(self, dt, walls: list[object], grid: Grid, player, enemis, all_sprites): # on met Walls car pas enccore de *args
+    def update(self, dt): # on met Walls car pas enccore de *args
         # Mouvement
         self.pos += self.velocity_vector * dt
         self.rect.center = self.pos

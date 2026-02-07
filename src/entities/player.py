@@ -1,16 +1,19 @@
 import pygame
 from settings import Settings
 from sprite_custom import get_custom_sprite
-from grid import Grid
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from main import App
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, game: "App"):
         super().__init__()
-        self.st = Settings()
-        self.size = (self.st.PLAYER_WIDTH, self.st.PLAYER_HEIGHT)
-        self.image = get_custom_sprite(self.st.PLAYER_SPRITE, self.size)
-        self.rect = self.image.get_rect(center=(self.st.SCREEN_WIDTH / 2, self.st.SCREEN_HEIGHT / 2))
+        self.game = game
+        self.size = (self.game.st.PLAYER_WIDTH, self.game.st.PLAYER_HEIGHT)
+        self.image = self.game.ui_manager.get_custom_sprite(self.game.st.PLAYER_SPRITE, self.size)
+        self.rect = self.image.get_rect(center=(self.game.st.SCREEN_WIDTH / 2, self.game.st.SCREEN_HEIGHT / 2))
         self.velocity = 500
         self.pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
         self.max_hp = Settings.PLAYER_HEALTH
@@ -18,7 +21,7 @@ class Player(pygame.sprite.Sprite):
         self.damage = self.current_hp
         self.alive = True
         
-    def update(self, dt, walls: list[object], grid: Grid, player, enemis, all_sprite):
+    def update(self, dt):
         keys = pygame.key.get_pressed()
 
         # ---------------------------------------------------------
@@ -34,7 +37,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = self.pos.x
 
         # check de collisions
-        hits = pygame.sprite.spritecollide(self, walls, False)
+        hits = pygame.sprite.spritecollide(self, self.game.walls, False)
         if hits: # si collision
             hit: object = hits[0]
             # collision a gauche
@@ -58,7 +61,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = self.pos.y
 
         # check de collisions
-        hits = pygame.sprite.spritecollide(self, walls, False)
+        hits = pygame.sprite.spritecollide(self, self.game.walls, False)
         if hits: # si collision
              hit = hits[0]
              if keys[pygame.K_UP] | keys[pygame.K_w]:
@@ -77,16 +80,16 @@ class Player(pygame.sprite.Sprite):
                 self.pos.x = 0
                 self.rect.x = self.pos.x
         # Droite
-        if self.pos.x >= self.st.SCREEN_WIDTH - self.rect.width:
-                self.pos.x = self.st.SCREEN_WIDTH - self.rect.width
+        if self.pos.x >= self.game.st.SCREEN_WIDTH - self.rect.width:
+                self.pos.x = self.game.st.SCREEN_WIDTH - self.rect.width
                 self.rect.x = self.pos.x
         # Haut
         if self.pos.y <= 0:
                 self.pos.y = 0
                 self.rect.y = self.pos.y
         # Bas
-        if self.pos.y >= self.st.SCREEN_HEIGHT - self.rect.height:
-                self.pos.y = self.st.SCREEN_HEIGHT - self.rect.height
+        if self.pos.y >= self.game.st.SCREEN_HEIGHT - self.rect.height:
+                self.pos.y = self.game.st.SCREEN_HEIGHT - self.rect.height
                 self.rect.y = self.pos.y
 
     def take_damage(self, amount):
@@ -99,7 +102,7 @@ class Player(pygame.sprite.Sprite):
 
     def reset(self):
         # Remis au centre de l'ecran
-        self.pos.xy = self.st.SCREEN_WIDTH / 2, self.st.SCREEN_HEIGHT / 2
+        self.pos.xy = self.game.st.SCREEN_WIDTH / 2, self.game.st.SCREEN_HEIGHT / 2
         self.current_hp = self.max_hp
         self.damage = self.current_hp
         self.alive = True

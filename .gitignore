@@ -12,3 +12,6 @@ wheels/
 # VScode file
 .vscode
 
+# test and temp.
+test/
+add_event_doc.py

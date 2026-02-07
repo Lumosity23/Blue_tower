@@ -1,19 +1,22 @@
-from settings import Settings
-from sprite_custom import get_custom_sprite
-from grid import Grid
 import pygame
+from sprite_custom import get_custom_sprite
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from main import App
 
 
 class Enemie(pygame.sprite.Sprite):
-    def __init__(self, x: int, y: int, size: tuple):
+    def __init__(self, x: int, y: int, size: tuple, game: "App", type:int=0):
         super().__init__()
-        self.image = get_custom_sprite(Settings.ENEMIE_SPRITE, size, 'circle')
-        # self.image = pygame.transform.scale(self.image, size)
+        self.game = game
+        self.type = type
+        self.image = get_custom_sprite(self.game.st.ENEMIE_SPRITE, size, 'circle')
         self.rect = self.image.get_rect(center=(x,y))
         self.pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
         self.director_vector = pygame.math.Vector2()
         self.velocity = 90
-        self.max_hp = Settings.ENEMIE_HEALTH # * (WaveManager.wave_difficulty / 10) <<< risquer car on multiplie p-e par 0
+        self.max_hp = self.game.st.ENEMIE_HEALTH # * (WaveManager.wave_difficulty / 10) <<< risquer car on multiplie p-e par 0
         self.current_hp = self.max_hp
         self.health_bar = None
         self.size = size
@@ -21,14 +24,14 @@ class Enemie(pygame.sprite.Sprite):
         self.target_pos = None
 
 
-    def update(self, dt, walls, grid: Grid, player,enemis,all_sprites):
+    def update(self, dt):
         
         if self.arrived:
 
-            nx, ny = self.next_target(grid)
+            nx, ny = self.next_target()
         
-            dx = ((nx * Settings.CELL_SIZE) + Settings.CELL_SIZE / 2) - self.size[0] / 2
-            dy = ((ny * Settings.CELL_SIZE) + Settings.CELL_SIZE / 2) - self.size[1] / 2
+            dx = ((nx * self.game.st.CELL_SIZE) + self.game.st.CELL_SIZE / 2) - self.size[0] / 2
+            dy = ((ny * self.game.st.CELL_SIZE) + self.game.st.CELL_SIZE / 2) - self.size[1] / 2
 
             self.target_pos = pygame.math.Vector2(dx, dy)
             self.arrived = False
@@ -51,14 +54,21 @@ class Enemie(pygame.sprite.Sprite):
         self.current_hp -= amount
         # si 0 HP alors -> mort
         if self.current_hp <= 0:
-            self.kill()
+            self.die()
 
 
-    def next_target(self, grid: Grid):
+    def die(self):
+        '''
+            mort de l'enemis et ajout au event
+        '''
+        self.game.eventManager.publish("ENEMY_KILLED", self.type)
 
-        cx, cy = grid.get_cell_pos(self.pos.x, self.pos.y)
+        
+    def next_target(self):
 
-        neighbors = grid.get_neighbors(cx, cy)
+        cx, cy = self.game.grid.get_cell_pos(self.pos.x, self.pos.y)
+
+        neighbors = self.game.grid.get_neighbors(cx, cy)
         next_cell = None
         cheapest_cell = float('inf')
         

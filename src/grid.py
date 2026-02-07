@@ -2,20 +2,24 @@ import pygame
 import collections
 import heapq
 from settings import Settings
-from cell import Cell
+from entities.cell import Cell
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from main import App
 
 
 class Grid():
 
-    def __init__(self, kernel_pos: tuple):
+    def __init__(self, game: "App"):
         self.st = Settings()
         self.rows = Settings.ROWS
         self.cols = Settings.COLS
         self.cell_size = Settings.CELL_SIZE
         self.grid = self.init_grid()
         self.flow_field = {}
-        self.update_flow_field(kernel_pos)
+        self.update_flow_field(game.kernel.pos)
 
 
     def init_grid(self):

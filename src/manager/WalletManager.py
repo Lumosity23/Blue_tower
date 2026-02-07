@@ -1,11 +1,15 @@
 import pygame
-from settings import Settings
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from main import App
 
 
-class Wallet:
+class WalletManager:
 
-    def __init__(self, mode: str):
-        self.init_amount = Settings.MODE[mode]
+    def __init__(self, game: "App"):
+        self.game = game
+        self.init_amount = self.game.st.MODE[self.game.mode]
         self.amount = self.init_amount
         self.creatif = False
         if not self.amount:
