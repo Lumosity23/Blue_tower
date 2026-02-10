@@ -65,7 +65,6 @@ class Grid():
             return self.grid[gx, gy].type
         # si hors champ
         return None
-    
 
     def set_cell_value(self, posx, posy, value, already_cell_pos: bool=False) -> None:
         
@@ -126,7 +125,7 @@ class Grid():
                 
         return cells
 
-
+    # METHODE NON UTILISER POUR L'INSTANT
     def change_cells_state(self, last_cell: list, current_cell: list) -> None:
 
        if not last_cell:
@@ -144,10 +143,12 @@ class Grid():
 
 
     def get_cost(self, posx, posy, alredy_cell: bool=False):
-
+        
+        # FONCTIONNE
         if alredy_cell:
             return self.game.st.cell_cost[self.grid[posx, posy].type]
         
+        # ERREUR A TROUVE CAR NE FONCTIONNE PAS !!!!! 
         gx = posx // self.cell_size
         gy = posy // self.cell_size
 
@@ -195,7 +196,9 @@ class Grid():
 
             for neighbor in self.getValidNeighbors(cx, cy):
                 
-                cell_cost = self.get_cost(neighbor[0], neighbor[1])
+                cell_cost = self.get_cost(neighbor[0], neighbor[1], True)
+                if cell_cost > 1:
+                    print(cell_cost)
 
                 if neighbor in self.flow_field:
                     continue
