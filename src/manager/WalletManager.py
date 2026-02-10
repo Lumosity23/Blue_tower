@@ -14,6 +14,11 @@ class WalletManager:
         self.creatif = False
         if not self.amount:
             self.creatif = True
+            print("mode creatif activer")
+
+        # Declaration des subscribe
+        self.game.eventManager.subscribe("ERROR_PAYMENT", self.buy)
+        self.game.eventManager.subscribe("RESTART_GAME", self.reset)
 
     
     def buy(self, amount: int) -> bool:

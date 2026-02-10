@@ -35,7 +35,7 @@ class Cursor(pygame.sprite.Sprite):
 
         for sprite in self.game.all_sprites:
             # Si ce n'est pas un mur (donc c'est un joueur ou ennemi)
-            if sprite not in self.game.walls:
+            if sprite not in self.game.builds:
                 if sprite != self:
                     if self.rect.colliderect(sprite.rect):
                         self.image.fill((255,51,51))

@@ -1,5 +1,4 @@
 import pygame
-from sprite_custom import get_custom_sprite
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -11,7 +10,7 @@ class Enemie(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         self.type = type
-        self.image = get_custom_sprite(self.game.st.ENEMIE_SPRITE, size, 'circle')
+        self.image = self.game.ui_manager.get_custom_sprite(self.game.st.ENEMIE_SPRITE, size, 'circle')
         self.rect = self.image.get_rect(center=(x,y))
         self.pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
         self.director_vector = pygame.math.Vector2()
@@ -61,6 +60,7 @@ class Enemie(pygame.sprite.Sprite):
         '''
             mort de l'enemis et ajout au event
         '''
+        self.kill()
         self.game.eventManager.publish("ENEMY_KILLED", self.type)
 
         

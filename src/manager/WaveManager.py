@@ -1,6 +1,6 @@
 import pygame
 import random
-from enemy import Enemie
+from entities.enemy import Enemie
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -16,7 +16,7 @@ class WaveManager():
         self.wave_number = 0
         self.first_round = True
         self.end_wave = False
-    
+        self.game.eventManager.subscribe("RESTART_GAME", self.reset)
 
     def update(self):
 

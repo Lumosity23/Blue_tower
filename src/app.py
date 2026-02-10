@@ -37,9 +37,10 @@ class App:
         self.kernel = Kernel(self)
         self.grid = Grid(self)
         self.cursor = Cursor(self)
+        self.mode = "CREATIF"
         self.walletManager = WalletManager(self)
         self.all_sprites = pygame.sprite.Group()
-        self.walls = pygame.sprite.Group()
+        self.builds = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
         self.player = Player(self)
@@ -49,7 +50,7 @@ class App:
         self.edit = False
         self.debug = False
         self.last_time_shoot = - self.st.BULLET_COOLDOWN
-        self.mode = "CREATIF"
+        
     
 
     # Boucle qui va recupree les event
@@ -63,7 +64,7 @@ class App:
                 current_time = pygame.time.get_ticks()
                 if current_time - self.last_time_shoot > self.st.BULLET_COOLDOWN:
                     # Creation d'un projectile si clic de souris
-                    bullet = Bullet(self.player.rect.centerx, self.player.rect.centery)
+                    bullet = Bullet(self.player.rect.centerx, self.player.rect.centery, target_pos=pygame.mouse.get_pos())
                     self.bullets.add(bullet)
                     self.all_sprites.add(bullet)
                     self.last_time_shoot = current_time
@@ -71,19 +72,6 @@ class App:
             if self.edit:
                 if m3 and self.cursor.cell_isOccupied == False:
                     self.buildManager.attemp_build(pygame.mouse.get_pos(), self.st.WALL)
-                    '''# Verifier qu'on a asser d'argent
-                    if self.wallet.buy(self.st.cell_cost[self.st.WALL]):
-                        mx, my = pygame.mouse.get_pos()
-                        self.grid.set_cell_value(mx, my, self.st.WALL)
-
-                        px = (mx // self.st.CELL_SIZE) * self.st.CELL_SIZE
-                        py = (my // self.st.CELL_SIZE) * self.st.CELL_SIZE
-
-                        wall = Wall(px, py)
-                        self.walls.add(wall)
-                        self.all_sprites.add(wall)
-                        # Mettre a jour la heatmap avec le nouveau mur
-                        self.grid.update_flow_field(self.kernel.pos)'''
         # Restart
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE or event.key == pygame.K_r:
@@ -118,7 +106,7 @@ class App:
             self.collider.check_collisions(self.kernel, self.enemies, False, False)
 
             # On appel la methode update de tout les object dans "all_sprites"
-            self.all_sprites.update(dt, self.walls, self.grid, self.player, self.enemies, self.all_sprites, self.wallet) 
+            self.all_sprites.update(dt) 
             self.wave_manager.update()
 
             # Verifier si le joueur est toujours en vie
@@ -167,25 +155,24 @@ class App:
             # Nombre de FPS
             self.ui_manager.draw_text(self._display_surf, str(int(self.clock.get_fps())), 10, 0, (255,255,255))
             # Wallet
-            self.ui_manager.draw_text(self._display_surf, str(self.wallet.get_wallet_val()), self.st.SCREEN_WIDTH - 50, 20, (255,255,255), 'topright')
+            money = str(self.walletManager.get_wallet_val())
+            if self.walletManager.creatif:
+                money = "CREATIF"
+            self.ui_manager.draw_text(self._display_surf, money, self.st.SCREEN_WIDTH - 50, 20, (255,255,255), 'topright')
             # self.ui_manager.draw_text(self._display_surf, str(len(self.ui_manager.cache_text)), self.st.SCREEN_WIDTH - 100, self.st.SCREEN_HEIGHT - 100, (255,255,255), 'topright')
 
         pygame.display.flip() # METRE AJOUR L'ECRAN PHYSIQUE
 
 
     def start_game(self):
-        # Reinitialiser le manager et les entite unique
-        self.wave_manager.reset()
-        self.player.reset()
-        self.kernel.reset()
-        self.wallet.reset()
+        # Reinitialiser le manager et les entite unique via l'event "RESTART_GAME"
+        self.eventManager.publish("RESTART_GAME")
 
         # Vider les groupes de logic et rendu
         self.enemies.empty()
         self.bullets.empty()
         self.all_sprites.empty()
-        self.walls.empty()
-        self.grid.restart()
+        self.builds.empty()
 
         # Rajout du player dans le rendu
         self.all_sprites.add(self.player, self.kernel)

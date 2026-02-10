@@ -5,10 +5,10 @@ from dataclasses import dataclass
 class Settings:
     
     #### PLAYER ####
-    PLAYER_WIDTH = 20 * 4
-    PLAYER_HEIGHT = 38 * 4
+    PLAYER_WIDTH = 30 * 2
+    PLAYER_HEIGHT = 38 * 2
     PLAYER_HEALTH = 30
-    PLAYER_SPRITE = 'assets/player.png'
+    PLAYER_SPRITE = 'assets/falco.png'
 
     #### ENEMIE ####
     ENEMIE_SIZE = (30,30)
@@ -20,6 +20,11 @@ class Settings:
     KERNEL_SIZE = 64 * 2
     KERNEL_HP = 40
 
+    #### WALL ####
+    WALL_SPRITE = 'assets/wall_gab.png'
+    WALL = "WALL"
+    WALL_HP = 25
+ 
     #### TURRET ####
     TURRET = 2
 
@@ -45,7 +50,7 @@ class Settings:
     GRAVITY = 9.81
 
     #### GRID ####
-    CELL_SIZE = 64
+    CELL_SIZE = 64 #* 2
 
     #### SCREEN ####
     SCREEN_WIDTH = 25 * CELL_SIZE # AXE X de l'ecran
@@ -57,19 +62,20 @@ class Settings:
     ROWS = SCREEN_HEIGHT // CELL_SIZE
     DIRECTIONS_ALGO = [(1, 0), (0, -1), (-1, 0), (0, 1)]
     DIRECTIONS_ENEMIS = [(1, 0), (0, -1), (-1, 0), (0, 1)] #[(1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1), (0, 1), (1, 1)]
+    
     #### FONT ####
     PATH_FONT = 'assets/font/boldpixels/BoldPixels.ttf'
 
     #### BUILDINGS TYPE ####
-    EMPTY = 0
-    WALL = 1
-    BUILDING = 2
+    EMPTY = "EMPTY"
+    WALL = "WALL"
+    TURRET = "TURRET"
+    BANK = "BANK"
 
     #### CELL_COST #####
     cell_cost = {
         EMPTY: 1,
-        WALL: 50,
-        BUILDING: 100
+        WALL: 50
     }
 
     TYPE_COST = {

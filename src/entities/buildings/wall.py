@@ -1,31 +1,21 @@
-from settings import Settings
-import pygame
+from .Building import Building
+from typing import TYPE_CHECKING
 
-class Wall(pygame.sprite.Sprite):
-    def __init__(self, x: int, y: int, width: int=Settings.CELL_SIZE, height: int=Settings.CELL_SIZE, color: tuple=(0,153,153), align: str='topleft', alpha: bool=False):
-        super().__init__()
-        self.x = x
-        self.y = y
-        self.image = pygame.Surface((width, height))
-        # Transparent
-        if alpha:
-            self.image.set_alpha(50)
+if TYPE_CHECKING:
+    from main import App
 
-        self.color = self.image.fill(color)
 
-        if align == 'bottom':
-            self.rect = self.image.get_rect(bottom=(x, y))
 
-        elif align == 'midtop':
-            self.rect = self.image.get_rect(midtop=(x, y))
+class Wall(Building):
+    
+    def __init__(self, x: int, y: int, game: "App"):
+        
+        # Appel de la classe parent
+        super().__init__(x, y, game)
 
-        elif align == 'midleft':
-            self.rect = self.image.get_rect(midleft=(x, y))
-
-        elif align == 'center':
-            self.rect = self.image.get_rect(center=(x, y))
-
-        elif align == 'topright':
-            self.rect = self.image.get_rect(topright=(x, y))
-
-        else: self.rect = self.image.get_rect(topleft=(x, y))
+        self.type = self.game.st.WALL
+        self.image = self.game.ui_manager.get_custom_sprite(self.game.st.WALL_SPRITE, (self.game.st.CELL_SIZE, self.game.st.CELL_SIZE))
+        self.rect = self.image.get_rect(topleft=(x, y))
+        self.max_hp = self.game.st.WALL_HP
+        self.current_hp = self.max_hp
+        self.cost = self.game.st.TYPE_COST[self.type]

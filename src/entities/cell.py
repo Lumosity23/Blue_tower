@@ -12,3 +12,4 @@ class Cell(pygame.sprite.Sprite):
         self.size = Settings.CELL_SIZE
         self.rect = pygame.Rect(posx * self.size, posy * self.size, self.size, self.size)
                             #   pos x             pos y             longeur x  largeur y
+        self.isOccupied = False

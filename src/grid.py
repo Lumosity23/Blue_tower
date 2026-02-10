@@ -1,7 +1,5 @@
 import pygame
-import collections
 import heapq
-from settings import Settings
 from entities.cell import Cell
 
 from typing import TYPE_CHECKING
@@ -13,13 +11,16 @@ if TYPE_CHECKING:
 class Grid():
 
     def __init__(self, game: "App"):
-        self.st = Settings()
-        self.rows = Settings.ROWS
-        self.cols = Settings.COLS
-        self.cell_size = Settings.CELL_SIZE
+        self.game = game
+        self.rows = self.game.st.ROWS
+        self.cols = self.game.st.COLS
+        self.cell_size = self.game.st.CELL_SIZE
         self.grid = self.init_grid()
         self.flow_field = {}
         self.update_flow_field(game.kernel.pos)
+
+        # Declaration des subscribe
+        self.game.eventManager.subscribe("RESTART_GAME", self.restart)
 
 
     def init_grid(self):
@@ -27,7 +28,7 @@ class Grid():
         cells = {}
         for cols in range(self.cols):
             for rows in range(self.rows):
-                cells[(cols,rows)] = Cell(cols, rows, self.st.EMPTY) # 0 car on a simplement init la grille
+                cells[(cols,rows)] = Cell(cols, rows, self.game.st.EMPTY) # 0 car on a simplement init la grille
         return cells
     
 
@@ -46,12 +47,12 @@ class Grid():
         # le grillage en x
         for col in range(self.cols + 1):
             x = col * self.cell_size
-            pygame.draw.line(surface, grid_color, (x, 0), (x, Settings.SCREEN_HEIGHT))
+            pygame.draw.line(surface, grid_color, (x, 0), (x, self.game.st.SCREEN_HEIGHT))
 
         # le grillage en y
         for row in range(self.rows + 1):
             y = row * self.cell_size
-            pygame.draw.line(surface, grid_color, (0, y), (Settings.SCREEN_WIDTH, y))
+            pygame.draw.line(surface, grid_color, (0, y), (self.game.st.SCREEN_WIDTH, y))
 
 
 
@@ -145,7 +146,7 @@ class Grid():
     def get_cost(self, posx, posy, alredy_cell: bool=False):
 
         if alredy_cell:
-            return Settings.cell_cost[self.grid[posx, posy].type]
+            return self.game.st.cell_cost[self.grid[posx, posy].type]
         
         gx = posx // self.cell_size
         gy = posy // self.cell_size
@@ -153,13 +154,13 @@ class Grid():
         cell_pos = gx, gy
         if cell_pos in self.grid:
             cell_type = self.grid[cell_pos].type
-            if cell_type in Settings.cell_cost:
-                return Settings.cell_cost[self.grid[gx, gy].type]
+            if cell_type in self.game.st.cell_cost:
+                return self.game.st.cell_cost[cell_type]
 
 
-    def getValidNeighbors(self, posX, posY) -> int:
+    def getValidNeighbors(self, posX, posY) -> list[tuple[int, int]]:
         validNeighbors = []
-        for dx, dy in Settings.DIRECTIONS_ALGO:
+        for dx, dy in self.game.st.DIRECTIONS_ALGO:
             newX = posX + dx
             newY = posY + dy
 
@@ -194,7 +195,7 @@ class Grid():
 
             for neighbor in self.getValidNeighbors(cx, cy):
                 
-                cell_cost = self.get_cost(neighbor[0], neighbor[1], True)
+                cell_cost = self.get_cost(neighbor[0], neighbor[1])
 
                 if neighbor in self.flow_field:
                     continue
@@ -212,30 +213,11 @@ class Grid():
             revoie un dict de coordonner (tuple) de cell avec leur valeur (int)
         '''
         Neighbors = {}
-        previous_is_wall = False
-        for dx, dy in Settings.DIRECTIONS_ENEMIS:
+        for dx, dy in self.game.st.DIRECTIONS_ENEMIS:
             newX = int(x + dx)
             newY = int(y + dy)
 
-            # 1. Check Limites
-            if newX or newY != 0:
-                # Diagonale direction
-                if not previous_is_wall:
-                    if (newX,newY) in self.flow_field:    
-                        Neighbors[newX, newY] = self.flow_field[newX, newY]
-                        previous_is_wall = False
-                        continue
-
             if (newX,newY) in self.flow_field:    
                 Neighbors[newX, newY] = self.flow_field[newX, newY]
-                if self.grid[newX, newY].type == self.st.WALL:
-                    previous_is_wall = True
 
         return Neighbors
-
-
-
-
-
-
-        

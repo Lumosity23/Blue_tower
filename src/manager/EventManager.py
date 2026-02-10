@@ -8,7 +8,7 @@ class EventManager():
         self.listeners = {}
 
     
-    def subscribe(self, event_type: str, callback: function) -> None:
+    def subscribe(self, event_type: str, callback) -> None:
         '''
             permet de cree un eventment\n
             event_type = nom significatif pour le callback\n

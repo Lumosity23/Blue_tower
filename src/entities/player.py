@@ -1,6 +1,5 @@
 import pygame
 from settings import Settings
-from sprite_custom import get_custom_sprite
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -20,6 +19,7 @@ class Player(pygame.sprite.Sprite):
         self.current_hp = self.max_hp
         self.damage = self.current_hp
         self.alive = True
+        self.game.eventManager.subscribe("RESTART_GAME", self.reset)
         
     def update(self, dt):
         keys = pygame.key.get_pressed()
@@ -37,7 +37,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = self.pos.x
 
         # check de collisions
-        hits = pygame.sprite.spritecollide(self, self.game.walls, False)
+        hits = pygame.sprite.spritecollide(self, self.game.builds, False)
         if hits: # si collision
             hit: object = hits[0]
             # collision a gauche
@@ -61,7 +61,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = self.pos.y
 
         # check de collisions
-        hits = pygame.sprite.spritecollide(self, self.game.walls, False)
+        hits = pygame.sprite.spritecollide(self, self.game.builds, False)
         if hits: # si collision
              hit = hits[0]
              if keys[pygame.K_UP] | keys[pygame.K_w]:

@@ -4,7 +4,7 @@ from settings import Settings
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x: int, y: int, size: tuple=(Settings.BULLET_SIZE, 1/3 * Settings.BULLET_SIZE), velocity: int=Settings.BULLET_VELOCITY, target_pos: tuple=pygame.mouse.get_pos()):
+    def __init__(self, x: int, y: int, size: tuple=(Settings.BULLET_SIZE, 1/3 * Settings.BULLET_SIZE), velocity: int=Settings.BULLET_VELOCITY, target_pos: tuple=None):
         super().__init__()
         self.size = size
         self.image = pygame.Surface(self.size)

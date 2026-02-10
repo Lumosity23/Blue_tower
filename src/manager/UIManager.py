@@ -99,7 +99,7 @@ class UIManager():
             Charge une image, la redimensionne et applique une forme.\n
         
             path: chemin vers le sprite en png\n
-            size: tuple de taille (x,y)\n
+            size: tuple de taille (x, y)\n
             shape: 'square' ou 'circle'
         """
         # 1. Gestion du cache (clé unique basée sur path et size)
