@@ -5,10 +5,10 @@ from dataclasses import dataclass
 class Settings:
     
     #### PLAYER ####
-    PLAYER_WIDTH = 30 * 2
+    PLAYER_WIDTH = 22 * 2
     PLAYER_HEIGHT = 38 * 2
     PLAYER_HEALTH = 30
-    PLAYER_SPRITE = 'assets/falco.png'
+    PLAYER_SPRITE = 'assets/player.png'
 
     #### ENEMIE ####
     ENEMIE_SIZE = (30,30)

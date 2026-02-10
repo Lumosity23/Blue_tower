@@ -29,5 +29,9 @@ class EventManager():
         if event_type in self.listeners:
             # Executer tout les fonction associer a l'evenement
             for callback in self.listeners[event_type]:
-                # Appel la fonction en question avec les argument
-                callback(data)
+                # Appel la fonction sans argument
+                if not data:
+                    callback()
+                # Appel la fonction avec les argument
+                else:
+                    callback(data)

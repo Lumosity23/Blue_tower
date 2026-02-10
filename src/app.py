@@ -63,6 +63,7 @@ class App:
             if m1:
                 current_time = pygame.time.get_ticks()
                 if current_time - self.last_time_shoot > self.st.BULLET_COOLDOWN:
+                    self.kernel.shoot()
                     # Creation d'un projectile si clic de souris
                     bullet = Bullet(self.player.rect.centerx, self.player.rect.centery, target_pos=pygame.mouse.get_pos())
                     self.bullets.add(bullet)
@@ -166,7 +167,7 @@ class App:
 
     def start_game(self):
         # Reinitialiser le manager et les entite unique via l'event "RESTART_GAME"
-        self.eventManager.publish("RESTART_GAME")
+        self.eventManager.publish("RESTART_GAME",data=None)
 
         # Vider les groupes de logic et rendu
         self.enemies.empty()
