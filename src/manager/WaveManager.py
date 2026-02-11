@@ -54,11 +54,10 @@ class WaveManager():
         # creation des ennemis
         for _ in range(self.wave_difficulty):
             enemy = self.enemy_maker()
-            enemies.append(enemy)
 
-        # Ajout des ennemis pour la logic et le rendu
-        self.game.enemies.add(enemies)
-        self.game.all_sprites.add(enemies)
+            # Ajout des ennemis pour la logic et le rendu
+            self.game.enemies.add(enemy)
+            self.game.all_sprites.add(enemy)
 
         # Incrementation pour changer la diff et le temps de preparation entre chaque vague
         self.wave_number += 1

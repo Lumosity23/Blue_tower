@@ -56,7 +56,7 @@ class BuildManager():
             self.game.builds.add(build)
             self.game.all_sprites.add(build)
             self.game.grid.set_cell_value(mx, my, type_name)
-            self.game.grid.update_flow_field(self.game.kernel.pos)
+            self.game.grid.update_flow_field(self.game.kernel.rect.center)
         
         else:
             print(f"ce type de batiment n'exite pas dans mon repertoire : {type_name}")

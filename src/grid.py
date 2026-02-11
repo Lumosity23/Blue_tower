@@ -17,7 +17,7 @@ class Grid():
         self.cell_size = self.game.st.CELL_SIZE
         self.grid = self.init_grid()
         self.flow_field = {}
-        self.update_flow_field(game.kernel.pos)
+        self.update_flow_field(game.kernel.rect.center)
 
         # Declaration des subscribe
         self.game.eventManager.subscribe("RESTART_GAME", self.restart)
@@ -197,8 +197,6 @@ class Grid():
             for neighbor in self.getValidNeighbors(cx, cy):
                 
                 cell_cost = self.get_cost(neighbor[0], neighbor[1], True)
-                if cell_cost > 1:
-                    print(cell_cost)
 
                 if neighbor in self.flow_field:
                     continue
