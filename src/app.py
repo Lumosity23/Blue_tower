@@ -37,7 +37,7 @@ class App:
         self.kernel = Kernel(self)
         self.grid = Grid(self)
         self.cursor = Cursor(self)
-        self.mode = "CREATIF"
+        self.mode = "EASY"
         self.walletManager = WalletManager(self)
         self.all_sprites = pygame.sprite.Group()
         self.builds = pygame.sprite.Group()
@@ -71,6 +71,7 @@ class App:
                     self.last_time_shoot = current_time
             # Systeme de build        
             if self.edit:
+                # Creation d'un mur
                 if m3 and self.cursor.cell_isOccupied == False:
                     self.buildManager.attemp_build(pygame.mouse.get_pos(), self.st.WALL)
         # Restart
@@ -87,6 +88,11 @@ class App:
                     self.debug = False
             if event.key == pygame.K_p and self.edit:
                 self.debug = not self.debug
+
+            if self.edit:
+                # Creation de la tourelle
+                if event.key == pygame.K_t and self.cursor.cell_isOccupied == False:
+                    self.buildManager.attemp_build(pygame.mouse.get_pos(), self.st.TURRET)
 
     # la logic et tout le reste se trouve ici dans la boucle
     def on_loop(self, dt):

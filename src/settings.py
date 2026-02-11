@@ -12,7 +12,7 @@ class Settings:
 
     #### ENEMIE ####
     ENEMIE_SIZE = (30,30)
-    ENEMIE_HEALTH = 5
+    ENEMIE_HEALTH = 50
     ENEMIE_SPRITE = 'assets/enemie.png'
     
     #### KERNEL ####
@@ -23,10 +23,13 @@ class Settings:
     #### WALL ####
     WALL_SPRITE = 'assets/wall_gab.png'
     WALL = "WALL"
-    WALL_HP = 25
+    WALL_HP = 50
  
     #### TURRET ####
-    TURRET = 2
+    TURRET_SPRITE = 'assets/turret.png'
+    TURRET = "TURRET"
+    TURRET_HP = WALL_HP // 2
+    TURRET_COOLDOWN = 500 # en millisecondes
 
     #### BANK ####
     BANK = 3
@@ -79,6 +82,7 @@ class Settings:
     }
 
     TYPE_COST = {
+        EMPTY: 1,
         WALL: 50,
         TURRET: 200,
         BANK: 300,

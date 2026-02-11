@@ -90,3 +90,15 @@ class WaveManager():
     def reset(self):
         self.wave_difficulty = 0
         self.wave_number = 0
+    
+
+    def nearest_enemy(self, pos_node: tuple) -> Enemie:
+
+        shortest_lenght = (float("inf"),None)
+        enemy: Enemie
+        for enemy in self.game.enemies:
+            lenght = pygame.Vector2((pos_node)).distance_to(enemy.pos)
+            if lenght < shortest_lenght[0]:
+                shortest_lenght = lenght, enemy
+        return shortest_lenght[1]
+        

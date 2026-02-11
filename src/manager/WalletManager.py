@@ -17,7 +17,7 @@ class WalletManager:
             print("mode creatif activer")
 
         # Declaration des subscribe
-        self.game.eventManager.subscribe("ERROR_PAYMENT", self.buy)
+        self.game.eventManager.subscribe("ERROR_PAYMENT", self.error)
         self.game.eventManager.subscribe("RESTART_GAME", self.reset)
 
     
@@ -52,3 +52,7 @@ class WalletManager:
 
     def reset(self):
         self.amount = self.init_amount
+    
+
+    def error(self):
+        print("erreur de payement -> manque de cash !")

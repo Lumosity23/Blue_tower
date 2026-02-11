@@ -146,7 +146,7 @@ class Grid():
         
         # FONCTIONNE
         if alredy_cell:
-            return self.game.st.cell_cost[self.grid[posx, posy].type]
+            return self.game.st.TYPE_COST[self.grid[posx, posy].type]
         
         # ERREUR A TROUVE CAR NE FONCTIONNE PAS !!!!! 
         gx = posx // self.cell_size
