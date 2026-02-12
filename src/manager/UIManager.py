@@ -94,7 +94,7 @@ class UIManager():
         pygame.draw.rect(surface, color, fill_rect)
 
 
-    def get_custom_sprite(self, path: str, size: tuple, shape: str='square'): 
+    def get_custom_sprite(self, path: str, size: tuple, shape: str='square') -> pygame.Surface: 
         """   
             Charge une image, la redimensionne et applique une forme.\n
         

@@ -12,13 +12,14 @@ class Settings:
 
     #### ENEMIE ####
     ENEMIE_SIZE = (30,30)
-    ENEMIE_HEALTH = 50
+    ENEMIE_HEALTH = 5
     ENEMIE_SPRITE = 'assets/enemie.png'
     
     #### KERNEL ####
     KERNEL_SPRITE = 'assets/kernel.png'
     KERNEL_SIZE = 64 * 2
     KERNEL_HP = 40
+    KERNEL_COOLDOWN = 1500
 
     #### WALL ####
     WALL_SPRITE = 'assets/wall_gab.png'
@@ -29,7 +30,7 @@ class Settings:
     TURRET_SPRITE = 'assets/turret.png'
     TURRET = "TURRET"
     TURRET_HP = WALL_HP // 2
-    TURRET_COOLDOWN = 500 # en millisecondes
+    TURRET_COOLDOWN = 1000 # en millisecondes
 
     #### BANK ####
     BANK = 3
@@ -94,3 +95,7 @@ class Settings:
         "HARD": 250,
         "CREATIF": False 
     }
+
+    #### UI ####
+    ROOT_PANEL_POS = 100, 100
+    ROOT_PANEL_SIZE = 300, 200

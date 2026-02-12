@@ -12,6 +12,7 @@ from entities.kernel import Kernel
 from manager.WalletManager import WalletManager
 from manager.EventManager import EventManager
 from manager.BuildManager import BuildManager
+from ui.UIElement import UIElement
 
 
 class App:
@@ -51,6 +52,17 @@ class App:
         self.debug = False
         self.last_time_shoot = - self.st.BULLET_COOLDOWN
         
+        # Test
+        self.root_panel = UIElement(self.st.ROOT_PANEL_POS[0], self.st.ROOT_PANEL_POS[1], self.st.ROOT_PANEL_SIZE[0], self.st.ROOT_PANEL_SIZE[1])
+        self.root_panel.image.fill((50, 50, 50)) # Gris foncé
+
+        # 2. Création de l'ENFANT (Bouton Rouge)
+        # Position 10, 10 DANS LE PARENT (donc 110, 110 sur l'écran)
+        self.red_button = UIElement(10, 10, 50, 50)
+        self.red_button.image.fill((255, 0, 0)) # Rouge
+    
+        # 3. LIAISON
+        self.root_panel.add_child(self.red_button)
     
 
     # Boucle qui va recupree les event
@@ -63,7 +75,6 @@ class App:
             if m1:
                 current_time = pygame.time.get_ticks()
                 if current_time - self.last_time_shoot > self.st.BULLET_COOLDOWN:
-                    #self.kernel.shoot()
                     # Creation d'un projectile si clic de souris
                     bullet = Bullet(self.player.rect.centerx, self.player.rect.centery, target_pos=pygame.mouse.get_pos())
                     self.bullets.add(bullet)
@@ -94,6 +105,12 @@ class App:
                 if event.key == pygame.K_t and self.cursor.cell_isOccupied == False:
                     self.buildManager.attemp_build(pygame.mouse.get_pos(), self.st.TURRET)
 
+            if event.key == pygame.K_g:
+                if self.root_panel.visible:
+                    self.root_panel.hide()
+                else:
+                    self.root_panel.show()
+
     # la logic et tout le reste se trouve ici dans la boucle
     def on_loop(self, dt):
         
@@ -115,11 +132,12 @@ class App:
             # On appel la methode update de tout les object dans "all_sprites"
             self.all_sprites.update(dt) 
             self.wave_manager.update()
+            self.root_panel.update(dt)
 
             # Verifier si le joueur est toujours en vie
             if not self.player.alive or not self.kernel.alive:
                 self.game_over = True
-            
+
 
     # Affichage et autre rendu visuel
     def on_render(self):
@@ -168,12 +186,19 @@ class App:
             self.ui_manager.draw_text(self._display_surf, money, self.st.SCREEN_WIDTH - 50, 20, (255,255,255), 'topright')
             # self.ui_manager.draw_text(self._display_surf, str(len(self.ui_manager.cache_text)), self.st.SCREEN_WIDTH - 100, self.st.SCREEN_HEIGHT - 100, (255,255,255), 'topright')
 
+            # Test de UIElement
+            self.root_panel.draw(self._display_surf)
+
         pygame.display.flip() # METRE AJOUR L'ECRAN PHYSIQUE
 
 
     def start_game(self):
         # Reinitialiser le manager et les entite unique via l'event "RESTART_GAME"
         self.eventManager.publish("RESTART_GAME",data=None)
+
+        # Test UIElement
+        self.root_panel.rect.x = self.st.ROOT_PANEL_POS[0]
+        self.root_panel.rect.y = self.st.ROOT_PANEL_POS[1]
 
         # Vider les groupes de logic et rendu
         self.enemies.empty()
