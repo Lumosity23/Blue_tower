@@ -63,7 +63,8 @@ class App:
     
         # 3. LIAISON
         self.root_panel.add_child(self.red_button)
-    
+        self.root_panel.visible = False
+        self.root_panel.speed = 1500
 
     # Boucle qui va recupree les event
     def on_event(self, event):

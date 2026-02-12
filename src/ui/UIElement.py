@@ -11,7 +11,6 @@ class UIElement:
         '''
         self.rect = pygame.Rect(x, y, w, h)
         self.pos = pygame.math.Vector2(x, y)
-        print(f"position init : {self.pos.x},{self.pos.y}")
         self.start_pos = self.pos.copy()
         self.image = pygame.Surface((w, h))
         self.image.fill((100, 100, 100))
@@ -31,7 +30,6 @@ class UIElement:
         '''
         new_rect = self.get_absolute_rect()
         self.start_pos.xy = new_rect.topleft
-        print(f"nouvelle pos init : {self.start_pos.x},{self.start_pos.y}")
 
 
     def add_child(self, new_child: "UIElement") -> None:
@@ -41,7 +39,7 @@ class UIElement:
         self.children.append(new_child)
         new_child.parent = self # Definition du lien de parente
         new_child.home_position()
-        print(f"{new_child} a ete ajouter a ses enfants")
+
     
     def get_absolute_rect(self) -> pygame.Rect:
         '''
@@ -71,7 +69,7 @@ class UIElement:
             vec = pygame.math.Vector2(tx - self.rect.x, ty - self.rect.y)
             dist = vec.length()
 
-            if dist > 1:
+            if dist > self.speed / 100:
                 vec.normalize_ip()
                 # On se deplace
                 self.rect.x += vec.x * self.speed * dt
@@ -82,12 +80,11 @@ class UIElement:
                 self.rect.x = tx
                 self.rect.y = ty
                 self.target = None
-        
-            # Propagation aux enfants
-            child: "UIElement"
-            for child in self.children:
-                child.target = self.target
-                child.update(dt)
+                
+        # Propagation aux enfants
+        child: "UIElement"
+        for child in self.children:
+            child.update(dt)
         
 
     def draw(self, surface: pygame.Surface):
@@ -113,10 +110,10 @@ class UIElement:
         '''
             Remet a la position initial notre element
         '''
-        self.pos = self.start_pos.copy()
+        #self.pos = self.start_pos.copy()
         self.rect.topleft = (int(self.pos.x), int(self.pos.y))
-        print(f"position reinitialiser -> {self.rect}")
-        
+        self.target = None
+
 
     def show(self) -> None:
         """
@@ -131,7 +128,7 @@ class UIElement:
                 child.reset_position()
 
         # Test pour le debug
-        if not self.parent: self.target = (350,350)
+        self.target = (50,50)
 
         
 
@@ -140,4 +137,3 @@ class UIElement:
             Masque l'element de l'ecran et reinitialise sa position de depart
         '''
         self.visible = False
-        self.target = None
