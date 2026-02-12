@@ -23,8 +23,9 @@ class Kernel(pygame.sprite.Sprite):
         # Declaration des Subscribe
         self.game.eventManager.subscribe("RESTART_GAME", self.reset)
 
-    #def update(self, dt):
-     #   self.shoot()
+
+    def update(self, dt):
+        self.shoot()
         
 
     def take_damage(self, damage: int) -> None:
@@ -42,7 +43,7 @@ class Kernel(pygame.sprite.Sprite):
     
     def shoot(self) -> None:
         # Creation d'un projectile si clic de souris
-        bullet = Bullet(self.rect.centerx, self.rect.centery, target_pos=pygame.mouse.get_pos())
+        bullet = Bullet(self.rect.centerx, self.rect.centery, target_pos=self.game.wave_manager.nearest_enemy)
         self.game.bullets.add(bullet)
         self.game.all_sprites.add(bullet)
 
