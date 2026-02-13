@@ -1,19 +1,27 @@
 import pygame
-
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from main import App
 
 class UIElement:
 
-    def __init__(self, x: int, y: int, w: int, h: int):
+    def __init__(self, x: int, y: int, w: int, h: int, game: "App", uid: str=None):
         '''
             un element de UI requiert toute ses dimentsion : (x, y) et W and H\n
             et ensuie l'instance du jeu : game et si il est un enfant (children)\n
             alors il dois donner l'instance de son parent
         '''
+        self.uid = uid
+        self.game = game
         self.rect = pygame.Rect(x, y, w, h)
+        self.absolute_rect = None
         self.pos = pygame.math.Vector2(x, y)
         self.start_pos = self.pos.copy()
         self.image = pygame.Surface((w, h))
         self.image.fill((100, 100, 100))
+
+        # Par defaut l'image est invisible
+        self.image.set_alpha(0)
 
         self.visible: bool = True
         self.parent: "UIElement" = None
@@ -28,8 +36,7 @@ class UIElement:
         '''
             Met a jour sa position init si self est un enfant
         '''
-        new_rect = self.get_absolute_rect()
-        self.start_pos.xy = new_rect.topleft
+        self.absolute_rect = self.get_absolute_rect()
 
 
     def add_child(self, new_child: "UIElement") -> None:
@@ -85,7 +92,24 @@ class UIElement:
         child: "UIElement"
         for child in self.children:
             child.update(dt)
+    
+
+    def handle_event(self, event):
+        """
+        Renvoie True si l'événement a été traité par cet élément ou un enfant.
+        """
+        if not self.visible:
+            return False
+
+        # 1. On demande d'abord aux enfants (car ils sont dessines PAR DESSUS le parent)
+        # On inverse la liste pour commencer par le dernier dessiné (celui tout en haut)
+        child: UIElement
+        for child in reversed(self.children):
+            if child.handle_event(event):
+                return True # L'événement a été mangé par un enfant
         
+        return False # Personne n'a réagi
+    
 
     def draw(self, surface: pygame.Surface):
         '''
@@ -127,10 +151,6 @@ class UIElement:
             for child in self.children:
                 child.reset_position()
 
-        # Test pour le debug
-        self.target = (50,50)
-
-        
 
     def hide(self) -> None:
         '''

@@ -13,7 +13,7 @@ class Kernel(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         self.size = (game.st.KERNEL_SIZE, game.st.KERNEL_SIZE)
-        self.image = self.game.ui_manager.get_custom_sprite(game.st.KERNEL_SPRITE, self.size, 'circle')
+        self.image = self.game.spriteManager.get_custom_sprite(game.st.KERNEL_SPRITE, self.size, 'circle')
         self.rect = self.image.get_rect(center=(game.st.SCREEN_WIDTH / 2, game.st.SCREEN_HEIGHT / 2))
         self.pos = self.rect.x, self.rect.y
         self.max_hp = game.st.KERNEL_HP

@@ -11,7 +11,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         self.size = (self.game.st.PLAYER_WIDTH, self.game.st.PLAYER_HEIGHT)
-        self.image = self.game.ui_manager.get_custom_sprite(self.game.st.PLAYER_SPRITE, self.size)
+        self.image = self.game.spriteManager.get_custom_sprite(self.game.st.PLAYER_SPRITE, self.size)
         self.rect = self.image.get_rect(center=(self.game.st.SCREEN_WIDTH / 2, self.game.st.SCREEN_HEIGHT / 2))
         self.velocity = 500
         self.pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)

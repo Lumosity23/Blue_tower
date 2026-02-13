@@ -10,7 +10,7 @@ class Enemie(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         self.type = type
-        self.image = self.game.ui_manager.get_custom_sprite(self.game.st.ENEMIE_SPRITE, size, 'circle')
+        self.image = self.game.spriteManager.get_custom_sprite(self.game.st.ENEMIE_SPRITE, size, 'circle')
         self.rect = self.image.get_rect(center=(x,y))
         self.pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
         self.director_vector = pygame.math.Vector2()

@@ -14,7 +14,7 @@ class Wall(Building):
         super().__init__(x, y, game)
 
         self.type = self.game.st.WALL
-        self.image = self.game.ui_manager.get_custom_sprite(self.game.st.WALL_SPRITE, (self.game.st.CELL_SIZE, self.game.st.CELL_SIZE))
+        self.image = self.game.spriteManager.get_custom_sprite(self.game.st.WALL_SPRITE, (self.game.st.CELL_SIZE, self.game.st.CELL_SIZE))
         self.rect = self.image.get_rect(topleft=(x, y))
         self.max_hp = self.game.st.WALL_HP
         self.current_hp = self.max_hp

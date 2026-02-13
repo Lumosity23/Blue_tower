@@ -13,7 +13,7 @@ class Turret(Building):
 
         self.st = self.game.st
         self.type = self.game.st.TURRET
-        self.image = self.game.ui_manager.get_custom_sprite(self.st.TURRET_SPRITE, (self.st.CELL_SIZE, self.st.CELL_SIZE))
+        self.image = self.game.spriteManager.get_custom_sprite(self.st.TURRET_SPRITE, (self.st.CELL_SIZE, self.st.CELL_SIZE))
         self.rect = self.image.get_rect(topleft=(x, y))
         self.max_hp = self.st.TURRET_HP
         self.current_hp = self.max_hp

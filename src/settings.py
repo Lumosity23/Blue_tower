@@ -97,5 +97,7 @@ class Settings:
     }
 
     #### UI ####
-    ROOT_PANEL_POS = 50, -1000
-    ROOT_PANEL_SIZE = SCREEN_WIDTH - 100, 1000
+    UI_LAYOUT_PATH = 'src/ui/layout.json'
+
+    ### COLOR ####
+    VISION_HUMAIN = 128
