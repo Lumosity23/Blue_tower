@@ -18,6 +18,7 @@ class App:
 
     # initialise les variable important pour pygame
     def __init__(self):
+        pygame.init()
         self._running = True
         self._display_surf = None
         self.clock = pygame.time.Clock()
@@ -27,7 +28,6 @@ class App:
 
     # on initialise pygame et tout les object utile pour le jeu
     def on_init(self):
-        pygame.init()
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self.eventManager = EventManager()
         self.wave_manager = WaveManager(self)
@@ -51,7 +51,7 @@ class App:
         self.edit = False
         self.debug = False
         self.last_time_shoot = - self.st.BULLET_COOLDOWN
-    
+        self.ui_manager.OSD.post_init()
 
     # Boucle qui va recupree les event
     def on_event(self, event):

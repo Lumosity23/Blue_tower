@@ -1,18 +1,15 @@
 import pygame
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from main import App
+
 
 class UIElement:
 
-    def __init__(self, x: int, y: int, w: int, h: int, game: "App", uid: str=None):
+    def __init__(self, x: int, y: int, w: int, h: int, uid: str=None):
         '''
             un element de UI requiert toute ses dimentsion : (x, y) et W and H\n
             et ensuie l'instance du jeu : game et si il est un enfant (children)\n
             alors il dois donner l'instance de son parent
         '''
-        self.uid = uid
-        self.game = game
+        self.uid = uid # Identifiant pour le UI_layout
         self.rect = pygame.Rect(x, y, w, h)
         self.absolute_rect = None
         self.pos = pygame.math.Vector2(x, y)
@@ -23,6 +20,7 @@ class UIElement:
         # Par defaut l'image est invisible
         self.image.set_alpha(0)
 
+        self.debug = False
         self.visible: bool = True
         self.parent: "UIElement" = None
         self.children = []
@@ -111,6 +109,33 @@ class UIElement:
         return False # Personne n'a réagi
     
 
+    def set_child(self, argument: str, own: bool=True) -> None:
+        '''
+            Passe un attribut de UIElement et permet de la set a tout le monde et a soi (ex : Debug)\n
+            le state de l'attribut changer pour aller dans son oposse donc a utiliser avec prudence !\n
+            ex : True -> False et inversement\n
+            \n
+            argument: attribut de UIElement bool en STR !\n
+            own: si on veux que soit-meme soit aussi affecter
+        '''
+        # Verification que UIElement a bien cet attribut
+        if hasattr(self, argument):
+            # Verifier que l'attribut est un bien un bool
+            if type(getattr(self, argument)) == bool:
+                if own:
+                    current_val = getattr(self, argument)
+                    setattr(self, argument, not current_val)
+                # Recursion sur ses enfants
+                if self.children:
+                    child: "UIElement"
+                    for child in self.children:
+                        child.set_child(argument)
+            else:
+                print(f"l'Attribut {argument}, n'est pas de type bool")
+        else:
+            print(f"UIElement n'as pas l'attribut suivant {argument}")
+
+
     def draw(self, surface: pygame.Surface):
         '''
             se dessiner sur la surface demander\n
@@ -121,8 +146,11 @@ class UIElement:
             return
         
         abs_rect = self.get_absolute_rect()
-
         surface.blit(self.image, abs_rect)
+
+        if self.debug:
+            # Dessine un cadre rose autour de l'element lors de l'edit_mode
+            pygame.draw.rect(surface, (255, 0, 255), abs_rect, 2)
 
         if self.children:
             child: "UIElement"

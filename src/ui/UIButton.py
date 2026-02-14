@@ -1,5 +1,6 @@
 import pygame
 from .UIElement import UIElement
+from .UIText import UIText
 from settings import Settings
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -8,10 +9,17 @@ if TYPE_CHECKING:
 
 class UIButton(UIElement):
 
-    def __init__(self, x, y, w, h, game, text, on_click_callback, color: tuple=(0, 0, 0), size_text: int=50):
-        super().__init__(x, y, w, h, game)
-        self.text = text
-        self.size_text = size_text
+    def __init__(self, x, y, w, h, text, on_click_callback, color: tuple=(0, 0, 0), size_text: int=50, text_color: tuple=(255, 255, 255), uid=None):
+        super().__init__(x, y, w, h, uid)
+
+        # Init le text du bouton
+        if uid:
+            uid_text = f"{uid}_text"
+        else: uid_text = None
+        self.text = UIText(x, y, text, size_text, text_color, align='center', uid=uid_text)
+        self.add_child(self.text)
+
+        # Fonction qui realise lors de la pression du bouton
         self.callback = on_click_callback
 
         # Couleur
@@ -49,8 +57,6 @@ class UIButton(UIElement):
     
     def draw(self, surface):
         super().draw(surface)
-        if self.visible:
-            self.game.spriteManager.draw_text(self.game._display_surf, self.text, self.absolute_rect.centerx, self.absolute_rect.centery, align='center', size=self.size_text)
 
 
     def handle_event(self, event: pygame.event.EventType) -> bool:

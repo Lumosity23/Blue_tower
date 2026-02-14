@@ -19,15 +19,15 @@ class UIManager():
         self.edit_mode = False
         self.layout_path = self.st.UI_LAYOUT_PATH
         # Init de notre bloc logic pour le UI
-        self.root = UIElement(0, 0, self.st.SCREEN_WIDTH, self.st.SCREEN_HEIGHT, game)
+        self.root = UIElement(0, 0, self.st.SCREEN_WIDTH, self.st.SCREEN_HEIGHT)
         self.root.image.set_alpha(0)
         
         # pour le debug pour l'instant
         self.selected_element = None
         
         # Init de element UI visuel
-        self.shop_panel = ShopPanel(self.game)
-        self.OSD = OSD(0, 0, 0, 0, game)
+        self.shop_panel = ShopPanel(game)
+        self.OSD = OSD(game)
 
         # Ajout des enfants
         self.root.add_child(self.shop_panel)
@@ -39,7 +39,9 @@ class UIManager():
         self.layout = self.load_layout()
 
     def toggle_edit_mode(self):
+        # Active le mode edite et le debug pour le element
         self.edit_mode = not self.edit_mode
+        self.root.set_child("debug", False)
         print(f" UI Edit Mode: {'ON' if self.edit_mode else 'OFF'}")
 
 

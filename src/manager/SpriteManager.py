@@ -10,69 +10,8 @@ class SpriteManager:
         
         self.game = game
         self.st = self.game.st
-
-        # Init FONT
-        self.font_100 = pygame.font.Font(self.game.st.PATH_FONT, 100)
-        self.font_50 = pygame.font.Font(self.game.st.PATH_FONT, 50)
-        self.font_25 = pygame.font.Font(self.game.st.PATH_FONT, 25)
-        self.font_10 = pygame.font.Font(self.game.st.PATH_FONT, 10)
-        self.font_5 = pygame.font.Font(self.game.st.PATH_FONT, 5)
-        self.font ={
-            100 : self.font_100,
-            50 : self.font_50,
-            25 : self.font_25,
-            10 : self.font_10,
-            5 : self.font_5
-        }
-
-        # On sauvgarde le text deja "Render" pour eviter de le refaire (OPTIMISATION)
-        self.cache_text = {}
         self.sprite_cache = {}
     
-
-    def draw_text(self, surface: pygame.Surface, text: str, x: int, y: int, color: tuple=(255,255,255), align: str='topleft', size: int=50):
-        '''
-            surface : la surface sur la quelle tu veux dessiner\n
-            text : le text que tu veux afficher\n
-            x, y : la position que tu veux lui donner en x et y\n
-            color : si tu veux une autre couleur que le noir (0,0,0) -> noire\n
-            align : permet de dire par ou alligner la text ('topleft', 'center',....)
-        '''
-        # ---- 1. RENDU (partie lourde) ---- #
-        img = None
-        # On va stocker les "rendu" par text et positon sur l'ecran
-        key = (text, color, size)
-
-        # Si deja "rendu" alors on affiche simplement la copy
-        if key in self.cache_text:
-            img = self.cache_text[key].copy()
-        else:
-            if size in self.font:
-                font = self.font[size]
-                img = font.render(text, True, color)
-            '''
-            # Sécurité : Si le cache est trop gros (>100 images), on le vide pour éviter le crash mémoire
-            if len(self.cache_text) > 100:
-                self.cache_text.clear()
-            '''
-            # Stocke le "rendu" pour la prochaine fois
-            self.cache_text[key] = img
-        
-        # ---- 2. POSITIONEMENT ---- #
-        rect = img.get_rect()
-        
-        if align == "center":
-            rect.center = (x, y)
-        elif align == "topright":
-            rect.topright = (x, y)
-        else:
-            rect.topleft = (x, y)
-        
-
-        # ---- 3. AFFICHAGE ---- # 
-        surface.blit(img, rect)
-        # debug (log)
-        # print(len(self.cache_text))
 
     def draw_health_bar(self, entity, surface: pygame.Surface, x: int=None, y: int=None, size: tuple=None) -> None:
         # 1. Calcul du ratio de vie (entre 0.0 et 1.0)
