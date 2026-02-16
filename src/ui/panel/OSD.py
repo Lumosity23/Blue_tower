@@ -33,8 +33,8 @@ class OSD(UIElement):
 
         # Wallet
         if self.game.walletManager.creatif:
-            self.wallet = UIText(self.st.SCREEN_WIDTH - 50, 20, "CREATIF", 'bottomright')
-        else: self.wallet = UIText(self.st.SCREEN_WIDTH - 50, 20, self.get_amount_wallet, 'bottomright', text_update=True)
+            self.wallet = UIText(self.st.SCREEN_WIDTH - 50, 20, "CREATIF")
+        else: self.wallet = UIText(self.st.SCREEN_WIDTH - 50, 20, self.get_amount_wallet, text_update=True)
 
         # Liste des text enfants
         self.text = [self.wave_text, self.number_wave, self.nmb, self.fps, self.wallet]

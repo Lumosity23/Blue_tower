@@ -19,7 +19,7 @@ class Player(pygame.sprite.Sprite):
         self.current_hp = self.max_hp
         self.damage = self.current_hp
         self.alive = True
-        self.game.eventManager.subscribe("RESTART_GAME", self.reset)
+        self.game.eventManager.subscribe("NEW_GAME", self.reset)
         
     def update(self, dt):
         keys = pygame.key.get_pressed()

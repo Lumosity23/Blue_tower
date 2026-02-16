@@ -4,6 +4,7 @@ import json
 from ui.UIElement import UIElement
 from ui.panel.ShopPanel import ShopPanel
 from ui.panel.OSD import OSD
+from ui.panel.GameOverPanel import GameOverPanel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -28,13 +29,21 @@ class UIManager():
         # Init de element UI visuel
         self.shop_panel = ShopPanel(game)
         self.OSD = OSD(game)
+        self.game_over_panel = GameOverPanel(game)
+        self.pause = GameOverPanel(game)
 
         # Ajout des enfants
         self.root.add_child(self.shop_panel)
         self.root.add_child(self.OSD)
+        self.root.add_child(self.game_over_panel)
+        self.root.add_child(self.pause)
 
         # Declaration des event sur ecoute
         # self.game.eventManager.subscribe("OPEN_UPGRADE_PANEL", self.upgrade_panel.show)
+        self.game.eventManager.subscribe("SHOW_UPGRADE_PANEL", self.on_upgade_panel)
+        self.game.eventManager.subscribe("GAME_OVER", self.on_game_over)
+        self.game.eventManager.subscribe("PAUSE", self.on_pause)
+        self.game.eventManager.subscribe("NEW_GAME", self.on_restart)
 
         self.layout = self.load_layout()
 
@@ -181,3 +190,21 @@ class UIManager():
         if parent.get_absolute_rect().collidepoint(pos):
             return parent
         return None
+
+
+    def on_upgade_panel(self) -> None:
+
+        print("upgrade panel ouvert !")
+        return
+    
+    def on_game_over(self) -> None:
+
+        self.game_over_panel.visible = True
+
+    def on_pause(self) -> None:
+
+        self.pause.visible = not self.pause.visible
+    
+    def on_restart(self) -> None:
+
+        self.game_over_panel.visible = False

@@ -48,10 +48,18 @@ class App:
         self.all_sprites.add(self.player, self.kernel)
         self._running = True
         self.game_over = False
+        self.pause = False
         self.edit = False
         self.debug = False
         self.last_time_shoot = - self.st.BULLET_COOLDOWN
         self.ui_manager.OSD.post_init()
+
+
+        # Declaration des ecoute sur les event
+        self.eventManager.subscribe("RESTART_GAME", self.start_game)
+        self.eventManager.subscribe("QUIT", self.quit)
+        self.eventManager.subscribe("PAUSE", self.freeze)
+
 
     # Boucle qui va recupree les event
     def on_event(self, event):
@@ -86,13 +94,19 @@ class App:
                     self.game_over = False
                     self.start_game()
                     print("restart")
+                    return
             if event.key == pygame.K_e:
                 self.edit = not self.edit
                 if not self.edit:
                     self.all_sprites.remove(self.cursor)
                     self.debug = False
+                    return
             if event.key == pygame.K_p and self.edit:
                 self.debug = not self.debug
+                return
+
+            if event.key == pygame.K_ESCAPE:
+                self.eventManager.publish("PAUSE")
 
             if self.edit:
                 # Creation de la tourelle
@@ -103,11 +117,8 @@ class App:
     # la logic et tout le reste se trouve ici dans la boucle
     def on_loop(self, dt):
         
-        # GAME OVER
-        if self.game_over:
-            pass
         
-        else:
+        if not self.game_over and not self.pause:
             # Met a jour les point de vie des elements sur le terrain
             # Balles -> Ennemis
             self.collider.check_collisions(self.bullets, self.enemies, False, False)
@@ -126,6 +137,7 @@ class App:
             # Verifier si le joueur est toujours en vie
             if not self.player.alive or not self.kernel.alive:
                 self.game_over = True
+                self.eventManager.publish("GAME_OVER")
 
 
     # Affichage et autre rendu visuel
@@ -134,43 +146,39 @@ class App:
         # ECRAN NOIRE
         self._display_surf.fill((0,0,0)) 
         
-        # GAME OVER
-        if self.game_over:
-            # ICI meca de fin de game
-            self.spriteManager.draw_text(self._display_surf, "GAME OVER", self.st.SCREEN_WIDTH / 2, self.st.SCREEN_HEIGHT / 2, (255, 0, 0), 'center')
-            self.spriteManager.draw_text(self._display_surf, "clic SPACE or R for restart", self.st.SCREEN_WIDTH / 2, self.st.SCREEN_HEIGHT / 2 + 50, (255,255,255), 'center')
+        # Affichage de la grille lors d'edit
+        if self.edit:
+            self.grid.draw(self._display_surf)
+            self.all_sprites.add(self.cursor)
+            '''
+            if self.debug:
+                for cell_pos, cell_val in self.grid.flow_field.items():
+                    length = len(str(cell_val)) * 26
+                    decalage = (self.st.CELL_SIZE - length) // 2
+                    cx = cell_pos[0] * self.st.CELL_SIZE + decalage
+                    cy = cell_pos[1] * self.st.CELL_SIZE + 7
+                    self.spriteManager.draw_text(self._display_surf, str(cell_val), cx, cy)
+            '''
+        self.all_sprites.draw(self._display_surf) # DRAW sprite.image (self.image)
 
-        else:
-            # Affichage de la grille lors d'edit
-            if self.edit:
-                self.grid.draw(self._display_surf)
-                self.all_sprites.add(self.cursor)
-                
-                if self.debug:
-                    for cell_pos, cell_val in self.grid.flow_field.items():
-                        length = len(str(cell_val)) * 26
-                        decalage = (self.st.CELL_SIZE - length) // 2
-                        cx = cell_pos[0] * self.st.CELL_SIZE + decalage
-                        cy = cell_pos[1] * self.st.CELL_SIZE + 7
-                        self.spriteManager.draw_text(self._display_surf, str(cell_val), cx, cy)
+        # Dessiner la bar de vie de ennemis
+        for enemy in self.enemies:
+            self.spriteManager.draw_health_bar(enemy, self._display_surf)
 
-            self.all_sprites.draw(self._display_surf) # DRAW sprite.image (self.image)
-            # Dessiner la bar de vie de ennemis
-            for enemy in self.enemies:
-                self.spriteManager.draw_health_bar(enemy, self._display_surf)
-            self.spriteManager.draw_health_bar(self.player, self._display_surf)
-            self.spriteManager.draw_health_bar(self.kernel, self._display_surf, self.st.SCREEN_WIDTH / 2, self.st.SCREEN_HEIGHT - self.st.CELL_SIZE, (600, 32))
+        self.spriteManager.draw_health_bar(self.player, self._display_surf)
+        self.spriteManager.draw_health_bar(self.kernel, self._display_surf, self.st.SCREEN_WIDTH / 2, self.st.SCREEN_HEIGHT - self.st.CELL_SIZE, (600, 32))
 
-            # Dessiner le UI du jeu
-            self.ui_manager.root.draw(self._display_surf)
+        # Dessiner le UI du jeu
+        self.ui_manager.root.draw(self._display_surf)
 
         pygame.display.flip() # METRE AJOUR L'ECRAN PHYSIQUE
 
 
     def start_game(self):
         # Reinitialiser le manager et les entite unique via l'event "RESTART_GAME"
-        self.eventManager.publish("RESTART_GAME",data=None)
-
+        self.eventManager.publish("NEW_GAME",data=None)
+        self.game_over = False
+        
         # Vider les groupes de logic et rendu
         self.enemies.empty()
         self.bullets.empty()
@@ -179,6 +187,12 @@ class App:
 
         # Rajout du player dans le rendu
         self.all_sprites.add(self.player, self.kernel)
+
+    def quit(self) -> None:
+        self._running = False
+
+    def freeze(self) -> None:
+        self.pause = not self.pause
 
     def on_cleanup(self):
         # fermeture propre de pygame

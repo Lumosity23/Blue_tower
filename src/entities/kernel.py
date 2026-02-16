@@ -23,7 +23,7 @@ class Kernel(pygame.sprite.Sprite):
         self.alive = True
 
         # Declaration des Subscribe
-        self.game.eventManager.subscribe("RESTART_GAME", self.reset)
+        self.game.eventManager.subscribe("NEW_GAME", self.reset)
 
     def update(self, dt):
 

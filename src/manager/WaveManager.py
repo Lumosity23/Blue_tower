@@ -16,7 +16,7 @@ class WaveManager():
         self.wave_number = 0
         self.first_round = True
         self.end_wave = False
-        self.game.eventManager.subscribe("RESTART_GAME", self.reset)
+        self.game.eventManager.subscribe("NEW_GAME", self.reset)
 
     def update(self):
 
@@ -50,7 +50,6 @@ class WaveManager():
             
     def spawn_wave(self):
         
-        enemies = []
         # creation des ennemis
         for _ in range(self.wave_difficulty):
             enemy = self.enemy_maker()
