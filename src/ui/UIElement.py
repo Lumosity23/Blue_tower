@@ -3,22 +3,44 @@ import pygame
 
 class UIElement:
 
+    
+    # 1. LA VARIABLE PARTAGÉE (Dictionnaire vide au début)
+    # Elle appartient à la classe, pas aux objets individuels.
+    _LAYOUT_CACHE = {} 
+
+    # 2. MÉTHODE POUR REMPLIR LE CACHE (Appelée par le Manager)
+    @classmethod
+    def load_layout_cache(cls, data: dict):
+        cls._LAYOUT_CACHE = data
+        print("💾 UIElement : Configuration Layout chargée !")
+
+    
     def __init__(self, x: int, y: int, w: int, h: int, uid: str=None):
         '''
             un element de UI requiert toute ses dimentsion : (x, y) et W and H\n
             et ensuie l'instance du jeu : game et si il est un enfant (children)\n
             alors il dois donner l'instance de son parent
         '''
-        self.uid = uid # Identifiant pour le UI_layout
+        self.uid = uid
         self.rect = pygame.Rect(x, y, w, h)
+        
+        # 3. AUTO-CONFIGURATION SANS 'GAME'
+        # On regarde directement dans la variable de classe
+        if self.uid and self.uid in UIElement._LAYOUT_CACHE:
+            cfg: dict = UIElement._LAYOUT_CACHE[self.uid]
+            
+            # On applique la config JSON (qui écrase les valeurs par défaut x,y,w,h)
+            self.rect.x = cfg.get("x", x)
+            self.rect.y = cfg.get("y", y)
+            self.rect.width = cfg.get("w", w)
+            self.rect.height = cfg.get("h", h)
+
         self.absolute_rect = None
-        self.pos = pygame.math.Vector2(x, y)
+        self.pos = pygame.math.Vector2(self.rect.x, self.rect.y)
         self.start_pos = self.pos.copy()
-        self.image = pygame.Surface((w, h))
-        self.image.fill((100, 100, 100))
 
         # Par defaut l'image est invisible
-        self.image.set_alpha(0)
+        self.image = pygame.Surface((self.rect.w, self.rect.h), pygame.SRCALPHA)
 
         self.debug = False
         self.visible: bool = True

@@ -12,13 +12,19 @@ class ShopPanel(UIPanel):
         self.game = game
         self.st = self.game.st
         super().__init__(self.st.SCREEN_WIDTH - 340, 40, 300, self.st.SCREEN_HEIGHT - 80)
+        self.uid = "ShopPanel"
         self.visible = False
 
+        if self.uid:
+            child_uid = f"{self.uid}_"
+        else:
+            child_uid = ""
+
         # 2. Création des Boutons DANS le panneau
-        btn_wall = UIButton(10, 10, 120, 80, "Wall", self.buy_wall, (154, 139, 230), 50)
+        btn_wall = UIButton(10, 10, 120, 80, "Wall", self.buy_wall, (154, 139, 230), 50, uid=f"{child_uid}btn_wall_buy")
         self.add_child(btn_wall)
         
-        btn_turret = UIButton(140, 10, 120, 80, "Tourelle", self.buy_turret, (25, 100, 155), 25)
+        btn_turret = UIButton(140, 10, 120, 80, "Tourelle", self.buy_turret, (25, 100, 155), 25, uid=f"{child_uid}btn_turret_buy")
         self.add_child(btn_turret)
 
     def buy_wall(self):

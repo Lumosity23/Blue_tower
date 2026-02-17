@@ -9,16 +9,18 @@ if TYPE_CHECKING:
 
 class UIButton(UIElement):
 
-    def __init__(self, x, y, w, h, text, on_click_callback, color: tuple=(0, 0, 0), size_text: int=50, text_color: tuple=(255, 255, 255), uid=None):
-        super().__init__(x, y, w, h, uid)
-
+    def __init__(self, x, y, w, h, text, on_click_callback, color: tuple=(0, 0, 0), size_text: int=50, text_color: tuple=(255, 255, 255), border_radius: int=15, uid=None):
         # Init le text du bouton
         if uid:
             uid_text = f"{uid}_text"
         else: uid_text = None
-        self.text = UIText(x, y, text, size_text, text_color, align='center', uid=uid_text)
+        self.text = UIText(20, 10, text, size_text, text_color, uid=uid_text)
+        super().__init__(x, y, self.text.rect.w + 40, self.text.rect.h + 20, uid)
         self.add_child(self.text)
 
+        # Arrondi des coins du bouton
+        self.border_radius = border_radius
+        
         # Fonction qui realise lors de la pression du bouton
         self.callback = on_click_callback
 
@@ -30,8 +32,7 @@ class UIButton(UIElement):
 
         # Etat
         self.state = "IDLE"
-        self.image.set_alpha(1000)
-        self.image.fill(self.color_idle)
+        self.render()
         
 
     def set_color(self, color) -> None:
@@ -45,10 +46,12 @@ class UIButton(UIElement):
                 self.color_hover += (c * 0.9,)
         
         else:
-            for c in list(color):
-                new_color = c * 1.1
-                if new_color > 255:
-                    new_color = 255
+            for c in color:
+                new_color = 255 - c              #c * 1.1
+                if new_color == 255:
+                    new_color -= 50
+                elif new_color == 0:
+                    new_color += 50
                 self.color_hover += (new_color,)
         
         for c in list(color):
@@ -58,31 +61,44 @@ class UIButton(UIElement):
     def draw(self, surface):
         super().draw(surface)
 
+    def render(self) -> None:
 
+        # On choisit la couleur selon l'état
+        color = self.color_idle
+        if self.state == "HOVER":
+            color = self.color_hover
+        elif self.state == "PRESSED":
+            color = self.color_pressed
+
+        # On dessine le rectangle arrondi avec la bonne couleur
+        pygame.draw.rect(self.image, color, (0, 0, self.rect.w, self.rect.h), border_radius=self.border_radius)
+
+    
     def handle_event(self, event: pygame.event.EventType) -> bool:
-
         abs_rect = self.get_absolute_rect()
         mouse_pos = pygame.mouse.get_pos()
         is_hovered = abs_rect.collidepoint(mouse_pos)
 
+        old_state = self.state
+
+        # Logique de mise à jour de l'état
         if event.type == pygame.MOUSEMOTION:
-            if is_hovered:
-                self.image.fill(self.color_hover)
-            else:
-                self.image.fill(self.color_idle)
-            
-        if event.type == pygame.MOUSEBUTTONDOWN:
+            self.state = "HOVER" if is_hovered else "IDLE"
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
             if is_hovered and event.button == 1:
-                self.image.fill(self.color_pressed)
+                self.state = "PRESSED"
+                if self.callback:
+                    self.callback()
+                # On force le render ici car l'état vient de changer
+                self.render() 
+                return True
 
-            if self.callback:
-                self.callback()
-            return True
+        elif event.type == pygame.MOUSEBUTTONUP:
+            self.state = "HOVER" if is_hovered else "IDLE"
 
-        if event.type == pygame.MOUSEBUTTONUP:
-            if is_hovered:
-                self.image.fill(self.color_hover)
-            else:
-                self.image.fill(self.color_idle)
+        # Si changement d'etat
+        if self.state != old_state:
+            self.render()
 
         return False

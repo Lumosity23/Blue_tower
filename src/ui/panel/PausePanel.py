@@ -6,25 +6,27 @@ if TYPE_CHECKING:
     from main import App
 
 
-class GameOverPanel(UIPanel):
+class PausePanel(UIPanel):
 
     def __init__(self, game: "App", uid = None):
         super().__init__(50, 50, game.st.SCREEN_WIDTH - 100, game.st.SCREEN_HEIGHT - 100, (45, 45, 45), uid)
         self.game = game
         self.st = game.st
         self.visible = False
-        self.uid = "GameOverPanel"
+        self.uid = "PausePanel"
         if self.uid:
             child_uid = f"{self.uid}_"
         else:
             child_uid = ""
 
-        text = UIText(self.st.SCREEN_WIDTH / 2, 100, "GAME OVER !", 100, uid=f"{child_uid}title_gameOver")
-        btn_restart = UIButton(self.st.SCREEN_WIDTH / 2, self.st.SCREEN_HEIGHT / 2, 150, 70, "RESTART", self.restart_game, (255,0,0), uid=f"{child_uid}btn_restart")
-        btn_quit = UIButton(100, 100, 150, 70, "QUIT", self.quit, (255, 80, 0), uid=f"{child_uid}btn_quit")
+        text = UIText(self.rect.w // 2, 40, "PAUSE", 100, uid=f"{child_uid}title_PAUSE")
+        btn_resume = UIButton(100, 100, 150, 70, "RESUME", self.resume, (100, 100, 100), uid=f"{child_uid}btn_resume")
+        btn_restart = UIButton(100, 100, 250, 70, "RESTART", self.restart_game, (255,0,0), uid=f"{child_uid}btn_restart")
+        btn_quit = UIButton(100, 100, 150, 70, "QUIT", self.quit, (255,0,0), uid=f"{child_uid}btn_quit")
 
-        self.add_child(btn_restart)
         self.add_child(btn_quit)
+        self.add_child(btn_restart)
+        self.add_child(btn_resume)
         self.add_child(text)
 
 
@@ -36,4 +38,9 @@ class GameOverPanel(UIPanel):
     def quit(self) -> None:
 
         self.game.eventManager.publish("QUIT")
+        return
+
+    def resume(self) -> None:
+
+        self.game.eventManager.publish("PAUSE")
         return

@@ -30,15 +30,15 @@ class UIText(UIElement):
         else:
             text = self.text()
             self.image = self.font.render(text, True, self.color)
-
+        '''
         self.rect = self.image.get_rect()
         
         if hasattr(self.rect, align):
             # Alignement du rect
             setattr(self.rect, align, (x, y))
         
-        else: print(f"Erreur lors de l'alignement du text avec : {align}")
-
+        else: print(f"Erreur lors de l'alignement du text avec : {align} de {self.uid}")
+        '''
     
     def update(self, dt):
         super().update(dt)

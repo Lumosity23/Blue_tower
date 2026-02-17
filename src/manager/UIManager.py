@@ -5,6 +5,7 @@ from ui.UIElement import UIElement
 from ui.panel.ShopPanel import ShopPanel
 from ui.panel.OSD import OSD
 from ui.panel.GameOverPanel import GameOverPanel
+from ui.panel.PausePanel import PausePanel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -19,9 +20,13 @@ class UIManager():
         self.st = self.game.st
         self.edit_mode = False
         self.layout_path = self.st.UI_LAYOUT_PATH
+        self.layout = self.load_layout()
+
+        # On injecte les données dans la classe statique
+        UIElement.load_layout_cache(self.layout)
+
         # Init de notre bloc logic pour le UI
         self.root = UIElement(0, 0, self.st.SCREEN_WIDTH, self.st.SCREEN_HEIGHT)
-        self.root.image.set_alpha(0)
         
         # pour le debug pour l'instant
         self.selected_element = None
@@ -30,7 +35,7 @@ class UIManager():
         self.shop_panel = ShopPanel(game)
         self.OSD = OSD(game)
         self.game_over_panel = GameOverPanel(game)
-        self.pause = GameOverPanel(game)
+        self.pause = PausePanel(game)
 
         # Ajout des enfants
         self.root.add_child(self.shop_panel)
@@ -45,7 +50,6 @@ class UIManager():
         self.game.eventManager.subscribe("PAUSE", self.on_pause)
         self.game.eventManager.subscribe("NEW_GAME", self.on_restart)
 
-        self.layout = self.load_layout()
 
     def toggle_edit_mode(self):
         # Active le mode edite et le debug pour le element
@@ -133,29 +137,21 @@ class UIManager():
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             # On cherche l'élément le plus profond sous la souris
             found = self.find_element_under_mouse(self.root, mouse_pos)
-            if found and found != self.root: # On ne bouge pas la racine !
+            if found and found != self.root : # On ne bouge pas la racine !
                 self.selected_element = found
                 # On calcule le décalage pour que l'objet ne saute pas au coin de la souris
                 self.offset_x = mouse_pos[0] - found.rect.x
                 self.offset_y = mouse_pos[1] - found.rect.y
-                print(f"Saisi : {type(found).__name__}")
+                # print(f"Saisi : {found.uid}")
                 return True
 
         # B. Mouvement Souris : On déplace
         elif event.type == pygame.MOUSEMOTION:
             if self.selected_element:
-                # On met à jour la position RELATIVE (rect.x/y)
-                # Attention : Si l'élément a un parent, il faut soustraire la position du parent !
-                parent_x = 0
-                parent_y = 0
-                if self.selected_element.parent:
-                    parent_rect = self.selected_element.parent.get_absolute_rect()
-                    parent_x = parent_rect.x
-                    parent_y = parent_rect.y
                 
                 # Nouvelle position locale
-                new_x = mouse_pos[0] - self.offset_x # - parent_x
-                new_y = mouse_pos[1] - self.offset_y # - parent_y
+                new_x = mouse_pos[0] - self.offset_x
+                new_y = mouse_pos[1] - self.offset_y
                 
                 # Application (avec Snapping à la grille 10px pour être propre ?)
                 self.selected_element.rect.x = round(new_x / 10) * 10
@@ -166,7 +162,7 @@ class UIManager():
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             if self.selected_element:
                 el = self.selected_element
-                print(f"NOUVELLE POSITION pour {type(el).__name__}: x={el.rect.x}, y={el.rect.y}")
+                # print(f"NOUVELLE POSITION pour {el.uid}: x={el.rect.x}, y={el.rect.y}")
                 self.selected_element = None
                 return True
         
@@ -174,22 +170,27 @@ class UIManager():
 
 
     def find_element_under_mouse(self, parent: "UIElement", pos):
+        # On verifie que l'element est visible avant
+        if parent.visible:
         # Récursion pour trouver l'élément le plus haut (dernier dessiné)
         # On parcourt à l'envers
-        child: "UIElement"
-        for child in reversed(parent.children):
-            # D'abord on regarde dans les enfants des enfants
-            found = self.find_element_under_mouse(child, pos)
-            if found: return found
-            
-            # Sinon on regarde l'enfant lui-même
-            if child.get_absolute_rect().collidepoint(pos):
-                return child
-        
-        # Si aucun enfant, on regarde le parent lui-même
-        if parent.get_absolute_rect().collidepoint(pos):
-            return parent
-        return None
+            child: "UIElement"
+            for child in reversed(parent.children):
+                if child.visible:
+                    # D'abord on regarde dans les enfants des enfants
+                    found = self.find_element_under_mouse(child, pos)
+                    if found: return found
+                
+                    # Sinon on regarde l'enfant lui-même
+                    if child.get_absolute_rect().collidepoint(pos):
+                        return child
+
+            # Si aucun enfant, on regarde le parent lui-même
+            if parent.get_absolute_rect().collidepoint(pos):
+                return parent
+            return None
+
+        else: return None
 
 
     def on_upgade_panel(self) -> None:

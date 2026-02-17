@@ -38,7 +38,7 @@ class App:
         self.kernel = Kernel(self)
         self.grid = Grid(self)
         self.cursor = Cursor(self)
-        self.mode = "EASY"
+        self.mode = "CREATIF"
         self.walletManager = WalletManager(self)
         self.all_sprites = pygame.sprite.Group()
         self.builds = pygame.sprite.Group()
@@ -107,7 +107,13 @@ class App:
 
             if event.key == pygame.K_ESCAPE:
                 self.eventManager.publish("PAUSE")
-
+                return
+            
+            # POur le debug et l'edit de UI facilement
+            if event.key == pygame.K_f:
+                self.player.alive = False
+                return
+            
             if self.edit:
                 # Creation de la tourelle
                 if event.key == pygame.K_t and self.cursor.cell_isOccupied == False:
@@ -132,13 +138,13 @@ class App:
             # On appel la methode update de tout les object dans "all_sprites"
             self.all_sprites.update(dt) 
             self.wave_manager.update()
-            self.ui_manager.root.update(dt)
 
             # Verifier si le joueur est toujours en vie
             if not self.player.alive or not self.kernel.alive:
                 self.game_over = True
                 self.eventManager.publish("GAME_OVER")
-
+        
+        self.ui_manager.root.update(dt)
 
     # Affichage et autre rendu visuel
     def on_render(self):
@@ -189,6 +195,7 @@ class App:
         self.all_sprites.add(self.player, self.kernel)
 
     def quit(self) -> None:
+        print("QUIT")
         self._running = False
 
     def freeze(self) -> None:

@@ -15,26 +15,32 @@ class OSD(UIElement):
             Permet d'afficher du text sur l'ecran
         '''
         # Transparent car beosin que d'afficher du text
+        self.uid = 'OSD'
         self.game = game
         self.image.set_alpha(0)
         self.st = Settings()
+
+        if self.uid:
+            self.child_uid = f"{self.uid}_"
+        else:
+            self.child_uid = ""
     
 
     def post_init(self) -> None:
         # Nombre de vague
-        self.wave_text = UIText(self.st.SCREEN_WIDTH / 2, 50, "Wave", 50, align='center')
-        self.number_wave = UIText(self.st.SCREEN_WIDTH / 2, 50, self.get_wave_number, 'center', text_update=True)
+        self.wave_text = UIText(self.st.SCREEN_WIDTH / 2, 50, "Wave", 50, uid=f"{self.child_uid}wave_text")
+        self.number_wave = UIText(self.st.SCREEN_WIDTH / 2, 50, self.get_wave_number, text_update=True, uid=f"{self.child_uid}wave_number")
 
         # Nombre d'ennemis qui restent
-        self.nmb = UIText(self.st.SCREEN_WIDTH - 50, 60, self.get_len_enemies, 'topright', text_update=True)
+        self.nmb = UIText(self.st.SCREEN_WIDTH - 50, 60, self.get_len_enemies, text_update=True,  uid=f"{self.child_uid}enemis_restant")
 
         # Nombre de FPS
         self.fps = UIText(10, 0, self.get_fps, 50, text_update=True)
 
         # Wallet
         if self.game.walletManager.creatif:
-            self.wallet = UIText(self.st.SCREEN_WIDTH - 50, 20, "CREATIF")
-        else: self.wallet = UIText(self.st.SCREEN_WIDTH - 50, 20, self.get_amount_wallet, text_update=True)
+            self.wallet = UIText(self.st.SCREEN_WIDTH - 50, 20, "CREATIF", uid=f"{self.child_uid}creatif_text")
+        else: self.wallet = UIText(self.st.SCREEN_WIDTH - 50, 20, self.get_amount_wallet, text_update=True, uid=f"{self.child_uid}creatif_text")
 
         # Liste des text enfants
         self.text = [self.wave_text, self.number_wave, self.nmb, self.fps, self.wallet]
