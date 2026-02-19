@@ -1,0 +1,40 @@
+{
+    "ROOT": {
+        "ShopPanel": {
+            "ShopPanel_btn_wall_buy": {
+                "ShopPanel_btn_wall_buy_text": "fin de branche"
+            },
+            "ShopPanel_btn_turret_buy": {
+                "ShopPanel_btn_turret_buy_text": "fin de branche"
+            }
+        },
+        "OSD": {
+            "OSD_wave_text": "fin de branche",
+            "OSD_wave_number": "fin de branche",
+            "OSD_enemis_restant": "fin de branche",
+            "OSD_FPS": "fin de branche",
+            "OSD_gameMode_text": "fin de branche"
+        },
+        "GameOverPanel": {
+            "GameOverPanel_btn_restart": {
+                "GameOverPanel_btn_restart_text": "fin de branche"
+            },
+            "GameOverPanel_btn_quit": {
+                "GameOverPanel_btn_quit_text": "fin de branche"
+            },
+            "GameOverPanel_title_gameOver": "fin de branche"
+        },
+        "PausePanel": {
+            "PausePanel_btn_quit": {
+                "PausePanel_btn_quit_text": "fin de branche"
+            },
+            "PausePanel_btn_restart": {
+                "PausePanel_btn_restart_text": "fin de branche"
+            },
+            "PausePanel_btn_resume": {
+                "PausePanel_btn_resume_text": "fin de branche"
+            },
+            "PausePanel_title_PAUSE": "fin de branche"
+        }
+    }
+}

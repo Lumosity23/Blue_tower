@@ -28,7 +28,14 @@ class App:
 
     # on initialise pygame et tout les object utile pour le jeu
     def on_init(self):
+        # Init des composante de base de pygame
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
+        self.all_sprites = pygame.sprite.Group()
+        self.builds = pygame.sprite.Group()
+        self.enemies = pygame.sprite.Group()
+        self.bullets = pygame.sprite.Group()
+
+        # Init des differents composante du jeu
         self.eventManager = EventManager()
         self.wave_manager = WaveManager(self)
         self.spriteManager = SpriteManager(self)
@@ -38,7 +45,7 @@ class App:
         self.kernel = Kernel(self)
         self.grid = Grid(self)
         self.cursor = Cursor(self)
-        self.mode = "CREATIF"
+        self.mode = "EASY"
         self.walletManager = WalletManager(self)
         self.all_sprites = pygame.sprite.Group()
         self.builds = pygame.sprite.Group()
@@ -67,6 +74,9 @@ class App:
         # si UI recupere l'event alors return
         if self.ui_manager.handle_event(event):
             return
+
+        if self.buildManager.handle_event(event):
+            return
         
         if event.type == pygame.QUIT:
             self._running = False
@@ -74,14 +84,15 @@ class App:
         # Tir d'un projectile    
         elif event.type == pygame.MOUSEBUTTONDOWN:
             m1, m2, m3 = pygame.mouse.get_pressed()
-            if m1:
-                current_time = pygame.time.get_ticks()
-                if current_time - self.last_time_shoot > self.st.BULLET_COOLDOWN:
-                    # Creation d'un projectile si clic de souris
-                    bullet = Bullet(self.player.rect.centerx, self.player.rect.centery, target_pos=pygame.mouse.get_pos())
-                    self.bullets.add(bullet)
-                    self.all_sprites.add(bullet)
-                    self.last_time_shoot = current_time
+            if not self.edit:    
+                if m1:
+                    current_time = pygame.time.get_ticks()
+                    if current_time - self.last_time_shoot > self.st.BULLET_COOLDOWN:
+                        # Creation d'un projectile si clic de souris
+                        bullet = Bullet(self.player.rect.centerx, self.player.rect.centery, target_pos=pygame.mouse.get_pos())
+                        self.bullets.add(bullet)
+                        self.all_sprites.add(bullet)
+                        self.last_time_shoot = current_time
             # Systeme de build        
             if self.edit:
                 # Creation d'un mur

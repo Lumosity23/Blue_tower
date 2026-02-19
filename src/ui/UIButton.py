@@ -47,7 +47,7 @@ class UIButton(UIElement):
         
         else:
             for c in color:
-                new_color = 255 - c              #c * 1.1
+                new_color = 255 - c #c * 1.1
                 if new_color == 255:
                     new_color -= 50
                 elif new_color == 0:

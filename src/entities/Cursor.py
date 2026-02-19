@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from main import App
+    from entities.buildings.Building import Building
 
 
 class Cursor(pygame.sprite.Sprite):
@@ -35,6 +36,7 @@ class Cursor(pygame.sprite.Sprite):
 
         for sprite in self.game.all_sprites:
             # Si ce n'est pas un mur (donc c'est un joueur ou ennemi)
+            sprite: "Building"
             if sprite not in self.game.builds:
                 if sprite != self:
                     if self.rect.colliderect(sprite.rect):
@@ -48,3 +50,8 @@ class Cursor(pygame.sprite.Sprite):
             return
 
         #self.image.set_alpha(50)
+    
+    
+    def handle_event(self, event) -> bool:
+
+        pass

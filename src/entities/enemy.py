@@ -6,7 +6,7 @@ if TYPE_CHECKING:
 
 
 class Enemie(pygame.sprite.Sprite):
-    def __init__(self, x: int, y: int, size: tuple, game: "App", type:int=0):
+    def __init__(self, x: int, y: int, size: tuple, game: "App", type:int=1):
         super().__init__()
         self.game = game
         self.type = type
@@ -61,9 +61,10 @@ class Enemie(pygame.sprite.Sprite):
             mort de l'enemis et ajout au event
         '''
         self.kill()
-        self.game.eventManager.publish("ENEMY_KILLED", self.type)
+        amount: int = self.type * 20
+        self.game.eventManager.publish("ENEMY_KILLED", amount)
 
-        
+
     def next_target(self):
 
         cx, cy = self.game.grid.get_cell_pos(self.pos.x, self.pos.y)

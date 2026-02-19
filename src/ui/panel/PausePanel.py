@@ -9,10 +9,11 @@ if TYPE_CHECKING:
 class PausePanel(UIPanel):
 
     def __init__(self, game: "App", uid = None):
-        super().__init__(50, 50, game.st.SCREEN_WIDTH - 100, game.st.SCREEN_HEIGHT - 100, (45, 45, 45), uid)
+        super().__init__(-50, -50, game.st.SCREEN_WIDTH + 100, game.st.SCREEN_HEIGHT + 100, (45, 45, 45), uid)
         self.game = game
         self.st = game.st
         self.visible = False
+        self.image.set_alpha(230)
         self.uid = "PausePanel"
         if self.uid:
             child_uid = f"{self.uid}_"

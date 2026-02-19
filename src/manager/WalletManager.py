@@ -19,6 +19,7 @@ class WalletManager:
         # Declaration des subscribe
         self.game.eventManager.subscribe("ERROR_PAYMENT", self.error)
         self.game.eventManager.subscribe("NEW_GAME", self.reset)
+        self.game.eventManager.subscribe("ENEMY_KILLED", self.earn_money)
 
     
     def buy(self, amount: int) -> bool:

@@ -17,7 +17,6 @@ class OSD(UIElement):
         # Transparent car beosin que d'afficher du text
         self.uid = 'OSD'
         self.game = game
-        self.image.set_alpha(0)
         self.st = Settings()
 
         if self.uid:
@@ -35,15 +34,19 @@ class OSD(UIElement):
         self.nmb = UIText(self.st.SCREEN_WIDTH - 50, 60, self.get_len_enemies, text_update=True,  uid=f"{self.child_uid}enemis_restant")
 
         # Nombre de FPS
-        self.fps = UIText(10, 0, self.get_fps, 50, text_update=True)
+        self.FPS = UIText(10, 0, self.get_fps, 50, text_update=True, uid=f"{self.child_uid}FPS")
 
         # Wallet
-        if self.game.walletManager.creatif:
-            self.wallet = UIText(self.st.SCREEN_WIDTH - 50, 20, "CREATIF", uid=f"{self.child_uid}creatif_text")
-        else: self.wallet = UIText(self.st.SCREEN_WIDTH - 50, 20, self.get_amount_wallet, text_update=True, uid=f"{self.child_uid}creatif_text")
+        if not self.game.walletManager.creatif:
+            self.wallet = UIText(self.st.SCREEN_WIDTH - 50, 20, self.get_amount_wallet, text_update=True, uid=f"{self.child_uid}creatif_text")
+        else: self.wallet = None
 
+        self.gameMode = UIText(self.st.SCREEN_WIDTH - 50, 20, self.game.mode, uid=f"{self.child_uid}gameMode_text")
         # Liste des text enfants
-        self.text = [self.wave_text, self.number_wave, self.nmb, self.fps, self.wallet]
+        if not self.wallet:
+            self.text = [self.wave_text, self.number_wave, self.nmb, self.FPS, self.gameMode]
+        else:
+            self.text = [self.wave_text, self.number_wave, self.nmb, self.FPS, self.gameMode, self.wallet]
 
         # ajout des text aux enfants
         for child in self.text:

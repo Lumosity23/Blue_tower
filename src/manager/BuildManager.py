@@ -1,3 +1,4 @@
+import pygame
 from entities.buildings.Building import Building
 from typing import TYPE_CHECKING
 
@@ -9,6 +10,7 @@ class BuildManager():
 
     def __init__(self, game: "App"):
         self.game = game
+        self.selected_build: "Building" = None
         self.build_maker = {}
 
     def attemp_build(self, MousPos, type: int) -> None:
@@ -60,3 +62,40 @@ class BuildManager():
         
         else:
             print(f"ce type de batiment n'exite pas dans mon repertoire : {type_name}")
+    
+    
+    def handle_event(self, event) -> bool:
+        # Voir si un batiment a manger l'event
+        
+        if self.game.edit:
+            button = 1
+        else: button = 3
+
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == button:
+            # On check si on a cliquer sur un batiments
+            build: "Building"
+            clicked_build = None
+            for build in self.game.builds:
+                if build.rect.collidepoint(event.pos):
+                    clicked_build = build
+                    break
+            
+            # Si batiment a intersepter le clic
+            if clicked_build:
+                if self.selected_build:
+                    self.selected_build.deselect()
+                # On selectionne le nouveau batiment
+                self.selected_build = clicked_build
+                self.selected_build.select()
+                return True
+
+            # Si clique dans le vide -> deselection du seleted_build
+            else:
+                if self.selected_build:
+                    self.selected_build.deselect()
+                    self.selected_build = None
+            
+        for build in self.game.builds:
+            build.handle_event(event)
+
+        return False

@@ -20,13 +20,14 @@ class UIManager():
         self.st = self.game.st
         self.edit_mode = False
         self.layout_path = self.st.UI_LAYOUT_PATH
+        self.tree_path = self.st.UI_TREE_PATH
         self.layout = self.load_layout()
 
         # On injecte les données dans la classe statique
         UIElement.load_layout_cache(self.layout)
 
         # Init de notre bloc logic pour le UI
-        self.root = UIElement(0, 0, self.st.SCREEN_WIDTH, self.st.SCREEN_HEIGHT)
+        self.root = UIElement(0, 0, self.st.SCREEN_WIDTH, self.st.SCREEN_HEIGHT, uid="ROOT")
         
         # pour le debug pour l'instant
         self.selected_element = None
@@ -114,7 +115,10 @@ class UIManager():
         if event.type == pygame.KEYDOWN and event.key == pygame.K_g:
             if not self.shop_panel.visible:
                 self.shop_panel.show()
-            else : self.shop_panel.hide()
+                return
+            else : 
+                self.shop_panel.hide()
+                return
 
         # SI ON EST EN MODE ÉDITION : ON DÉPLACE 
         if self.edit_mode:
@@ -127,10 +131,15 @@ class UIManager():
     def handle_editor_event(self, event):
         mouse_pos = pygame.mouse.get_pos()
 
-        # Sauvgarde de l'OSD via CTRL + S
+        
         if event.type == pygame.KEYDOWN:
+            # Sauvgarde de l'OSD via CTRL + S
             if event.key == pygame.K_s and (pygame.key.get_mods() & pygame.KMOD_CTRL):
                 self.save_layout()
+                return True
+            # Sauvgarde de l'arbre genealogique du UI via CTRL + T
+            if event.key == pygame.K_t and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+                self.save_tree(self.root)
                 return True
             
         # A. Clic Gauche : On attrape un élément
@@ -191,6 +200,34 @@ class UIManager():
             return None
 
         else: return None
+
+    def save_tree(self, parent: "UIElement") -> None:
+        """Parcourt l'arbre UI et sauvegarde les positions."""
+        print(" Sauvegarde du Tree en cours...")
+
+        # Fonction récursive interne pour visiter tout l'arbre
+        def collect_data(element: "UIElement") -> dict:
+            # Si l'élément a un ID, on sauvegarde ses infos
+            own_tree = {}
+            if element.uid:
+                if element.children:
+                    # print("enfant detecter...")
+                    for child in element.children:
+                        own_tree[f"{child.uid}"] = collect_data(child)
+                else:
+                    return "fin de branche"
+                    
+            # retourne l'arbre de l'element
+            return own_tree
+            
+        # On lance la collecte depuis la racine
+        data_to_save = {f"{parent.uid}" : collect_data(parent)}
+
+        # On écrit dans le fichier
+        with open(self.tree_path, 'w') as f:
+            json.dump(data_to_save, f, indent=4) # indent=4 pour que ce soit joli à lire
+            
+        print(f"Tree sauvegardé dans {self.layout_path} !")
 
 
     def on_upgade_panel(self) -> None:

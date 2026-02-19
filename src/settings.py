@@ -96,6 +96,7 @@ class Settings:
 
     #### UI ####
     UI_LAYOUT_PATH = 'src/ui/layout.json'
+    UI_TREE_PATH = 'src/ui/tree.json'
 
     ### COLOR ####
     VISION_HUMAIN = 128

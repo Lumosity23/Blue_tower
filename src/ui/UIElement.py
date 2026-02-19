@@ -23,7 +23,7 @@ class UIElement:
         '''
         self.uid = uid
         self.rect = pygame.Rect(x, y, w, h)
-        
+        self.cfg_loaded = False
         # 3. AUTO-CONFIGURATION SANS 'GAME'
         # On regarde directement dans la variable de classe
         if self.uid and self.uid in UIElement._LAYOUT_CACHE:
@@ -34,6 +34,7 @@ class UIElement:
             self.rect.y = cfg.get("y", y)
             self.rect.width = cfg.get("w", w)
             self.rect.height = cfg.get("h", h)
+            self.cfg_loaded = True
 
         self.absolute_rect = None
         self.pos = pygame.math.Vector2(self.rect.x, self.rect.y)
@@ -114,7 +115,7 @@ class UIElement:
             child.update(dt)
     
 
-    def handle_event(self, event):
+    def handle_event(self, event) -> bool:
         """
         Renvoie True si l'événement a été traité par cet élément ou un enfant.
         """
