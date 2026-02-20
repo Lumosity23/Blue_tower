@@ -1,5 +1,5 @@
 import pygame
-from pygame.locals import *
+#from pygame.locals import *
 from settings import Settings
 from entities.player import Player
 from entities.bullet import Bullet
@@ -206,7 +206,6 @@ class App:
         self.all_sprites.add(self.player, self.kernel)
 
     def quit(self) -> None:
-        print("QUIT")
         self._running = False
 
     def freeze(self) -> None:

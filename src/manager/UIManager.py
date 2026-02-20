@@ -206,7 +206,7 @@ class UIManager():
         print(" Sauvegarde du Tree en cours...")
 
         # Fonction récursive interne pour visiter tout l'arbre
-        def collect_data(element: "UIElement") -> dict:
+        def collect_data(element: "UIElement") -> dict | str:
             # Si l'élément a un ID, on sauvegarde ses infos
             own_tree = {}
             if element.uid:

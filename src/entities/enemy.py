@@ -10,17 +10,17 @@ class Enemie(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         self.type = type
-        self.image = self.game.spriteManager.get_custom_sprite(self.game.st.ENEMIE_SPRITE, size, 'circle')
+        self.image = self.game.spriteManager.get_custom_sprite(self.game.st.ENEMIE, size, 'circle')
         self.rect = self.image.get_rect(center=(x,y))
         self.pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
         self.director_vector = pygame.math.Vector2()
-        self.velocity = 90
+        self.velocity = 150
         self.max_hp = self.game.st.ENEMIE_HEALTH # * (WaveManager.wave_difficulty / 10) <<< risquer car on multiplie p-e par 0
         self.current_hp = self.max_hp
         self.health_bar = None
         self.size = size
         self.arrived = True
-        self.target_pos = None
+        self.target_pos: pygame.math.Vector2
 
 
     def update(self, dt):
@@ -41,8 +41,8 @@ class Enemie(pygame.sprite.Sprite):
         if length > 0:
             self.director_vector = self.director_vector.normalize()
 
-        if length > 10:
-            # mise a jour de la position du joueur
+        if length > 1:
+            # mise a jour de la position de l'enemie
             self.pos += self.director_vector * self.velocity * dt
             self.rect.center = self.pos
 
@@ -65,12 +65,12 @@ class Enemie(pygame.sprite.Sprite):
         self.game.eventManager.publish("ENEMY_KILLED", amount)
 
 
-    def next_target(self):
+    def next_target(self) -> tuple[int, int] :
 
         cx, cy = self.game.grid.get_cell_pos(self.pos.x, self.pos.y)
 
         neighbors = self.game.grid.get_neighbors(cx, cy)
-        next_cell = None
+        next_cell: tuple[int, int] = None
         cheapest_cell = float('inf')
         
         for n, cost in neighbors.items():

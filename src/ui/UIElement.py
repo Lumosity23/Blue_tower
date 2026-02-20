@@ -15,7 +15,7 @@ class UIElement:
         print("💾 UIElement : Configuration Layout chargée !")
 
     
-    def __init__(self, x: int, y: int, w: int, h: int, uid: str=None):
+    def __init__(self, x: int, y: int, w: int, h: int, uid: str | None = None):
         '''
             un element de UI requiert toute ses dimentsion : (x, y) et W and H\n
             et ensuie l'instance du jeu : game et si il est un enfant (children)\n
@@ -195,12 +195,12 @@ class UIElement:
             Permet d'affcher l'ement sur l'ecran
         """
         self.visible = True
-        self.reset_position()
+        """ self.reset_position()
         
         child: "UIElement"
         if self.children:
             for child in self.children:
-                child.reset_position()
+                child.reset_position() """
 
 
     def hide(self) -> None:

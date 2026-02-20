@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 class UIButton(UIElement):
 
-    def __init__(self, x, y, w, h, text, on_click_callback, color: tuple=(0, 0, 0), size_text: int=50, text_color: tuple=(255, 255, 255), border_radius: int=15, uid=None):
+    def __init__(self, x, y, w, h, text, on_click_callback, color: tuple[int, int, int]=(0, 0, 0), size_text: int=50, text_color: tuple[int, int, int]=(255, 255, 255), border_radius: int=15, uid=None):
         # Init le text du bouton
         if uid:
             uid_text = f"{uid}_text"

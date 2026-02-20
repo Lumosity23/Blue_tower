@@ -10,10 +10,10 @@ class BuildManager():
 
     def __init__(self, game: "App"):
         self.game = game
-        self.selected_build: "Building" = None
+        self.selected_build: Building | None = None
         self.build_maker = {}
 
-    def attemp_build(self, MousPos, type: int) -> None:
+    def attemp_build(self, MousPos, type: str) -> None:
         '''
             permet de construir un batiment a la position donnee
         '''
@@ -97,5 +97,5 @@ class BuildManager():
             
         for build in self.game.builds:
             build.handle_event(event)
-
+        
         return False

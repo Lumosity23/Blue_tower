@@ -4,14 +4,16 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from main import App
+    from entities.buildings.Building import Building
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, game: "App"):
         super().__init__()
         self.game = game
+        self.type = self.game.st.PLAYER
         self.size = (self.game.st.PLAYER_WIDTH, self.game.st.PLAYER_HEIGHT)
-        self.image = self.game.spriteManager.get_custom_sprite(self.game.st.PLAYER_SPRITE, self.size)
+        self.image = self.game.spriteManager.get_custom_sprite(self.game.st.PLAYER, self.size)
         self.rect = self.image.get_rect(center=(self.game.st.SCREEN_WIDTH / 2, self.game.st.SCREEN_HEIGHT / 2))
         self.velocity = 500
         self.pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
@@ -19,6 +21,9 @@ class Player(pygame.sprite.Sprite):
         self.current_hp = self.max_hp
         self.damage = self.current_hp
         self.alive = True
+        self.current_cell: tuple[int, int] = self.game.grid.get_cell_pos(self.rect.x, self.rect.y)
+
+
         self.game.eventManager.subscribe("NEW_GAME", self.reset)
         
     def update(self, dt):
@@ -39,7 +44,7 @@ class Player(pygame.sprite.Sprite):
         # check de collisions
         hits = pygame.sprite.spritecollide(self, self.game.builds, False)
         if hits: # si collision
-            hit: object = hits[0]
+            hit: Building = hits[0]
             # collision a gauche
             if keys[pygame.K_LEFT] | keys[pygame.K_a]:
                  self.rect.left = hit.rect.right
@@ -72,6 +77,14 @@ class Player(pygame.sprite.Sprite):
                 self.pos.y = self.rect.y       
         # check collision avec la fenetre et les murs
         self.constraints_screen()
+        new_cell = self.game.grid.get_cell_pos(self.rect.x, self.rect.y)
+        if new_cell != self.current_cell:
+            nx, ny = new_cell
+            oldx, oldy = self.current_cell
+            self.game.grid.set_cell_value(oldx, oldy, self.game.st.EMPTY, True)
+            self.game.grid.set_cell_value(nx, ny, self.type, True)
+            self.game.grid.update_flow_field(self.game.kernel.pos)
+            self.current_cell = new_cell
     
 
     def constraints_screen(self):

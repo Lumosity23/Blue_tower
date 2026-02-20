@@ -23,7 +23,7 @@ class Grid():
         self.game.eventManager.subscribe("RESTART_GAME", self.restart)
 
 
-    def init_grid(self):
+    def init_grid(self) -> dict[tuple[int, int], Cell]:
         # Initialisation de la grid
         cells = {}
         for cols in range(self.cols):
@@ -56,7 +56,7 @@ class Grid():
 
 
 
-    def get_cell_value(self, posx, posy) -> int | None:
+    def get_cell_value(self, posx, posy) -> str | None:
         
         gx = posx // self.cell_size
         gy = posy // self.cell_size
@@ -67,7 +67,7 @@ class Grid():
         return None
 
     def set_cell_value(self, posx, posy, value, already_cell_pos: bool=False) -> None:
-        
+        ''' donner la position, donner la valeur a inscrire : str ex: WALL == 1'''
         if not already_cell_pos:
             gx = posx // self.cell_size
             gy = posy // self.cell_size
@@ -80,7 +80,7 @@ class Grid():
                 self.grid[posx, posy].type = value
 
 
-    def get_cell_pos(self, posx: float, posy: float) -> tuple:
+    def get_cell_pos(self, posx: int, posy: int) -> tuple[int, int]:
         
         gx = posx // self.cell_size
         gy = posy // self.cell_size
@@ -94,7 +94,7 @@ class Grid():
             return cell_pos
         
     
-    def get_cell_isOccupied(self, posx, posy) -> bool:
+    def get_cell_isOccupied(self, posx, posy) -> bool | None:
 
         gx = posx // self.cell_size
         gy = posy // self.cell_size
@@ -142,7 +142,7 @@ class Grid():
                self.grid[cell].isOccupied = not self.grid[cell].isOccupied
 
 
-    def get_cost(self, posx, posy, alredy_cell: bool=False):
+    def get_cost(self, posx, posy, alredy_cell: bool=False) -> int | None:
         
         # FONCTIONNE
         if alredy_cell:
@@ -196,20 +196,22 @@ class Grid():
 
             for neighbor in self.getValidNeighbors(cx, cy):
                 
-                cell_cost = self.get_cost(neighbor[0], neighbor[1], True)
+                nx, ny = neighbor
+                cell_cost = self.get_cost(nx, ny, True)
 
                 if neighbor in self.flow_field:
                     continue
                 
                 # Nouveau cout (node actuel + cout du voisin)
-                new_cost = current_cost + cell_cost
+                if cell_cost == 0: new_cost = 0
+                else: new_cost = current_cost + cell_cost
 
                 if new_cost < self.flow_field.get(neighbor, float('inf')):
                     self.flow_field[neighbor] = new_cost
                     heapq.heappush(pq, (new_cost, neighbor))
 
     
-    def get_neighbors(self, x, y) -> dict[tuple:int]:
+    def get_neighbors(self, x, y) -> dict[tuple, int]:
         '''
             revoie un dict de coordonner (tuple) de cell avec leur valeur (int)
         '''

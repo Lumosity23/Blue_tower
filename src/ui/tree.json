@@ -6,6 +6,9 @@
             },
             "ShopPanel_btn_turret_buy": {
                 "ShopPanel_btn_turret_buy_text": "fin de branche"
+            },
+            "ShopPanel_btn_test": {
+                "ShopPanel_btn_test_text": "fin de branche"
             }
         },
         "OSD": {
@@ -13,7 +16,8 @@
             "OSD_wave_number": "fin de branche",
             "OSD_enemis_restant": "fin de branche",
             "OSD_FPS": "fin de branche",
-            "OSD_gameMode_text": "fin de branche"
+            "OSD_gameMode_text": "fin de branche",
+            "OSD_creatif_text": "fin de branche"
         },
         "GameOverPanel": {
             "GameOverPanel_btn_restart": {
