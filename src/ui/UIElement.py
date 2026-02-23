@@ -165,8 +165,7 @@ class UIElement:
             et dessine ses enfants juste apres si il y en a !
         ''' 
         # Verifier que l'element dois etre afficher
-        if not self.visible:
-            return
+        if not self.visible: return
         
         abs_rect = self.get_absolute_rect()
         surface.blit(self.image, abs_rect)

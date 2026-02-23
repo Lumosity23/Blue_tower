@@ -9,11 +9,11 @@ if TYPE_CHECKING:
 
 class UIButton(UIElement):
 
-    def __init__(self, x, y, w, h, text, on_click_callback, color: tuple[int, int, int]=(0, 0, 0), size_text: int=50, text_color: tuple[int, int, int]=(255, 255, 255), border_radius: int=15, uid=None):
+    def __init__(self, x, y, text, on_click_callback, color: tuple[int, int, int]=(0, 0, 0), size_text: int=50, text_color: tuple[int, int, int]=(255, 255, 255), border_radius: int=15, uid=None):
         # Init le text du bouton
         if uid:
             uid_text = f"{uid}_text"
-        else: uid_text = None
+        else: uid_text: str | None = None
         self.text = UIText(20, 10, text, size_text, text_color, uid=uid_text)
         super().__init__(x, y, self.text.rect.w + 40, self.text.rect.h + 20, uid)
         self.add_child(self.text)
@@ -41,7 +41,7 @@ class UIButton(UIElement):
         r, g, b = color
         l = (0.2126 * r) + (0.7152 * g) + (0.0722 * b)
         
-        if l > Settings.VISION_HUMAIN:
+        if l > 128:
             for c in list(color):
                 self.color_hover += (c * 0.9,)
         
@@ -71,7 +71,7 @@ class UIButton(UIElement):
             color = self.color_pressed
 
         # On dessine le rectangle arrondi avec la bonne couleur
-        pygame.draw.rect(self.image, color, (0, 0, self.rect.w, self.rect.h), border_radius=self.border_radius)
+        pygame.draw.rect(self.image, color, (0, 0, self.rect.w, self.rect.h), border_radius=self.border_radius)  # (0, 0, self.rect.w, self.rect.h)
 
     
     def handle_event(self, event: pygame.event.EventType) -> bool:

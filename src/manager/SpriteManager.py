@@ -1,83 +1,81 @@
 import pygame
+import os
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from main import App
 
 
 class SpriteManager:
 
+
     def __init__(self, game: "App"):
-        
         self.game = game
         self.st = self.game.st
-        self.sprite_cache = {}
-    
-
-    def draw_health_bar(self, entity, surface: pygame.Surface, x: int=None, y: int=None, size: tuple=None) -> None:
-        # 1. Calcul du ratio de vie (entre 0.0 et 1.0)
-        # On évite la division par zéro par sécurité
-        if entity.max_hp <= 0: return
-        ratio = entity.current_hp / entity.max_hp
         
-        if not x and not y and not size: 
-            # 2. Définir la position et la taille de la BARRE
-            # On veut qu'elle soit au-dessus de l'objet
-            bar_width = entity.rect.width # Même largeur que l'objet
-            bar_height = 5
-
-            # Position X : La même que l'objet
-            # Position Y : Un peu au-dessus (ex: -10 pixels)
-            x = entity.rect.x
-            y = entity.rect.y - 10
+        # 1. CACHE : On stocke les images originales pour éviter de relire le disque
+        # { "player": <pygame.Surface>, "wall": <pygame.Surface>, ... }
+        self.image_cache = {}
         
-        # si custom bar
-        else:
-            bar_width, bar_height = size
-            x -= bar_width / 2
-            y -= bar_height / 2
-        # 3. Dessiner le FOND (Rouge ou Noir) -> La barre vide
-        # Rect(x, y, width, height)
-        back_rect = pygame.Rect(x, y, bar_width, bar_height)
-        pygame.draw.rect(surface, (60, 60, 60), back_rect) # Gris foncé/Noir
-        
-        # 4. Dessiner la VIE (Vert) -> La barre pleine
-        # Sa largeur dépend du ratio !
-        fill_width = bar_width * ratio
-        fill_rect = pygame.Rect(x, y, fill_width, bar_height)
-        
-        # Petit détail esthétique : Couleur change selon la vie
-        color = (0, 255, 0) # Vert
-        if ratio < 0.3: color = (255, 0, 0) # Rouge si critique
-        
-        pygame.draw.rect(surface, color, fill_rect)
+        # 2. FONTS : Génération dynamique des tailles
+        self.fonts = {}
+        self.init_fonts(25, 200, 5)
 
 
-    def get_custom_sprite(self, type_path: str, size: tuple[int, int]=(64, 64), shape: str='square') -> pygame.Surface: 
-        """   
-            Charge une image, la redimensionne et applique une forme.\n
+    def init_fonts(self, start: int, end: int, step: int):
+        """ Génère des polices de caractères de façon dynamique """
+        pygame.font.init()
+        # On récupère le chemin depuis les settings ou un défaut
+        font_path = 'assets/font/boldpixels/BoldPixels.ttf'
         
-            path: chemin vers le sprite en png\n
-            size: tuple de taille (x, y)\n
-            shape: 'square' ou 'circle'
+        if not os.path.exists(font_path):
+            print(f"Attention: Police introuvable à {font_path}. Utilisation de la police système.")
+            font_path = None # Utilise la police par défaut de Pygame
+
+        for size in range(start, end + step, step):
+            self.fonts[size] = pygame.font.Font(font_path, size)
+        
+        print(f"SpriteManager: {len(self.fonts)} tailles de polices chargées.")
+
+
+    # ==========================================
+    # GESTION DES IMAGES
+    # ==========================================
+    def get_base_image(self, sprite_id: str) -> pygame.Surface:
+        """ Récupère l'image originale (chargement 'paresseux') """
+        if sprite_id not in self.image_cache:
+            # On cherche le chemin dans Settings.ASSET_PATHS
+            path = self.st.ASSET_PATHS.get(sprite_id)
+            if not path or not os.path.exists(path):
+                # Image de secours (Carré rose de debug)
+                surf = pygame.Surface((64, 64))
+                surf.fill((255, 0, 255))
+                self.image_cache[sprite_id] = surf
+                print(f"SpriteManager Error: ID '{sprite_id}' non trouvé.")
+            else:
+                self.image_cache[sprite_id] = pygame.image.load(path).convert_alpha()
+        
+        return self.image_cache[sprite_id]
+
+
+    def get_sprite_resize(self, sprite_id: str, size: tuple[int, int]) -> pygame.Surface:
+        """ 
+        Méthode demandée : Récupère un sprite et le redimensionne direct.
+        Très utile pour les balles ou les effets temporaires.
         """
-        # 1. Chargement et redimensionnement
-        try:
-            image = self.game.st.get_sprite(type_path).convert_alpha()
-        except FileNotFoundError:
-            print(f"Erreur: Image non trouvée {type_path}")
-            return pygame.Surface(size, (0,255,0)) # Retourne une surface vide ou rose par défaut
+        base_img = self.get_base_image(sprite_id)
+        return pygame.transform.smoothscale(base_img, size)
+
+
+    def get_custom_sprite(self, sprite_id: str, size: tuple[int, int] = (64, 64), shape: str = 'square') -> pygame.Surface: 
+        """ Charge, redimensionne et applique une forme (Cercle ou Carré) """
+        image = self.get_sprite_resize(sprite_id, size)
         
-        image = pygame.transform.scale(image, size)
-        
-        # 2. Application de la forme
         if shape == 'circle':
-            # Créer une surface vide transparente
             final_surf = pygame.Surface(size, pygame.SRCALPHA)
-            # Dessiner le masque (cercle blanc)
             radius = min(size[0], size[1]) // 2
             pygame.draw.circle(final_surf, (255, 255, 255), (radius, radius), radius)
-            # Appliquer l'image sur le masque
             final_surf.blit(image, (0, 0), special_flags=pygame.BLEND_RGBA_MIN)
-            image = final_surf
+            return final_surf
     
         return image

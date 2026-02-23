@@ -9,7 +9,8 @@ class WalletManager:
 
     def __init__(self, game: "App"):
         self.game = game
-        self.init_amount = self.game.st.MODE[self.game.mode]
+        self.diff_mtp = self.game.st.DIFFICULTY_MTP.get(self.game.mode, "NORMAL")
+        self.init_amount = 1000 * self.diff_mtp
         self.amount = self.init_amount
         self.creatif = False
         if not self.amount:

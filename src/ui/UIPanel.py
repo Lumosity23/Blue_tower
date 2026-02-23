@@ -1,5 +1,6 @@
 import pygame
 from .UIElement import UIElement
+from .UIText import UIText
 
 
 class UIPanel(UIElement):
@@ -11,7 +12,11 @@ class UIPanel(UIElement):
 
         self.border_color = (255, 255, 255) # Blanc par defaut
         self.border_width = 2 # Pixel
+    
 
+    def set_label(self, text) -> None:
+        self.label = UIText(self.rect.centerx, self.rect.top - 30, text, 100, uid="text_panel")
+        self.add_child(self.label)
     
     def draw(self, surface):
         super().draw(surface)

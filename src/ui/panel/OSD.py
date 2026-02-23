@@ -1,5 +1,6 @@
 from ui.UIElement import UIElement
 from ui.UIText import UIText
+from ui.UIProgressBar import UIProgressBar
 from settings import Settings
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -23,12 +24,14 @@ class OSD(UIElement):
             self.child_uid = f"{self.uid}_"
         else:
             self.child_uid = ""
-    
+
+        self.game.eventManager.subscribe("UPDATE_KERNEL_HP", self.update_hud_hp)
+
 
     def post_init(self) -> None:
         # Nombre de vague
-        self.wave_text = UIText(self.st.SCREEN_WIDTH / 2, 50, "Wave", 50, uid=f"{self.child_uid}wave_text")
-        self.number_wave = UIText(self.st.SCREEN_WIDTH / 2, 50, self.get_wave_number, text_update=True, uid=f"{self.child_uid}wave_number")
+        self.wave_text = UIText(self.st.SCREEN_WIDTH // 2, 50, "Wave", 50, uid=f"{self.child_uid}wave_text")
+        self.number_wave = UIText(self.st.SCREEN_WIDTH // 2, 50, self.get_wave_number, text_update=True, uid=f"{self.child_uid}wave_number")
 
         # Nombre d'ennemis qui restent
         self.nmb = UIText(self.st.SCREEN_WIDTH - 50, 60, self.get_len_enemies, text_update=True,  uid=f"{self.child_uid}enemis_restant")
@@ -42,22 +45,36 @@ class OSD(UIElement):
         else: self.wallet = None
 
         self.gameMode = UIText(self.st.SCREEN_WIDTH - 50, 20, self.game.mode, uid=f"{self.child_uid}gameMode_text")
+        
+        self.kernel_hp_bar = UIProgressBar(
+            x=self.game.st.SCREEN_WIDTH // 2 - 100, # Centré en haut
+            y=20, 
+            w=400, h=40,
+            uid="HUD_KERNEL_HP"
+        )
+        self.kernel_hp_bar.dynamic_color = True
+
         # Liste des text enfants
         if not self.wallet:
-            self.text = [self.wave_text, self.number_wave, self.nmb, self.FPS, self.gameMode]
+            self.text = [self.wave_text, self.number_wave, self.nmb, self.FPS, self.gameMode, self.kernel_hp_bar]
         else:
-            self.text = [self.wave_text, self.number_wave, self.nmb, self.FPS, self.gameMode, self.wallet]
+            self.text = [self.wave_text, self.number_wave, self.nmb, self.FPS, self.gameMode, self.wallet, self.kernel_hp_bar]
 
         # ajout des text aux enfants
         for child in self.text:
             self.add_child(child)
-        
+    
+
+    def update_hud_hp(self, current_hp):
+        # On met à jour la barre qui est dans le HUD
+        self.kernel_hp_bar.update_values(current_hp, self.game.kernel.current_hp)
+
     
     def get_wave_number(self) -> str:
-        return str(self.game.wave_manager.wave_number)
+        return str(self.game.sceneManager.entityManager.waveManager.wave_number)
     
     def get_len_enemies(self) -> str:
-        return str(len(self.game.enemies))
+        return str(len(self.game.sceneManager.entityManager.get_entities("ENEMY")))
 
     def get_fps(self) -> str:
         return str(int(self.game.clock.get_fps()))

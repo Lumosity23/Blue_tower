@@ -19,9 +19,9 @@ class GameOverPanel(UIPanel):
         else:
             child_uid = ""
 
-        text = UIText(self.st.SCREEN_WIDTH / 2, 100, "GAME OVER !", 100, uid=f"{child_uid}title_gameOver")
-        btn_restart = UIButton(self.st.SCREEN_WIDTH / 2, self.st.SCREEN_HEIGHT / 2, 150, 70, "RESTART", self.restart_game, (255,0,0), uid=f"{child_uid}btn_restart")
-        btn_quit = UIButton(100, 100, 150, 70, "QUIT", self.quit, (255, 80, 0), uid=f"{child_uid}btn_quit")
+        text = UIText(self.st.SCREEN_WIDTH // 2, 100, "GAME OVER !", 100, uid=f"{child_uid}title_gameOver")
+        btn_restart = UIButton(self.st.SCREEN_WIDTH / 2, self.st.SCREEN_HEIGHT / 2, "RESTART", self.restart_game, (255,0,0), uid=f"{child_uid}btn_restart")
+        btn_quit = UIButton(100, 100, "QUIT", self.quit, (255, 80, 0), uid=f"{child_uid}btn_quit")
 
         self.add_child(btn_restart)
         self.add_child(btn_quit)

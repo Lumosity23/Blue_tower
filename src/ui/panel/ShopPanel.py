@@ -1,6 +1,7 @@
 import pygame
 from ui.UIPanel import UIPanel
 from ui.UIButton import UIButton
+from ui.UICompose import UICompose
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from main import App
@@ -11,7 +12,7 @@ class ShopPanel(UIPanel):
     def __init__(self, game: "App"):
         self.game = game
         self.st = self.game.st
-        super().__init__(self.st.SCREEN_WIDTH - 340, 40, 500, self.st.SCREEN_HEIGHT - 80)
+        super().__init__(self.st.SCREEN_WIDTH - 530, 340, 490, self.st.SCREEN_HEIGHT - 380)
         self.uid = "ShopPanel"
         self.visible = False
 
@@ -20,19 +21,21 @@ class ShopPanel(UIPanel):
         else:
             child_uid = ""
 
-        # 2. Création des Boutons DANS le panneau
-        btn_wall = UIButton(10, 10, 120, 80, "Wall", self.buy_wall, (154, 139, 230), 50, uid=f"{child_uid}btn_wall_buy")
-        self.add_child(btn_wall)
-        
-        btn_turret = UIButton(140, 10, 120, 80, "Tourelle", self.buy_turret, (25, 100, 155), 25, uid=f"{child_uid}btn_turret_buy")
-        self.add_child(btn_turret)
+        self.set_label("SHOP")
 
-        btn_test = UIButton(140, 10, 120, 80, "I", self.buy_turret, (25, 100, 155), 25, border_radius=25, uid=f"{child_uid}btn_test")
-        self.add_child(btn_test)
+        # 2. Création des Boutons DANS le panneau
+        sprite_id = self.game.st.BUILDINGS_DATA["WALL"]["sprite_id"]
+        cost = self.game.st.BUILDINGS_DATA["WALL"]["cost"]
+
+        for col in range(2):
+            for row in range(3):
+                
+                element = UICompose(30 + (col * 230), 160 + (row * 230), 200, 200, "test", self.game.spriteManager.get_base_image(sprite_id), self.buy_wall, f"{str(cost)} $", f"{child_uid}{col}{row}" )
+                self.add_child(element)
+
 
     def buy_wall(self):
-        # Ici tu appelles ton EventBus ou ton BuildManager
-        self.game.buildManager.attemp_build(pygame.mouse.get_pos(), "WALL")
+        self.game.eventManager.publish("SELECT_BUILD", "WALL")
 
     def buy_turret(self):
-        self.game.buildManager.attemp_build(pygame.mouse.get_pos(), "TURRET")
+        self.game.eventManager.publish("SELECT_BUILD", "TURRET")

@@ -2,49 +2,199 @@
     "ROOT": {
         "x": 0,
         "y": 0,
-        "w": 1600,
-        "h": 1216
+        "w": 1920,
+        "h": 1080
     },
     "ShopPanel": {
-        "x": 1260,
-        "y": 40,
-        "w": 500,
-        "h": 1136
+        "x": 1390,
+        "y": 340,
+        "w": 490,
+        "h": 700
     },
-    "ShopPanel_btn_wall_buy": {
-        "x": 80,
-        "y": 140,
-        "w": 134,
-        "h": 70
+    "text_panel": {
+        "x": 120,
+        "y": 20,
+        "w": 224,
+        "h": 100
     },
-    "ShopPanel_btn_wall_buy_text": {
-        "x": 20,
+    "ShopPanel_00": {
+        "x": 30,
+        "y": 160,
+        "w": 200,
+        "h": 200
+    },
+    "ShopPanel_00_label": {
+        "x": 56,
         "y": 10,
-        "w": 94,
+        "w": 88,
         "h": 50
     },
-    "ShopPanel_btn_turret_buy": {
-        "x": 80,
-        "y": 50,
-        "w": 131,
+    "ShopPanel_00_sprite": {
+        "x": 68,
+        "y": 68,
+        "w": 64,
+        "h": 64
+    },
+    "ShopPanel_00_btn": {
+        "x": 53,
+        "y": 140,
+        "w": 95,
         "h": 45
     },
-    "ShopPanel_btn_turret_buy_text": {
+    "ShopPanel_00_btn_text": {
         "x": 20,
         "y": 10,
-        "w": 91,
+        "w": 55,
         "h": 25
     },
-    "ShopPanel_btn_test": {
-        "x": 130,
-        "y": 620,
-        "w": 51,
+    "ShopPanel_01": {
+        "x": 30,
+        "y": 390,
+        "w": 200,
+        "h": 200
+    },
+    "ShopPanel_01_label": {
+        "x": 56,
+        "y": 10,
+        "w": 88,
+        "h": 50
+    },
+    "ShopPanel_01_sprite": {
+        "x": 68,
+        "y": 68,
+        "w": 64,
+        "h": 64
+    },
+    "ShopPanel_01_btn": {
+        "x": 53,
+        "y": 140,
+        "w": 95,
         "h": 45
     },
-    "ShopPanel_btn_test_text": {
+    "ShopPanel_01_btn_text": {
         "x": 20,
         "y": 10,
-        "w": 11,
+        "w": 55,
+        "h": 25
+    },
+    "ShopPanel_02": {
+        "x": 30,
+        "y": 620,
+        "w": 200,
+        "h": 200
+    },
+    "ShopPanel_02_label": {
+        "x": 56,
+        "y": 0,
+        "w": 88,
+        "h": 50
+    },
+    "ShopPanel_02_sprite": {
+        "x": 68,
+        "y": 68,
+        "w": 64,
+        "h": 64
+    },
+    "ShopPanel_02_btn": {
+        "x": 53,
+        "y": 140,
+        "w": 95,
+        "h": 45
+    },
+    "ShopPanel_02_btn_text": {
+        "x": 20,
+        "y": 10,
+        "w": 55,
+        "h": 25
+    },
+    "ShopPanel_10": {
+        "x": 260,
+        "y": 160,
+        "w": 200,
+        "h": 200
+    },
+    "ShopPanel_10_label": {
+        "x": 56,
+        "y": 10,
+        "w": 88,
+        "h": 50
+    },
+    "ShopPanel_10_sprite": {
+        "x": 68,
+        "y": 68,
+        "w": 64,
+        "h": 64
+    },
+    "ShopPanel_10_btn": {
+        "x": 53,
+        "y": 140,
+        "w": 95,
+        "h": 45
+    },
+    "ShopPanel_10_btn_text": {
+        "x": 20,
+        "y": 10,
+        "w": 55,
+        "h": 25
+    },
+    "ShopPanel_11": {
+        "x": 260,
+        "y": 390,
+        "w": 200,
+        "h": 200
+    },
+    "ShopPanel_11_label": {
+        "x": 56,
+        "y": 10,
+        "w": 88,
+        "h": 50
+    },
+    "ShopPanel_11_sprite": {
+        "x": 68,
+        "y": 68,
+        "w": 64,
+        "h": 64
+    },
+    "ShopPanel_11_btn": {
+        "x": 53,
+        "y": 140,
+        "w": 95,
+        "h": 45
+    },
+    "ShopPanel_11_btn_text": {
+        "x": 20,
+        "y": 10,
+        "w": 55,
+        "h": 25
+    },
+    "ShopPanel_12": {
+        "x": 260,
+        "y": 620,
+        "w": 200,
+        "h": 200
+    },
+    "ShopPanel_12_label": {
+        "x": 56,
+        "y": 0,
+        "w": 88,
+        "h": 50
+    },
+    "ShopPanel_12_sprite": {
+        "x": 68,
+        "y": 68,
+        "w": 64,
+        "h": 64
+    },
+    "ShopPanel_12_btn": {
+        "x": 53,
+        "y": 140,
+        "w": 95,
+        "h": 45
+    },
+    "ShopPanel_12_btn_text": {
+        "x": 20,
+        "y": 10,
+        "w": 55,
         "h": 25
     },
     "OSD": {
@@ -54,86 +204,98 @@
         "h": 0
     },
     "OSD_wave_text": {
-        "x": 720,
-        "y": 30,
+        "x": 40,
+        "y": 1010,
         "w": 94,
         "h": 50
     },
     "OSD_wave_number": {
-        "x": 840,
-        "y": 30,
+        "x": 20,
+        "y": 90,
         "w": 28,
         "h": 50
     },
     "OSD_enemis_restant": {
-        "x": 20,
-        "y": 80,
+        "x": 160,
+        "y": 1010,
         "w": 28,
         "h": 50
     },
     "OSD_FPS": {
-        "x": 1540,
-        "y": 10,
+        "x": 1860,
+        "y": 0,
         "w": 28,
         "h": 50
     },
     "OSD_gameMode_text": {
-        "x": 40,
-        "y": 1140,
+        "x": 1780,
+        "y": 1010,
         "w": 112,
         "h": 50
     },
     "OSD_creatif_text": {
         "x": 20,
         "y": 20,
-        "w": 112,
+        "w": 84,
         "h": 50
+    },
+    "HUD_KERNEL_HP": {
+        "x": 760,
+        "y": 20,
+        "w": 400,
+        "h": 40
+    },
+    "HUD_KERNEL_HP_text": {
+        "x": 172,
+        "y": 8,
+        "w": 56,
+        "h": 25
     },
     "GameOverPanel": {
         "x": 50,
         "y": 50,
-        "w": 1500,
-        "h": 1116
+        "w": 1820,
+        "h": 980
     },
     "GameOverPanel_btn_restart": {
-        "x": 1050,
-        "y": 1020,
+        "x": 960,
+        "y": 540,
         "w": 236,
         "h": 70
     },
     "GameOverPanel_btn_restart_text": {
-        "x": 20,
-        "y": 10,
+        "x": 0,
+        "y": 0,
         "w": 196,
         "h": 50
     },
     "GameOverPanel_btn_quit": {
-        "x": 1320,
-        "y": 1020,
+        "x": 100,
+        "y": 100,
         "w": 152,
         "h": 70
     },
     "GameOverPanel_btn_quit_text": {
-        "x": 20,
-        "y": 10,
+        "x": 0,
+        "y": 0,
         "w": 112,
         "h": 50
     },
     "GameOverPanel_title_gameOver": {
-        "x": 450,
-        "y": 30,
+        "x": 0,
+        "y": 0,
         "w": 573,
         "h": 100
     },
     "PausePanel": {
         "x": -50,
         "y": -50,
-        "w": 1700,
-        "h": 1316
+        "w": 2020,
+        "h": 1180
     },
     "PausePanel_btn_quit": {
-        "x": 1470,
-        "y": 1170,
+        "x": 1790,
+        "y": 1040,
         "w": 152,
         "h": 70
     },
@@ -144,8 +306,8 @@
         "h": 50
     },
     "PausePanel_btn_restart": {
-        "x": 1190,
-        "y": 1170,
+        "x": 1520,
+        "y": 1040,
         "w": 236,
         "h": 70
     },
@@ -156,8 +318,8 @@
         "h": 50
     },
     "PausePanel_btn_resume": {
-        "x": 90,
-        "y": 1160,
+        "x": 80,
+        "y": 1040,
         "w": 208,
         "h": 70
     },
@@ -168,8 +330,8 @@
         "h": 50
     },
     "PausePanel_title_PAUSE": {
-        "x": 720,
-        "y": 80,
+        "x": 860,
+        "y": 70,
         "w": 280,
         "h": 100
     }

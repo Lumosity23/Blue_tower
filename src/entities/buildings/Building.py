@@ -1,87 +1,110 @@
 import pygame
+from entities.Entity import Entity
+from ui.UIProgressBar import UIProgressBar
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from main import App
 
-
-class Building(pygame.sprite.Sprite):
-
+class Building(Entity):
+    # Registre automatique des types de bâtiments
     BUILDING_TYPES = {}
 
-    def __init_subclass__(cls, **kargs):
-        super().__init_subclass__(**kargs)
-        
-        # Nom de la classe enfants en maj
-        # Enregistrement de la classe dans le dico
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
         cls.BUILDING_TYPES[cls.__name__.upper()] = cls
 
-
-    def __init__(self, x, y, game: "App"):
-        super().__init__()
+    def __init__(self, x, y, data: dict, game: "App", uid: str = None):
+        # 1. Init Entity (Position Monde)
+        w, h = data.get("size", (game.st.CELL_SIZE, game.st.CELL_SIZE))
+        super().__init__(x, y, w, h, uid)
+        
         self.game = game
-        self.pos = x, y
-        self.is_selected = False
-        self.state = "IDLE"
+        self.data = data # On garde le dictionnaire de config
+        
+        # État
+        self.state = "IDLE" # IDLE, HOVER, SELECTED
+        
+        # Visuel
+        self.source_image = self.game.spriteManager.get_custom_sprite(
+            data.get("sprite_id"), (w, h)
+        )
+        self.image = self.source_image.copy()
 
-        # Valeur par defaut pour le building
-        self.image = pygame.Surface((self.game.st.CELL_SIZE, self.game.st.CELL_SIZE))
-        self.image.fill((255, 0, 255))
-        self.source_image = self.image.copy()
-        self.rect = self.image.get_rect(topleft=self.pos)
-        self.max_hp = 100
+        # Stats issues du dictionnaire
+        self.max_hp = data.get("hp", 100)
         self.current_hp = self.max_hp
-        self.cost = 25
-    
+        self.cost = data.get("cost", 0)
+        self.range = data.get("range", 0)
+
+        # --- ENFANT : Barre de Vie ---
+        # On la crée mais on la cache par défaut (elle ne s'affiche qu'au survol/clic)
+        self.hp_bar = UIProgressBar(x=5, y=-12, w=self.rect.w - 10, h=6, uid=f"{uid}_hp" if uid else None)
+        self.hp_bar.visible = False
+        self.add_child(self.hp_bar)
 
     def handle_event(self, event) -> bool:
-        mouse_pos = pygame.mouse.get_pos()
-        is_hovered = self.rect.collidepoint(mouse_pos)
+        if not self.visible or not self.active: return False
 
-        # Gestion du Survol
+        # On utilise get_screen_rect pour gérer le décalage caméra !
+        screen_rect = self.get_screen_rect()
+        mouse_pos = pygame.mouse.get_pos()
+        is_hovered = screen_rect.collidepoint(mouse_pos)
+
+        # 1. Gestion du Survol (Hover)
         if event.type == pygame.MOUSEMOTION:
-            # On ne perd pas l'état SELECTED si on bouge la souris
             if self.state != "SELECTED":
                 new_state = "HOVER" if is_hovered else "IDLE"
-                # Si changement d'etat
                 if new_state != self.state:
                     self.state = new_state
-                    self.update_appearance()
+                    self.on_state_change()
 
-    
+        # 2. Gestion du Clic (Sélection)
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if is_hovered:
+                self.select()
+                return True
+            else:
+                self.deselect()
+
+        return super().handle_event(event) # Propagation aux enfants si besoin
+
     def select(self) -> None:
-        ''' Appele par le Buildmanager '''
         self.state = "SELECTED"
         self.game.eventManager.publish("BUILDING_SELECTED", self)
-        self.update_appearance()
+        self.on_state_change()
 
-    
     def deselect(self) -> None:
-        ''' Appeler par le Buildmanager '''
-        self.state = "IDLE"
-        self.update_appearance()
+        if self.state == "SELECTED":
+            self.state = "IDLE"
+            self.on_state_change()
 
+    def on_state_change(self):
+        """ Gère les effets visuels selon l'état """
+        # Visibilité de la barre de vie
+        self.hp_bar.visible = (self.state in ["HOVER", "SELECTED"])
+        
+        # On recrée l'image avec un feedback (ex: contour blanc si sélectionné)
+        self.image = self.source_image.copy()
+        if self.state == "SELECTED":
+            pygame.draw.rect(self.image, (255, 255, 255), (0, 0, self.rect.w, self.rect.h), 2)
+        elif self.state == "HOVER":
+            # Petit effet de brillance/teinte légère
+            self.image.fill((30, 30, 30), special_flags=pygame.BLEND_RGB_ADD)
 
     def take_damage(self, amount):
         self.current_hp -= amount
+        self.hp_bar.update_values(self.current_hp, self.max_hp)
         if self.current_hp <= 0:
             self.die()
-    
 
     def die(self):
-        self.kill()
+        self.active = False
+        self.visible = False
+        # Logique de destruction (libérer la grille)
+        self.game.eventManager.publish("BUILDING_DESTROYED", self)
 
-    
-    def update_appearance(self):
-        """ Recrée l'image à partir de la source et ajoute les effets """
-        # 1. Reset l'image
-        self.image = self.source_image.copy()
-
-        # 2. Si cliqué : Contour blanc
-        if self.state == "SELECTED":
-            # On dessine un rectangle blanc sur tout le tour
-            pygame.draw.rect(self.image, (255, 255, 255), self.image.get_rect(), 2)
-
-        # 3. Si survolé ou clique : Barre de vie
-        if self.state == "HOVER" or self.state == "SELECTED":
-            self.game.spriteManager.draw_health_bar(self, self.image, self.rect.w / 2, self.rect.h / 2, (self.rect.w - 20, 10))
+    def update(self, dt):
+        # Les bâtiments n'ont souvent pas de mouvement, mais ils peuvent 
+        # avoir des enfants qui s'animent (tourelles qui tournent)
+        super().update(dt)

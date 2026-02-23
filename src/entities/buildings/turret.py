@@ -19,6 +19,7 @@ class Turret(Building):
         self.max_hp = self.st.TURRET_HP
         self.current_hp = self.max_hp
         self.cost = self.st.TYPE_COST[self.type]
+        self.kills = 0
         self.last_shoot = pygame.time.get_ticks()
         self.cooldown = self.st.TURRET_COOLDOWN
 

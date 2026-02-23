@@ -1,3 +1,4 @@
+import pygame
 from .UIElement import UIElement
 from settings import Settings
 from typing import TYPE_CHECKING
@@ -7,7 +8,17 @@ if TYPE_CHECKING:
 
 class UIText(UIElement):
 
-    def __init__(self, x: int, y: int, callback: str | None, size_text: int=50, color: tuple=(255, 255, 255), align: str='topleft',text_update: bool=False, uid: str=None):
+    _FONTS_CACHE: dict[int, pygame.font.Font] = {} # Variable de classe (statique)
+
+
+    @classmethod
+    def set_font_provider(cls, fonts_dict: dict):
+        """ Injecte le dictionnaire de polices du SpriteManager """
+        cls._FONTS_CACHE = fonts_dict
+        print("🔡 UIText : Polices système injectées !")
+
+
+    def __init__(self, x: int, y: int, callback: str | None, size_text: int=50, color: tuple=(255, 255, 255), align: str='topleft',text_update: bool=False, uid: str | None=None):
         '''
         callback: est la fonction que dois apperler l'element pour metre a jour son text, pas de fonction alors str\n
         size_text: 100 | 75 | 50 | 25 | 10\n
@@ -23,7 +34,12 @@ class UIText(UIElement):
         self.color = color
         self.cache = {}
         self.st = Settings()
-        self.font: pygame.font.Font = self.st.get_font(size_text)
+        self.font: pygame.font.Font = self._FONTS_CACHE.get(size_text, None)
+
+        if self.font is None and self._FONTS_CACHE:
+            # Si la taille précise n'existe pas, on prend la plus proche
+            closest = min(self._FONTS_CACHE.keys(), key=lambda v: abs(v - size_text))
+            self.font = self._FONTS_CACHE[closest]
 
         if not self.text_update:
             self.image = self.font.render(self.text, True, self.color)

@@ -26,6 +26,9 @@ class UIManager():
         # On injecte les données dans la classe statique
         UIElement.load_layout_cache(self.layout)
 
+        from ui.UIText import UIText # Import local pour éviter les imports circulaires
+        UIText.set_font_provider(self.game.spriteManager.fonts)
+
         # Init de notre bloc logic pour le UI
         self.root = UIElement(0, 0, self.st.SCREEN_WIDTH, self.st.SCREEN_HEIGHT, uid="ROOT")
         

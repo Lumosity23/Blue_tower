@@ -1,76 +1,91 @@
 import pygame
+from ui.UIProgressBar import UIProgressBar
+from entities.Entity import Entity  # Ta nouvelle base
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from main import App
 
+class Enemie(Entity):
 
-class Enemie(pygame.sprite.Sprite):
-    def __init__(self, x: int, y: int, size: tuple, game: "App", type:int=1):
-        super().__init__()
+
+    def __init__(self, x: int, y: int, size: tuple, game: "App", type: int = 1, uid: str = None):
+        # 1. Init de la base Entity
+        super().__init__(x, y, size[0], size[1], "ENEMY", uid)
+        
         self.game = game
         self.type = type
-        self.image = self.game.spriteManager.get_custom_sprite(self.game.st.ENEMIE, size, 'circle')
-        self.rect = self.image.get_rect(center=(x,y))
-        self.pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
-        self.director_vector = pygame.math.Vector2()
-        self.velocity = 150
-        self.max_hp = self.game.st.ENEMIE_HEALTH # * (WaveManager.wave_difficulty / 10) <<< risquer car on multiplie p-e par 0
-        self.current_hp = self.max_hp
-        self.health_bar = None
         self.size = size
+        
+        # Setup visuel
+        self.image = self.game.spriteManager.get_custom_sprite(self.game.st.ENEMIE, size, 'circle')
+        
+        # Logique de mouvement
+        self.velocity = 150
+        self.director_vector = pygame.math.Vector2(0, 0)
+        self.target_pos = pygame.math.Vector2(x, y)
         self.arrived = True
-        self.target_pos: pygame.math.Vector2
+        
+        # Stats
+        self.max_hp = self.game.st.ENEMIE_HEALTH
+        self.current_hp = self.max_hp
+        
+        # --- ENFANT : Barre de vie ---
+        # Elle est attachée à l'ennemi et suit ses mouvements automatiquement
+        self.hp_bar = UIProgressBar(x=0, y=-10, w=self.rect.w, h=5, uid=f"{uid}_hp" if uid else None)
+        self.hp_bar.dynamic_color = True
+        self.add_child(self.hp_bar)
+
+
+    def spawn(self, x, y, uid=None):
+        """ Surcharge de spawn pour réinitialiser la logique de l'ennemi """
+        super().spawn(x, y, uid)
+        self.current_hp = self.max_hp
+        self.hp_bar.update_values(self.current_hp, self.max_hp)
+        self.arrived = True
+        # On s'assure que les enfants sont bien réactivés
+        self.set_child("active", own=True)
+        self.set_child("visible", own=True)
 
 
     def update(self, dt):
+        if not self.active: return
         
+        # 1. Logique de Pathfinding (Flow Field / Grid)
         if self.arrived:
-
             nx, ny = self.next_target()
-        
+            
+            # Calcul de la position cible au centre de la cellule
             dx = ((nx * self.game.st.CELL_SIZE) + self.game.st.CELL_SIZE / 2) - self.size[0] / 2
             dy = ((ny * self.game.st.CELL_SIZE) + self.game.st.CELL_SIZE / 2) - self.size[1] / 2
 
-            self.target_pos = pygame.math.Vector2(dx, dy)
+            self.target_pos.update(dx, dy)
             self.arrived = False
               
+        # 2. Calcul du vecteur de direction
         self.director_vector = self.target_pos - self.pos
         length = self.director_vector.length()
 
         if length > 0:
-            self.director_vector = self.director_vector.normalize()
+            self.director_vector.normalize_ip()
 
-        if length > 1:
-            # mise a jour de la position de l'enemie
+        if length > 2: # Seuil de proximité (un peu plus que 1 pour éviter les micro-saccades)
+            # Déplacement fluide sur self.pos (float)
             self.pos += self.director_vector * self.velocity * dt
+            # Mise à jour du Rect pour les collisions et get_screen_rect
             self.rect.center = self.pos
-
         else:
             self.arrived = True
 
-    def take_damage(self, amount):
-        self.current_hp -= amount
-        # si 0 HP alors -> mort
-        if self.current_hp <= 0:
-            self.die()
+        # 3. Update des enfants (Barre de vie)
+        super().update(dt)
 
 
-    def die(self):
-        '''
-            mort de l'enemis et ajout au event
-        '''
-        self.kill()
-        amount: int = self.type * 20
-        self.game.eventManager.publish("ENEMY_KILLED", amount)
-
-
-    def next_target(self) -> tuple[int, int] :
-
+    def next_target(self) -> tuple[int, int]:
         cx, cy = self.game.grid.get_cell_pos(self.pos.x, self.pos.y)
-
         neighbors = self.game.grid.get_neighbors(cx, cy)
-        next_cell: tuple[int, int] = None
+        
+        next_cell = (cx, cy)
         cheapest_cell = float('inf')
         
         for n, cost in neighbors.items():
@@ -79,3 +94,23 @@ class Enemie(pygame.sprite.Sprite):
                 next_cell = n
 
         return next_cell
+
+
+    def take_damage(self, amount):
+        if not self.active: return
+        
+        self.current_hp -= amount
+        self.hp_bar.update_values(self.current_hp, self.max_hp)
+        
+        if self.current_hp <= 0:
+            self.die()
+
+
+    def die(self):
+        """ Mort de l'ennemi : on désactive au lieu de supprimer (Pooling) """
+        self.active = False
+        self.visible = False
+        
+        # On prévient le reste du jeu
+        reward = self.type * 20
+        self.game.eventManager.publish("ENEMY_KILLED", reward)
