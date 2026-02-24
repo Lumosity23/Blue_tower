@@ -43,15 +43,15 @@ class App:
         self.walletManager = WalletManager(self)
         
         # Declaration des variables de base
-        self.grid = Grid(self)
         self.player = Player(self)
         self.kernel = Kernel(self)
+        self.grid = Grid(self)
         
         self.sceneManager.entityManager.root.add_child(self.player)
         self.sceneManager.entityManager.root.add_child(self.kernel)
         
         # Camera suis notre joueur
-        self.sceneManager.camera.follow(self.player.pos)
+        self.sceneManager.main_camera.follow(self.player.pos)
 
         # Init de HUD
         self.ui_manager.OSD.post_init()

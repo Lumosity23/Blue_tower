@@ -84,7 +84,7 @@ class Enemie(Entity):
 
     def next_target(self) -> tuple[int, int]:
         cx, cy = self.game.grid.get_cell_pos(self.pos.x, self.pos.y)
-        neighbors = self.game.grid.getValidNeighbors(cx, cy)
+        neighbors = self.game.grid.getNeighborsAndCost(cx, cy)
         
         next_cell = (cx, cy)
         cheapest_cell = float('inf')

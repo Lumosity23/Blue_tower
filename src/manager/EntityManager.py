@@ -14,7 +14,7 @@ class EntityManager:
 
         self.waveManager = WaveManager(game)
         self.root.add_child(self.waveManager)
-        
+
 
     def spawn(self, entity_class, x, y, uid=None, **kwargs):
         """
@@ -42,7 +42,7 @@ class EntityManager:
         
         # On l'attache à la caméra pour le rendu (SceneManager coordination)
         if hasattr(self.game.sceneManager, "main_camera"):
-            self.game.sceneManager.camera.add_child(new_entity)
+            self.game.sceneManager.main_camera.add_child(new_entity)
             
         return new_entity
 

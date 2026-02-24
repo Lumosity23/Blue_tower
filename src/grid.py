@@ -16,7 +16,7 @@ class Grid:
         # {(0,0): "EMPTY", (0,1): "WALL", ...}
         self.grid = self.init_grid()
         self.flow_field = {}
-        
+        self.update_flow_field(self.game.kernel.pos)
         self.game.eventManager.subscribe("NEW_GAME", self.restart)
 
 
@@ -87,12 +87,19 @@ class Grid:
                     heapq.heappush(pq, (new_cost, neighbor))
 
 
-    def getValidNeighbors(self, gx, gy):
+    def getValidNeighbors(self, gx, gy) -> list[tuple[int, int]]:
         neighbors = []
         for dx, dy in self.game.st.DIRECTIONS_ALGO:
             node = (gx + dx, gy + dy)
             if node in self.grid: neighbors.append(node)
         return neighbors
+
+
+    def getNeighborsAndCost(self, gx, gy) -> dict[tuple[int, int], int]:
+        NeighborsAndCost = {}
+        for neighbor in self.getValidNeighbors(gx, gy):
+            NeighborsAndCost[neighbor] = self.flow_field[neighbor]
+        return NeighborsAndCost
 
 
     def restart(self):

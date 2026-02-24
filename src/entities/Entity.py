@@ -85,7 +85,7 @@ class Entity:
         # Exemple d'interaction basique : détection du clic sur l'entité
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.get_screen_rect().collidepoint(event.pos):
-                print(f"Entité cliquée : {self.uid}")
+                # print(f"Entité cliquée : {self.uid}")
                 return True
                 
         return False # Personne n'a réagi

@@ -12,7 +12,7 @@ class ShopPanel(UIPanel):
     def __init__(self, game: "App"):
         self.game = game
         self.st = self.game.st
-        super().__init__(self.st.SCREEN_WIDTH - 530, 340, 490, self.st.SCREEN_HEIGHT - 380)
+        super().__init__(self.st.SCREEN_WIDTH - 530, 340, 490, 900)
         self.uid = "ShopPanel"
         self.visible = False
 

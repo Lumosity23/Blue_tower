@@ -12,7 +12,7 @@ class SceneManager:
         self.game = game
         
         # 1. Le système de vue
-        self.camera = Camera(game.st.SCREEN_WIDTH, game.st.SCREEN_HEIGHT)
+        self.main_camera = Camera(game.st.SCREEN_WIDTH, game.st.SCREEN_HEIGHT)
 
         # 2. Les Managers de contenu (Leurs racines seront enfants de la caméra)
         self.buildManager = BuildManager(game)
@@ -22,19 +22,19 @@ class SceneManager:
         self.cursor = Cursor(game)
         
         # Montage de l'arbre nodal
-        self.camera.add_child(self.buildManager.root)
-        self.camera.add_child(self.entityManager.root)
-        self.camera.add_child(self.cursor) # Le curseur suit aussi la caméra
+        self.main_camera.add_child(self.buildManager.root)
+        self.main_camera.add_child(self.entityManager.root)
+        self.main_camera.add_child(self.cursor) # Le curseur suit aussi la caméra
 
     def update(self, dt):
         # On update la racine (Camera), ce qui update TOUT le monde récursivement
-        self.camera.update(dt)
+        self.main_camera.update(dt)
 
     def draw(self, screen):
         """ 
         C'est ici qu'on gère le rendu global du monde physique.
         """
-        """ # On récupère toutes les entités actives des deux managers
+        # On récupère toutes les entités actives des deux managers
         # pour faire un Z-Sorting global (un ennemi peut passer derrière une tour)
         render_list = self.entityManager.get_active_entities() + self.buildManager.entities
         
@@ -43,8 +43,8 @@ class SceneManager:
             entity.draw(screen)
             
         # On dessine le curseur en dernier (toujours par dessus le monde)
-        self.cursor.draw(screen) """
-        self.camera.draw(screen)
+        self.cursor.draw(screen)
+        self.main_camera.draw(screen)
 
 
     def handle_event(self, event):
@@ -57,7 +57,7 @@ class SceneManager:
             return True
             
         # 3. Puis aux entités si besoin (clic sur ennemi, etc.)
-        if self.camera.handle_event(event):
+        if self.main_camera.handle_event(event):
             return True
             
         return False

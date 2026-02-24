@@ -21,9 +21,15 @@ class Cursor(Entity):
         self.default_image.fill((255, 255, 255, 100))
         self.image = self.default_image
 
+        # De base pas visible mais quand en mode EDIT
+        self.visible = False
+        self.active = False
+
         # On s'abonne à l'événement de sélection
+        self.game.eventManager.subscribe("BUILD_MODE", self.show)
         self.game.eventManager.subscribe("SELECT_BUILD", self.on_build_selected)
         self.game.eventManager.subscribe("CANCEL_BUILD", self.on_build_canceled)
+
 
     def on_build_selected(self, build_key: str):
         """ 
@@ -60,7 +66,7 @@ class Cursor(Entity):
     def update(self, dt):
         # 1. Conversion Screen -> World (Prise en compte de la caméra)
         mx, my = pygame.mouse.get_pos()
-        cam_x, cam_y = self.game.sceneManager.camera.pos.x, self.game.sceneManager.camera.pos.y
+        cam_x, cam_y = self.game.sceneManager.main_camera.pos.x, self.game.sceneManager.main_camera.pos.y
         
         world_mx = mx - cam_x
         world_my = my - cam_y
@@ -110,3 +116,8 @@ class Cursor(Entity):
         
         surface.blit(temp_image, screen_rect)
         super().draw(surface)
+    
+
+    def show(self) -> None:
+        self.visible = not self.visible
+        self.active = not self.active
