@@ -54,8 +54,10 @@ class Player(Entity):
         # ---------------------------------------------------------
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             self.pos.x -= self.velocity * dt
+            
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
             self.pos.x += self.velocity * dt
+            
         
         # Synchronisation immédiate du rect pour le test de collision X
         self.rect.x = self.pos.x
@@ -75,9 +77,10 @@ class Player(Entity):
         # ---------------------------------------------------------
         if keys[pygame.K_UP] or keys[pygame.K_w]:
             self.pos.y -= self.velocity * dt
+            
         if keys[pygame.K_DOWN] or keys[pygame.K_s]:
             self.pos.y += self.velocity * dt
-        
+            
         # Synchronisation immédiate du rect pour le test de collision Y
         self.rect.y = self.pos.y
 
@@ -95,7 +98,7 @@ class Player(Entity):
         # Finalisation (Contraintes, Grille, Enfants)
         # ---------------------------------------------------------
         self.constraints_world()
-        self.update_grid_logic()
+        #self.update_grid_logic()
         
         # Appel de l'update d'Entity pour propager aux enfants (barre de vie)
         super().update(dt)

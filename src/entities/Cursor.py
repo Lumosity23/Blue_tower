@@ -73,18 +73,21 @@ class Cursor(Entity):
 
         # 3. Vérification de collision / Occupation
         self.check_validity(world_mx, world_my)
+        super().update(dt)
+
 
     def check_validity(self, mx, my):
         # Vérification sur la grille
         cell_val = self.game.grid.get_cell_value(mx, my)
         
         # Vérification collision avec entités (Ennemis/Joueur) via EntityManager
-        collision_entity = any(e.rect.colliderect(self.rect) for e in self.game.entityManager.entities if e.active)
+        collision_entity = any(e.rect.colliderect(self.rect) for e in self.game.sceneManager.entityManager.entities if e.active)
 
         if cell_val != self.game.st.EMPTY or collision_entity:
             self.is_occupied = True
         else:
             self.is_occupied = False
+
 
     def draw(self, surface: pygame.Surface):
         if not self.visible: return
@@ -106,3 +109,4 @@ class Cursor(Entity):
             temp_image.fill((255, 50, 50, 100), special_flags=pygame.BLEND_RGBA_MULT)
         
         surface.blit(temp_image, screen_rect)
+        super().draw(surface)

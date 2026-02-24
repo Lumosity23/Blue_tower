@@ -13,6 +13,8 @@ class EntityManager:
         self.root = Entity(0, 0, 0, 0, "ROOT", "Entity_manager_ROOT")
 
         self.waveManager = WaveManager(game)
+        self.root.add_child(self.waveManager)
+        
 
     def spawn(self, entity_class, x, y, uid=None, **kwargs):
         """

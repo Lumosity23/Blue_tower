@@ -49,6 +49,9 @@ class App:
         
         self.sceneManager.entityManager.root.add_child(self.player)
         self.sceneManager.entityManager.root.add_child(self.kernel)
+        
+        # Camera suis notre joueur
+        self.sceneManager.camera.follow(self.player.pos)
 
         # Init de HUD
         self.ui_manager.OSD.post_init()
@@ -57,6 +60,7 @@ class App:
         self.eventManager.subscribe("RESTART_GAME", self.start_game)
         self.eventManager.subscribe("QUIT", self.quit)
         self.eventManager.subscribe("PAUSE", self.freeze)
+        self.eventManager.subscribe("BUILD_MODE", self.edit)
 
 
     # Boucle qui va recupree les event
@@ -86,7 +90,7 @@ class App:
         
         if self.state == "PLAYING":
             # Le SceneManager s'occupe du tri Z-Sort et du dessin via la caméra
-            self.sceneManager.draw(self._display_surf)
+            self.sceneManager.update(dt)
         
         # Verifier si le joueur est toujours en vie
         if not self.player.alive or not self.kernel.alive:
@@ -101,6 +105,8 @@ class App:
         self._display_surf.fill((10, 10, 10)) # Fond neutre
         
         if self.state == "PLAYING" or self.state == "PAUSE":
+            if self.edit_mode:
+                self.grid.draw(self._display_surf)
             # Le SceneManager s'occupe du tri Z-Sort et du dessin via la caméra
             self.sceneManager.draw(self._display_surf)
 
@@ -122,6 +128,10 @@ class App:
 
     def freeze(self) -> None:
         self.state = "PAUSE"
+
+
+    def edit(self) -> None:
+        self.edit_mode = not self.edit_mode
 
 
     def on_cleanup(self):

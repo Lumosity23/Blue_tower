@@ -85,6 +85,12 @@ class BuildManager:
 
 
     def handle_event(self, event) -> bool:
+        
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                self.game.eventManager.publish("BUILD_MODE")
+                return True
+
         # On inverse l'ordre pour la sélection (le dernier bâti est "au dessus")
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             clicked_build = None
@@ -104,7 +110,7 @@ class BuildManager:
                 self.selected_build = None
 
         return False
-
+    
 
     def clear_all(self):
         """ Désactive tous les bâtiments (pour le reset de partie) """

@@ -64,7 +64,7 @@ class SpriteManager:
         Très utile pour les balles ou les effets temporaires.
         """
         base_img = self.get_base_image(sprite_id)
-        return pygame.transform.smoothscale(base_img, size)
+        return pygame.transform.scale(base_img, size)
 
 
     def get_custom_sprite(self, sprite_id: str, size: tuple[int, int] = (64, 64), shape: str = 'square') -> pygame.Surface: 

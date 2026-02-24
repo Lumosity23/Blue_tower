@@ -34,19 +34,18 @@ class SceneManager:
         """ 
         C'est ici qu'on gère le rendu global du monde physique.
         """
-        # On récupère toutes les entités actives des deux managers
+        """ # On récupère toutes les entités actives des deux managers
         # pour faire un Z-Sorting global (un ennemi peut passer derrière une tour)
         render_list = self.entityManager.get_active_entities() + self.buildManager.entities
-        
-        # On ne garde que ce qui est actif/visible
-        render_list = [e for e in render_list if e.active and e.visible]
         
         # Tri par le bas (Perspective 2D)
         for entity in sorted(render_list, key=lambda e: e.rect.bottom):
             entity.draw(screen)
             
         # On dessine le curseur en dernier (toujours par dessus le monde)
-        self.cursor.draw(screen)
+        self.cursor.draw(screen) """
+        self.camera.draw(screen)
+
 
     def handle_event(self, event):
         # 1. On donne d'abord l'event au Curseur (pour la pose de bâtiments)
@@ -58,7 +57,7 @@ class SceneManager:
             return True
             
         # 3. Puis aux entités si besoin (clic sur ennemi, etc.)
-        """ if self.entityManager.handle_event(event):
-            return True """
+        if self.camera.handle_event(event):
+            return True
             
         return False

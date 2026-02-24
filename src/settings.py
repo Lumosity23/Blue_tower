@@ -131,9 +131,9 @@ class Settings:
     
     # Dictionnaire des chemins pour le SpriteManager
     ASSET_PATHS: Dict[str, str] = field(default_factory=lambda: {
-        "player": 'assets/player.png',
+        "PLAYER": 'assets/player.png',
         "enemie": 'assets/enemie.png',
-        "kernel": 'assets/kernel.png',
+        "KERNEL": 'assets/kernel.png',
         "wall": 'assets/wall_gab.png',
         "turret": 'assets/turret.png',
         "bullet": 'assets/bullet.png'

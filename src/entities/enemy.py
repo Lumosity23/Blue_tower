@@ -15,8 +15,9 @@ class Enemie(Entity):
         
         self.game = game
         self.type = type
-        self.size = size
-        
+        self.stats = self.game.st.ENEMIE_STATS
+        self.size = self.stats["size"]
+
         # Setup visuel
         self.image = self.game.spriteManager.get_custom_sprite(self.game.st.ENEMIE, size, 'circle')
         
@@ -27,7 +28,7 @@ class Enemie(Entity):
         self.arrived = True
         
         # Stats
-        self.max_hp = self.game.st.ENEMIE_HEALTH
+        self.max_hp = self.stats['hp']
         self.current_hp = self.max_hp
         
         # --- ENFANT : Barre de vie ---
@@ -83,7 +84,7 @@ class Enemie(Entity):
 
     def next_target(self) -> tuple[int, int]:
         cx, cy = self.game.grid.get_cell_pos(self.pos.x, self.pos.y)
-        neighbors = self.game.grid.get_neighbors(cx, cy)
+        neighbors = self.game.grid.getValidNeighbors(cx, cy)
         
         next_cell = (cx, cy)
         cheapest_cell = float('inf')

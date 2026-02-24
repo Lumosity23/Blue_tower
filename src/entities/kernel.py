@@ -41,9 +41,9 @@ class Kernel(Entity):
 
         # Logique de tir
         current_time = pygame.time.get_ticks()
-        if current_time - self.last_shoot > self.cooldown and not self.game.wave_manager.end_wave:
+        if current_time - self.last_shoot > self.cooldown and not self.game.sceneManager.entityManager.waveManager.end_wave:
             # On utilise le centre du Kernel pour chercher l'ennemi
-            target = self.game.wave_manager.nearest_enemy(self.rect.center)
+            target = self.game.sceneManager.entityManager.waveManager.nearest_enemy(self.rect.center)
             if target:
                 self.shoot(target.rect.center)
                 self.last_shoot = current_time

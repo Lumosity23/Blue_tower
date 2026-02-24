@@ -21,6 +21,7 @@ class Grid:
 
 
     def init_grid(self) -> dict:
+        print(f"Grid init avec une taille de {self.cols}x{self.rows} cells")
         return {(c, r): self.game.st.EMPTY for c in range(self.cols) for r in range(self.rows)}
 
 
