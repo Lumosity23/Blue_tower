@@ -1,7 +1,9 @@
 from entities.Camera import Camera
 from entities.Cursor import Cursor
+from entities.Entity import Entity
 from manager.BuildManager import BuildManager
 from manager.EntityManager import EntityManager
+from manager.WaveManager import WaveManager
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from main import App
@@ -17,34 +19,33 @@ class SceneManager:
         # 2. Les Managers de contenu (Leurs racines seront enfants de la caméra)
         self.buildManager = BuildManager(game)
         self.entityManager = EntityManager(game)
-        
+        self.waveManager = WaveManager(game)
+
         # 3. Le Curseur de jeu (Pont entre UI et Monde)
         self.cursor = Cursor(game)
-        
-        # Montage de l'arbre nodal
-        self.main_camera.add_child(self.buildManager.root)
-        self.main_camera.add_child(self.entityManager.root)
-        self.main_camera.add_child(self.cursor) # Le curseur suit aussi la caméra
+
 
     def update(self, dt):
-        # On update la racine (Camera), ce qui update TOUT le monde récursivement
+
+        # On update les different managers
+        self.entityManager.update(dt)
+        self.buildManager.update(dt)
+        self.waveManager.update()
+        self.cursor.update(dt)
+
+        # Update la camera pour l'offset
         self.main_camera.update(dt)
+
 
     def draw(self, screen):
         """ 
         C'est ici qu'on gère le rendu global du monde physique.
         """
-        # On récupère toutes les entités actives des deux managers
-        # pour faire un Z-Sorting global (un ennemi peut passer derrière une tour)
-        render_list = self.entityManager.get_active_entities() + self.buildManager.entities
-        
-        # Tri par le bas (Perspective 2D)
-        for entity in sorted(render_list, key=lambda e: e.rect.bottom):
-            entity.draw(screen)
-            
+        # La camera dessine tout les entites active
+        self.main_camera.draw(screen)
+
         # On dessine le curseur en dernier (toujours par dessus le monde)
         self.cursor.draw(screen)
-        self.main_camera.draw(screen)
 
 
     def handle_event(self, event):
@@ -55,9 +56,8 @@ class SceneManager:
         # 2. Puis au BuildManager (pour la sélection de bâtiments existants)
         if self.buildManager.handle_event(event):
             return True
-            
-        # 3. Puis aux entités si besoin (clic sur ennemi, etc.)
-        if self.main_camera.handle_event(event):
+        
+        if self.game.player.handle_event(event):
             return True
-            
+        
         return False

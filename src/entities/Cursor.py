@@ -28,7 +28,6 @@ class Cursor(Entity):
         # On s'abonne à l'événement de sélection
         self.game.eventManager.subscribe("BUILD_MODE", self.show)
         self.game.eventManager.subscribe("SELECT_BUILD", self.on_build_selected)
-        self.game.eventManager.subscribe("CANCEL_BUILD", self.on_build_canceled)
 
 
     def on_build_selected(self, build_key: str):
@@ -58,28 +57,28 @@ class Cursor(Entity):
         else:
             self.range_circle_surface = None
 
+
     def on_build_canceled(self):
         self.current_build_data = None
         self.image = self.default_image
         self.range_circle_surface = None
 
-    def update(self, dt):
-        # 1. Conversion Screen -> World (Prise en compte de la caméra)
-        mx, my = pygame.mouse.get_pos()
-        cam_x, cam_y = self.game.sceneManager.main_camera.pos.x, self.game.sceneManager.main_camera.pos.y
-        
-        world_mx = mx - cam_x
-        world_my = my - cam_y
 
-        # 2. Snapping à la grille
+    def update(self, dt):
+        mx, my = pygame.mouse.get_pos()
+        cam_offset = self.game.sceneManager.main_camera.offset
+        
+        # Screen -> World (Pour placer le curseur dans le monde)
+        world_mx = mx + cam_offset.x
+        world_my = my + cam_offset.y
+
+        # Snapping à la grille
         px = (world_mx // self.game.st.CELL_SIZE) * self.game.st.CELL_SIZE
         py = (world_my // self.game.st.CELL_SIZE) * self.game.st.CELL_SIZE
         self.pos.update(px, py)
         self.rect.topleft = self.pos
 
-        # 3. Vérification de collision / Occupation
         self.check_validity(world_mx, world_my)
-        super().update(dt)
 
 
     def check_validity(self, mx, my):
@@ -98,26 +97,57 @@ class Cursor(Entity):
     def draw(self, surface: pygame.Surface):
         if not self.visible: return
         
-        # On récupère la position écran pour le rendu
-        screen_rect = self.get_screen_rect()
+        # ATTENTION : get_screen_rect() de Entity renvoie la pos absolue du MONDE ! 
+        # (Le nom de la méthode est un peu trompeur, on devrait l'appeler get_world_rect)
+        world_rect = self.get_screen_rect()
+        cam_offset = self.game.sceneManager.main_camera.offset
         
-        # 1. Dessiner le cercle de portée en premier (dessous)
+        # World -> Screen (On SOUSTRAIT l'offset pour dessiner manuellement)
+        screen_x = world_rect.x - cam_offset.x
+        screen_y = world_rect.y - cam_offset.y
+
+        # 1. Dessiner le cercle (centré sur le screen_x/y)
         if self.current_build_data and self.range_circle_surface:
             r = self.current_build_data['range']
-            # On centre le cercle sur le bâtiment
-            range_pos = (screen_rect.centerx - r, screen_rect.centery - r)
+            range_pos = (screen_x + (self.rect.w//2) - r, screen_y + (self.rect.h//2) - r)
             surface.blit(self.range_circle_surface, range_pos)
 
         # 2. Dessiner le Ghost Sprite
-        # On applique une teinte rouge si c'est occupé
         temp_image = self.image.copy()
         if self.is_occupied:
             temp_image.fill((255, 50, 50, 100), special_flags=pygame.BLEND_RGBA_MULT)
         
-        surface.blit(temp_image, screen_rect)
-        super().draw(surface)
+        # On dessine aux coordonnées calculées !
+        surface.blit(temp_image, (screen_x, screen_y))
     
 
     def show(self) -> None:
         self.visible = not self.visible
         self.active = not self.active
+
+
+    def get_pos_world(self) -> tuple[int, int]:
+        mx, my = pygame.mouse.get_pos()
+        cam_offset = self.game.sceneManager.main_camera.offset
+        
+        return mx + cam_offset.x, my + cam_offset.y
+    
+    
+    def handle_event(self, event):
+        
+        if not self.game.edit_mode: return False
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 3:
+                self.on_build_canceled()
+                return True
+
+            if event.button == 1 and self.current_build_data != None:
+                data = {
+                    "pos" : pygame.math.Vector2(self.get_pos_world()),
+                    "data" : self.current_build_data
+                }
+                self.game.eventManager.publish("PLACE_BUILDING", data)
+                return True
+            
+        super().handle_event(event)

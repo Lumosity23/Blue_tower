@@ -41,9 +41,9 @@ class Kernel(Entity):
 
         # Logique de tir
         current_time = pygame.time.get_ticks()
-        if current_time - self.last_shoot > self.cooldown and not self.game.sceneManager.entityManager.waveManager.end_wave:
+        if current_time - self.last_shoot > self.cooldown and not self.game.sceneManager.waveManager.end_wave:
             # On utilise le centre du Kernel pour chercher l'ennemi
-            target = self.game.sceneManager.entityManager.waveManager.nearest_enemy(self.rect.center)
+            target = self.game.sceneManager.waveManager.nearest_enemy(self.rect.center)
             if target:
                 self.shoot(target.rect.center)
                 self.last_shoot = current_time
@@ -55,7 +55,7 @@ class Kernel(Entity):
     def take_damage(self, damage: int) -> None:
         self.current_hp -= damage
         # Mise à jour visuelle de la barre (enfant)
-        self.game.eventManager.post("UPDATE_KERNEL_HP", self.current_hp)
+        self.game.eventManager.publish("UPDATE_KERNEL_HP", self.current_hp)
         
         if self.current_hp <= 0:
             self.alive = False
@@ -79,12 +79,6 @@ class Kernel(Entity):
     
 
     def shoot(self, target: tuple) -> None:
-        # NOTE : Plus tard, tes projectiles (Bullet) devraient aussi 
-        # être gérés par l'EntityManager pour le pooling !
-        bullet = Bullet(self.rect.centerx, self.rect.centery, target_pos=target)
-        
-        # Pour l'instant on garde ton système de groupe, 
-        # mais on l'ajoute aussi à la caméra pour le rendu
-        self.game.bullets.add(bullet)
-        if self.game.sceneManager.camera:
-            self.game.sceneManager.camera.add_child(bullet)
+        # Systeme de pooling
+        self.game.sceneManager.entityManager.spawn(Bullet, self.rect.centerx, self.rect.centery, uid="Kernel_Bullet", target_pos=target, owner=self, bullet_damage=15)
+    

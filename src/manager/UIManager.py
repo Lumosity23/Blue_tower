@@ -6,6 +6,7 @@ from ui.panel.ShopPanel import ShopPanel
 from ui.panel.OSD import OSD
 from ui.panel.GameOverPanel import GameOverPanel
 from ui.panel.PausePanel import PausePanel
+from ui.panel.MenuPanel import MenuPanel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -40,19 +41,24 @@ class UIManager():
         self.OSD = OSD(game)
         self.game_over_panel = GameOverPanel(game)
         self.pause = PausePanel(game)
+        self.menu = MenuPanel(game)
 
         # Ajout des enfants
         self.root.add_child(self.shop_panel)
         self.root.add_child(self.OSD)
         self.root.add_child(self.game_over_panel)
         self.root.add_child(self.pause)
+        self.root.add_child(self.menu)
 
         # Declaration des event sur ecoute
         # self.game.eventManager.subscribe("OPEN_UPGRADE_PANEL", self.upgrade_panel.show)
         self.game.eventManager.subscribe("SHOW_UPGRADE_PANEL", self.on_upgade_panel)
         self.game.eventManager.subscribe("GAME_OVER", self.on_game_over)
         self.game.eventManager.subscribe("PAUSE", self.on_pause)
+        self.game.eventManager.subscribe("UNPAUSE", self.on_playing)
         self.game.eventManager.subscribe("NEW_GAME", self.on_restart)
+        self.game.eventManager.subscribe("MENU", self.on_menu)
+        self.game.eventManager.subscribe("QUIT_GAME", self.on_menu)
 
 
     def toggle_edit_mode(self):
@@ -120,7 +126,7 @@ class UIManager():
                 self.shop_panel.show()
                 return
             else : 
-                self.shop_panel.hide()
+                self.shop_panel.kill()
                 return
 
         # SI ON EST EN MODE ÉDITION : ON DÉPLACE 
@@ -166,8 +172,8 @@ class UIManager():
                 new_y = mouse_pos[1] - self.offset_y
                 
                 # Application (avec Snapping à la grille 10px pour être propre ?)
-                self.selected_element.rect.x = round(new_x / 10) * 10
-                self.selected_element.rect.y = round(new_y / 10) * 10
+                self.selected_element.rect.x = round(new_x / 5) * 5
+                self.selected_element.rect.y = round(new_y / 5) * 5
                 return True
 
         # C. Relâchement : On lâche et ON IMPRIME LE CODE
@@ -194,11 +200,11 @@ class UIManager():
                     if found: return found
                 
                     # Sinon on regarde l'enfant lui-même
-                    if child.get_absolute_rect().collidepoint(pos):
+                    if child.get_screen_rect().collidepoint(pos):
                         return child
 
             # Si aucun enfant, on regarde le parent lui-même
-            if parent.get_absolute_rect().collidepoint(pos):
+            if parent.get_screen_rect().collidepoint(pos):
                 return parent
             return None
 
@@ -238,14 +244,30 @@ class UIManager():
         print("upgrade panel ouvert !")
         return
     
+
     def on_game_over(self) -> None:
 
         self.game_over_panel.visible = True
 
-    def on_pause(self) -> None:
 
-        self.pause.visible = not self.pause.visible
+    def on_pause(self) -> None:    
+        self.pause.visible = True
     
+    def on_playing(self) -> None:
+        self.pause.visible = False
+    
+
     def on_restart(self) -> None:
 
-        self.game_over_panel.visible = False
+        for child in self.root.children:
+            child.visible = False
+        
+        self.OSD.visible = True
+    
+
+    def on_menu(self) -> None:
+
+        for child in self.root.children:
+            child.visible = False
+        
+        self.menu.visible = True

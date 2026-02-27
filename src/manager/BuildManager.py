@@ -1,6 +1,6 @@
 import pygame
 from entities.buildings.Building import Building
-from entities.Entity import Entity
+from entities.kernel import Kernel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -12,10 +12,7 @@ class BuildManager:
     def __init__(self, game: "App"):
         self.game = game
         
-        # 1. Racine pour le rendu (Sera attachée à la Camera)
-        self.root = Entity(0, 0, 0, 0, "ROOT", uid="BUILD_ROOT")
-        
-        # 2. Liste pour la logique et le pooling
+        # Liste pour la logique et le pooling
         self.entities: list[Building] = []
         
         # État
@@ -23,8 +20,34 @@ class BuildManager:
 
         # Souscriptions
         self.game.eventManager.subscribe("PLACE_BUILDING", self.attempt_build_from_event)
-        self.game.eventManager.subscribe("NEW_GAME", self.clear_all)
+        self.game.eventManager.subscribe("NEW_GAME", self.new_game)
 
+
+    def update(self, dt):
+        """ Update uniquement les entités actives """
+        # Update tout le entites active
+        for entity in self.entities:
+            if entity.active:
+                entity.update(dt)
+
+                # Apres l'update si l'entite est morte, on la retire de la camera
+                if not entity.active:
+                    self.game.sceneManager.main_camera.remove_entity(entity)
+
+        # self.check_build_collisions()
+
+
+    """ def check_build_collisions(self):
+        active_buildings = [b for b in self.entities if b.active]
+        active_enemies = [e for e in self.entities if e.tag == "ENEMY" and e.active]
+
+        for b in active_buildings:
+            for e in active_enemies:
+                if b.rect.colliderect(e.rect):
+                    b: "Building"
+                    b.on_hit(e)
+                    break # Une balle ne touche qu'un ennemi à la fois (sauf pénétration) """
+    
 
     def attempt_build_from_event(self, event_data: dict):
         """ Reçoit les infos du Cursor : {'pos': Vector2, 'data': dict} """
@@ -59,6 +82,9 @@ class BuildManager:
         # On cherche la classe correspondante (Turret, Wall, etc.)
         # Si le type spécifique n'existe pas, on prend la classe Building de base
         build_class = Building.BUILDING_TYPES.get(type_name, Building)
+        gx, gy = self.game.grid.get_cell_pos(pos.x, pos.y)
+        wx = gx * self.game.st.CELL_SIZE
+        wy = gy * self.game.st.CELL_SIZE
 
         # --- LOGIQUE DE POOLING ---
         recycled_build = None
@@ -68,18 +94,22 @@ class BuildManager:
                 break
 
         if recycled_build:
-            recycled_build.spawn(pos.x, pos.y, uid=f"{type_name}_{id(recycled_build)}")
+            recycled_build.spawn(wx, wy, uid=f"{type_name}_{id(recycled_build)}")
             # On pourrait avoir besoin de rafraîchir les stats si le bâtiment a été amélioré entre-temps
             recycled_build.data = data 
             build = recycled_build
+
         else:
             # Nouveau bâtiment
-            build = build_class(pos.x, pos.y, data, self.game, uid=f"{type_name}_{len(self.entities)}")
+            build = build_class(wx, wy, data, self.game, uid=f"{type_name}_{len(self.entities)}")
             self.entities.append(build)
-            self.root.add_child(build)
 
-        # 4. Mise à jour du monde
+        # Ajout dans la camera pour le rendu
+        self.game.sceneManager.main_camera.add_entity(build)
+
+        # Mise à jour du monde
         self.game.grid.set_cell_value(pos.x, pos.y, type_name)
+
         # On met à jour le chemin des ennemis vers le Kernel
         self.game.grid.update_flow_field(self.game.kernel.pos)
 
@@ -116,3 +146,23 @@ class BuildManager:
         """ Désactive tous les bâtiments (pour le reset de partie) """
         for b in self.entities:
             b.kill() # Met active/visible à False
+            # On la retire de la camera
+            self.game.sceneManager.main_camera.remove_entity(b)
+
+    
+    def new_game(self):
+        self.clear_all()
+        
+        wx = self.game.st.WORLD_WIDTH // 2
+        wy = self.game.st.WORLD_HEIGHT // 2
+        
+        # Ici, tu peux faire une méthode dédiée ou utiliser ta logique de pool de bâtiment
+        # Imaginons que tu instancies directement ton Kernel (s'il hérite de Building) :
+        kernel = Kernel( self.game )
+        
+        # On l'ajoute au Manager et à la Camera
+        self.entities.append(kernel)
+        self.game.sceneManager.main_camera.add_entity(kernel)
+        
+        # On sauvegarde le pointeur global
+        self.game.kernel = kernel

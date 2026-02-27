@@ -16,30 +16,40 @@ class Grid:
         # {(0,0): "EMPTY", (0,1): "WALL", ...}
         self.grid = self.init_grid()
         self.flow_field = {}
-        self.update_flow_field(self.game.kernel.pos)
+        
+        # Ecoute l'event de NEW_GAME
         self.game.eventManager.subscribe("NEW_GAME", self.restart)
 
 
     def init_grid(self) -> dict:
-        print(f"Grid init avec une taille de {self.cols}x{self.rows} cells")
+        # print(f"Grid init avec une taille de {self.cols}x{self.rows} cells")
         return {(c, r): self.game.st.EMPTY for c in range(self.cols) for r in range(self.rows)}
 
 
     def draw(self, surface: pygame.Surface):
-        # IMPORTANT : On dessine la grille avec le décalage de la caméra
-        cam_x = self.game.sceneManager.camera.pos.x
-        cam_y = self.game.sceneManager.camera.pos.y
+        cam_offset = self.game.sceneManager.main_camera.offset
         grid_color = (40, 40, 40)
 
-        # Lignes verticales
-        for col in range(self.cols + 1):
-            x = col * self.cell_size + cam_x
-            pygame.draw.line(surface, grid_color, (x, cam_y), (x, self.rows * self.cell_size + cam_y))
+        # 1. On calcule la première et la dernière case visible à l'écran
+        start_col = int(cam_offset.x // self.cell_size)
+        end_col = int((cam_offset.x + surface.get_width()) // self.cell_size) + 1
+        
+        start_row = int(cam_offset.y // self.cell_size)
+        end_row = int((cam_offset.y + surface.get_height()) // self.cell_size) + 1
 
-        # Lignes horizontales
-        for row in range(self.rows + 1):
-            y = row * self.cell_size + cam_y
-            pygame.draw.line(surface, grid_color, (cam_x, y), (self.cols * self.cell_size + cam_x, y))
+        # 2. Lignes verticales (On ne boucle QUE sur ce qui est à l'écran)
+        for col in range(start_col, end_col + 1):
+            world_x = col * self.cell_size
+            # RÈGLE 1 : World -> Screen
+            screen_x = world_x - cam_offset.x 
+            pygame.draw.line(surface, grid_color, (screen_x, 0), (screen_x, surface.get_height()))
+
+        # 3. Lignes horizontales
+        for row in range(start_row, end_row + 1):
+            world_y = row * self.cell_size
+            # RÈGLE 1 : World -> Screen
+            screen_y = world_y - cam_offset.y
+            pygame.draw.line(surface, grid_color, (0, screen_y), (surface.get_width(), screen_y))
 
 
     def get_cell_pos(self, world_x, world_y) -> tuple[int, int]:
@@ -103,5 +113,7 @@ class Grid:
 
 
     def restart(self):
+        
         self.grid = self.init_grid()
         self.flow_field.clear()
+        self.update_flow_field(self.game.kernel.pos)

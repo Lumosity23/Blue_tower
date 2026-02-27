@@ -2,48 +2,70 @@ import pygame
 from entities.Entity import Entity
 
 
-class Camera(Entity):
+class Camera:
 
     def __init__(self, screen_w: int, screen_h: int) -> None:
-        super().__init__(0, 0, screen_w, screen_h, "camera", "main_camera")
+        
+        # Systeme de position pour la camera
+        self.rect = pygame.Rect(0, 0, screen_w, screen_h)
+        self.pos = pygame.math.Vector2(self.rect.topleft)
+        self.offset = pygame.math.Vector2()
 
+        self.entities_to_show: set[Entity] = set()
         self.screen_center = pygame.math.Vector2(screen_w / 2, screen_h / 2)
-        self.target_pos = None # L'entité à suivre (le joueur)
+        self.target = None # L'entité à suivre (le joueur)
         self.smoothing = 0.1 # Vitesse de suivi (0.1 = 10% de la distance par frame)
+        self.speed = 5.0
 
 
-    def follow(self, target_vector2: pygame.math.Vector2):
+    def follow(self, target_entity: Entity):
         # On viens recupere la position de notre sujet de scene
-        self.target_pos = target_vector2
+        self.target = target_entity
+
+
+    def add_entity(self, entity: Entity):
+        self.entities_to_show.add(entity)
+        for child in entity.children:
+            self.add_entity(child)
+    
+
+    def remove_entity(self, entity: Entity):
+        self.entities_to_show.discard(entity)
+        for child in entity.children:
+            self.remove_entity(child)
 
 
     def update(self, dt):
-        if self.target_pos:
-            # On veut que le centre de l'écran soit sur le centre du sujet (ex : joueur)
-            # Calcul de la destination idéale
-            dest = self.screen_center - self.target_pos
+        if not self.target or not self.target.active: 
+            return
 
-            # On déplace la caméra vers la destination (Lerp fluide)
-            self.pos += (dest - self.pos) * self.smoothing
+        # On récupère le centre absolu du rect de l'entité
+        target_center = pygame.math.Vector2(self.target.get_screen_rect().center)
 
-            # Synchronisation du Rect pour que get_absolute_rect() fonctionne
-            self.rect.topleft = self.pos
-
-        # On update les enfants (ennemis, etc.)
-        super().update(dt)
+        ideal_offset = target_center - self.screen_center
+        self.offset += (ideal_offset - self.offset) * (self.speed * dt)
 
 
-    def draw(self, surface):
-        '''
-        Override de draw pour ajouter le Z-Sorting
-        '''
-        if not self.visible: return
+    def draw(self, surface: pygame.Surface):
+        
+        sorted_entities = sorted(
+            self.entities_to_show, 
+            key=lambda e: e.get_screen_rect().bottom
+        )
 
-        # --- LE Z-SORTING ---
-        # On trie les enfants par leur coordonnée 'bottom' 
-        # pour que ceux plus "bas" sur l'écran soient dessinés devant.
-        sorted_children = sorted(self.children, key=lambda e: e.rect.bottom)
+        # 2. Rendu
+        fast_blit = surface.blit
+        for e in sorted_entities:
+            # Si pour la logic l'entite est invisible alors on ne dessine pas
+            if not e.visible:
+                continue
 
-        child: "Entity"
-        for child in sorted_children:
-            child.draw(surface)
+            if hasattr(e, 'custom_draw'):
+                # On passe la surface ET l'offset à l'entité !
+                e.custom_draw(surface, self.offset)
+
+            else:
+                # --- Ancien comportement standard ---
+                rect = e.get_screen_rect()
+                pos_on_screen = (rect.x - self.offset.x, rect.y - self.offset.y)
+                fast_blit(e.image, pos_on_screen)

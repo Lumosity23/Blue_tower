@@ -33,12 +33,12 @@ class PausePanel(UIPanel):
 
     def restart_game(self) -> None:
 
-        self.game.eventManager.publish("RESTART_GAME")
+        self.game.eventManager.publish("NEW_GAME")
         return
 
     def quit(self) -> None:
 
-        self.game.eventManager.publish("QUIT")
+        self.game.eventManager.publish("QUIT_GAME")
         return
 
     def resume(self) -> None:

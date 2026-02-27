@@ -6,7 +6,7 @@ class Entity:
     def __init__(self, x: int, y: int, w: int, h: int, tag: str, uid: str | None) -> None:
         # ID de l'element
         self.uid = uid
-        self.tag = None
+        self.tag = tag
 
         # Position dans l'espace du niveau
         self.rect = pygame.Rect(x, y, w, h)
@@ -14,19 +14,17 @@ class Entity:
 
         # Surface de l'entite
         self.image = pygame.Surface((w, h))
-        self.flip_x = False
+        # self.flip_x = False
 
         # System de logic/rendu
         self.debug = False
         self.visible = True
         self.active = True
+        self.alive = True
 
         # Composite Paterne
         self.parent: "Entity" = None
         self.children = []
-
-        # Pour le Z-sorting (camera)
-        self.z_index = 0
 
 
     def add_child(self, new_child: "Entity") -> None:
@@ -46,14 +44,19 @@ class Entity:
         self.pos.update(x, y)
         self.rect.topleft = (x, y)
         self.uid = uid
-        self.set_child("active", own=True)
-        self.set_child("visible", own=True)
+        self.set_child("active", True)
+        self.set_child("visible", True)
 
 
     def kill(self):
-        ''' Détruit l'entité en se retirant de l'ecran '''
+        ''' Détruit l'entité et ses enfants en se retirant de l'ecran '''
         self.visible = False
         self.active = False
+
+        # On propage aussi la mort au enfants
+        child: "Entity"
+        for child in self.children:
+            child.kill()
     
 
     def increment_kills(self):
@@ -75,37 +78,32 @@ class Entity:
 
 
     def handle_event(self, event) -> bool:
+
         if not self.visible: return False
 
-        # Propagation aux enfants (ex: barre de vie cliquable ?)
+        # Propagation aux enfants
         for child in reversed(self.children):
+            child: "Entity"
             if child.handle_event(event):
-                return True
-        
-        # Exemple d'interaction basique : détection du clic sur l'entité
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            if self.get_screen_rect().collidepoint(event.pos):
-                # print(f"Entité cliquée : {self.uid}")
                 return True
                 
         return False # Personne n'a réagi
     
 
-    def set_child(self, argument: str, own: bool=True) -> None:
+    def set_child(self, argument: str, state: bool=True) -> None:
         '''
             Passe un attribut de UIElement et permet de la set a tout le monde et a soi (ex : Debug)\n
             le state de l'attribut changer pour aller dans son oposse donc a utiliser avec prudence !\n
             ex : True -> False et inversement\n
             \n
             argument: attribut de UIElement bool en STR !\n
-            own: si on veux que soit-meme soit aussi affecter
+           state: l'etat dans le quel on veux aller
         '''
         # Verification que UIElement a bien cet attribut
         if hasattr(self, argument):
             # Verifier que l'attribut est un bien un bool
-            if isinstance(getattr(self, argument), bool):
-                if own:
-                    setattr(self, argument, not getattr(self, argument))
+            if isinstance(getattr(self, argument), bool):    
+                setattr(self, argument, state)
                 # Recursion sur ses enfants
                 child: "Entity"
                 for child in self.children:
@@ -116,7 +114,7 @@ class Entity:
         if not self.visible: return
 
         # Syncronisation de la pos logic avec le rendu
-        self.rect.topleft = self.pos
+        self.rect.topleft = round(self.pos.x), round(self.pos.y)
 
         # Logique de mouvement, IA, etc.
         child: "Entity"
@@ -124,30 +122,7 @@ class Entity:
             child.update(dt)
 
 
-    def draw(self, surface: pygame.Surface):
-        '''
-            se dessiner sur la surface demander\n
-            et dessine ses enfants juste apres si il y en a !
-        ''' 
-        # Verifier que l'element dois etre afficher
-        if not self.visible: return
-        
-        screen_rect = self.get_screen_rect()
-
-        if self.flip_x:
-            # Gestion du Flip (regard gauche/droite)
-            img = pygame.transform.flip(self.image, self.flip_x, False)
-        else:
-            img = self.image
-
-        # Rendu sur l'ecran
-        surface.blit(img, screen_rect)
-    
-        if self.debug:
-            # Dessine un cadre rose autour de l'element lors de l'edit_mode
-            pygame.draw.rect(surface, (57, 255, 20), screen_rect, 2)
-
-        if self.children:
-            child: "Entity"
-            for child in self.children:
-                child.draw(surface)
+################################################ DEBUG ########################################################
+""" if self.debug:
+    # Dessine un cadre vert neon autour de l'element lors du debug_mode
+    pygame.draw.rect(surface, (57, 255, 20), screen_rect, 2) """

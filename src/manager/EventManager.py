@@ -1,7 +1,7 @@
 from settings import Settings
 
 
-class EventManager():
+class EventManager:
 
     def __init__(self):
         

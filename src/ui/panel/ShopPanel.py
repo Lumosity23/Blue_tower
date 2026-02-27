@@ -12,7 +12,7 @@ class ShopPanel(UIPanel):
     def __init__(self, game: "App"):
         self.game = game
         self.st = self.game.st
-        super().__init__(self.st.SCREEN_WIDTH - 530, 340, 490, 900)
+        super().__init__(self.st.SCREEN_WIDTH - 530, 90, 490, 800)
         self.uid = "ShopPanel"
         self.visible = False
 
@@ -29,8 +29,7 @@ class ShopPanel(UIPanel):
 
         for col in range(2):
             for row in range(3):
-                
-                element = UICompose(30 + (col * 230), 160 + (row * 230), 200, 200, "test", self.game.spriteManager.get_base_image(sprite_id), self.buy_wall, f"{str(cost)} $", f"{child_uid}{col}{row}" )
+                element = UICompose(30 + (col * 230), 160 + (row * 230), 200, 200, "test", self.game.spriteManager.get_base_image(sprite_id), self.buy_turret, f"{str(cost)} $", f"{child_uid}{col}{row}" )
                 self.add_child(element)
 
 

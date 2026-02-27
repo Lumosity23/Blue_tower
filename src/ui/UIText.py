@@ -21,7 +21,7 @@ class UIText(UIElement):
     def __init__(self, x: int, y: int, callback: str | None, size_text: int=50, color: tuple=(255, 255, 255), align: str='topleft',text_update: bool=False, uid: str | None=None):
         '''
         callback: est la fonction que dois apperler l'element pour metre a jour son text, pas de fonction alors str\n
-        size_text: 100 | 75 | 50 | 25 | 10\n
+        size_text: 25 -> 200\n
         color: ( R , G , B )\n
         align: topleft, bottomleft, topright, bottomright\n
                midtop, midleft, midbottom, midright\n

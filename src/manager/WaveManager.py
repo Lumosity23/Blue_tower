@@ -1,5 +1,6 @@
 import pygame
 import random
+import math 
 from entities.enemy import Enemie
 from typing import TYPE_CHECKING
 
@@ -17,7 +18,8 @@ class WaveManager:
         self.wave_difficulty = 3 # Null
         self.wave_number = 0
         self.first_round = True
-        self.end_wave = False
+        self.end_wave = True
+        self.spawn_area = (0, 0)
 
         self.dpg = 10           # Difficulties Point Global 
         self.status_point = 1   # Influence la puissance des ennemis 
@@ -27,21 +29,10 @@ class WaveManager:
         self.game.eventManager.subscribe("NEW_GAME", self.reset)   
 
 
-    def update(self, dt):
+    def update(self):
 
         # On recupere le temps ecouler jusqu'a maintenant
         current_time = pygame.time.get_ticks()
-
-        # Seulement pour la premier vague
-        if self.first_round:
-            self.spawn_wave()
-            self.first_round = False
-            self.last_spawn_time = current_time
-
-        # Fin de vague
-        if len(self.game.sceneManager.entityManager.get_entities("ENEMY")) == 0 and self.end_wave == False:
-            self.end_wave = True
-            self.last_spawn_time = current_time
 
         # Verification du temps apres fin de vague
         if current_time - self.last_spawn_time > self.cooldown and self.end_wave == True :
@@ -56,6 +47,11 @@ class WaveManager:
             self.last_spawn_time = current_time
             self.end_wave = False
             
+        # Fin de vague
+        if len(self.game.sceneManager.entityManager.get_entities("ENEMY")) == 0 and self.end_wave == False:
+            self.end_wave = True
+            self.last_spawn_time = current_time
+
             
     def spawn_wave(self):
         """ Déclenche une vague en utilisant le Pooling et le DDA """
@@ -64,13 +60,16 @@ class WaveManager:
         # CPT = 20 + (30 * DPG / 100) + Spawn_Point
         cpt = 20 + (30 * self.dpg / 100) + self.spawn_point
         
+        # recupere une zone de spawn
+        spawn_area = self.get_spawn_area()
+
         # 2. Spawn des unités via l'EntityManager (Pooling)
         for _ in range(int(cpt)):
-            posx, posy, size = self.get_enemy_config()
+            posx, posy, size = self.get_enemy_config(spawn_area)
             
             # On demande à l'EntityManager de nous donner un ennemi (neuf ou recyclé)
             enemy: "Enemie" = self.game.sceneManager.entityManager.spawn(Enemie, posx, posy, size=size, game=self.game)
-            
+
             # 3. Ajustement de la santé selon la formule DDA [cite: 191]
             # %HM = Base_HP * Status_Point + (20% de DPG)
             base_hp = self.game.st.ENEMIE_STATS["hp"]
@@ -83,21 +82,11 @@ class WaveManager:
         # mais on peut garder un petit cooldown de confort.
         self.cooldown += 1000 
 
-    def get_enemy_config(self):
-        """ Calcule une position et une taille valide (Ancien enemy_maker) """
-        good_pos = False
-        posx, posy = 0, 0
-
-        while not good_pos:
-            posx = random.randint(self.game.st.CELL_SIZE, self.game.st.SCREEN_WIDTH - self.game.st.CELL_SIZE)
-            posy = random.randint(self.game.st.CELL_SIZE, self.game.st.SCREEN_HEIGHT - self.game.st.CELL_SIZE)
-
-            # Sécurité : distance minimale avec le joueur et le kernel
-            dist_player = pygame.math.Vector2(posx, posy).distance_to(self.game.player.pos)
-            dist_kernel = pygame.math.Vector2(posx, posy).distance_to(self.game.kernel.pos)
-            
-            if dist_player > 100 and dist_kernel > 100:
-                good_pos = True
+    def get_enemy_config(self, spawn_area: tuple[int, int]):
+        """ Calcule une position et une taille valide """
+        
+        posx = random.randint(spawn_area[0] - 200, spawn_area[0] + 200)
+        posy = random.randint(spawn_area[1] - 200, spawn_area[1] + 200)
 
         radius = random.randint(15, 30)
         return posx, posy, (radius * 2, radius * 2)
@@ -120,7 +109,31 @@ class WaveManager:
     
 
     def handle_event(self, event) -> bool:
-        return False
+        # Debug des vague
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_x:
+            print(self.game.sceneManager.entityManager.get_active_entities())
+
 
     def draw(self, screen) -> None:
         return
+    
+
+    def get_spawn_area(self) -> tuple[int, int]:
+        # 1. On définit le centre (ton Kernel est généralement au milieu du monde)
+        center_x = self.game.st.WORLD_WIDTH // 2
+        center_y = self.game.st.WORLD_HEIGHT // 2
+
+        # 2. On choisit un rayon aléatoire 
+        # (Entre la zone de sécurité et le bord de la carte)
+        min_dist = 600
+        max_dist = self.game.st.WORLD_WIDTH // 2 - 200
+        rayon = random.randint(min_dist, max_dist)
+
+        # 3. On choisit un angle aléatoire entre 0 et 2π (360°)
+        angle = random.uniform(0, 2 * math.pi)
+
+        # 4. Conversion coordonnées polaires -> cartésiennes
+        x = center_x + rayon * math.cos(angle)
+        y = center_y + rayon * math.sin(angle)
+
+        return int(x), int(y)

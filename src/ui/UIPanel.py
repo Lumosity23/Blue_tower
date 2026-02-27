@@ -14,7 +14,7 @@ class UIPanel(UIElement):
         self.border_width = 2 # Pixel
     
 
-    def set_label(self, text) -> None:
+    def set_label(self, text, size_text: int=100) -> None:
         self.label = UIText(self.rect.centerx, self.rect.top - 30, text, 100, uid="text_panel")
         self.add_child(self.label)
     
@@ -25,7 +25,7 @@ class UIPanel(UIElement):
             return
         
         if not self.debug:
-            abs_rect = self.get_absolute_rect()
+            abs_rect = self.get_screen_rect()
             pygame.draw.rect(surface, self.border_color, abs_rect, self.border_width)
             
             

@@ -57,7 +57,7 @@ class UIElement:
         '''
             Met a jour sa position init si self est un enfant
         '''
-        self.absolute_rect = self.get_absolute_rect()
+        self.absolute_rect = self.get_screen_rect()
 
 
     def add_child(self, new_child: "UIElement") -> None:
@@ -69,7 +69,7 @@ class UIElement:
         new_child.home_position()
 
     
-    def get_absolute_rect(self) -> pygame.Rect:
+    def get_screen_rect(self) -> pygame.Rect:
         '''
             permet de connaitre sa position absolue sur l'ecran
         '''
@@ -153,10 +153,6 @@ class UIElement:
                     child: "UIElement"
                     for child in self.children:
                         child.set_child(argument)
-            else:
-                print(f"l'Attribut {argument}, n'est pas de type bool")
-        else:
-            print(f"UIElement n'as pas l'attribut suivant {argument}")
 
 
     def draw(self, surface: pygame.Surface):
@@ -167,7 +163,7 @@ class UIElement:
         # Verifier que l'element dois etre afficher
         if not self.visible: return
         
-        abs_rect = self.get_absolute_rect()
+        abs_rect = self.get_screen_rect()
         surface.blit(self.image, abs_rect)
 
         if self.debug:
@@ -202,7 +198,7 @@ class UIElement:
                 child.reset_position() """
 
 
-    def hide(self) -> None:
+    def kill(self) -> None:
         '''
             Masque l'element de l'ecran et reinitialise sa position de depart
         '''

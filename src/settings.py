@@ -112,7 +112,7 @@ class Settings:
 
     KERNEL_STATS: dict = field(default_factory=lambda: {
         "hp": 1000,
-        "cooldown": 1500,
+        "cooldown": 1000,
         "size": (128, 128)
     })
 

@@ -32,7 +32,7 @@ class App:
 
         # Variable d'etats
         self.mode = "EASY" # NORMAL, HARD, INSANE, DEMON
-        self.state = "PLAYING" # PAUSE, GAME_OVER, PLAYING
+        self.state = "MENU" # PAUSE, GAME_OVER, PLAYING
         self.edit_mode = False
 
         # Init des differents composante du jeu
@@ -43,25 +43,25 @@ class App:
         self.walletManager = WalletManager(self)
         
         # Declaration des variables de base
-        self.player = Player(self)
-        self.kernel = Kernel(self)
+        self.player = None
+        self.kernel = None
         self.grid = Grid(self)
-        
-        self.sceneManager.entityManager.root.add_child(self.player)
-        self.sceneManager.entityManager.root.add_child(self.kernel)
-        
-        # Camera suis notre joueur
-        self.sceneManager.main_camera.follow(self.player.pos)
 
         # Init de HUD
         self.ui_manager.OSD.post_init()
 
         # Declaration des ecoute sur les event
-        self.eventManager.subscribe("RESTART_GAME", self.start_game)
+        self.eventManager.subscribe("NEW_GAME", self.start_game)
         self.eventManager.subscribe("QUIT", self.quit)
         self.eventManager.subscribe("PAUSE", self.freeze)
+        self.eventManager.subscribe("UNPAUSE", self.unfreeze)
         self.eventManager.subscribe("BUILD_MODE", self.edit)
 
+        # Annonce le lancemeent du jeu avec le Menu
+        self.eventManager.publish("MENU")
+
+        return True
+        
 
     # Boucle qui va recupree les event
     def on_event(self, event):
@@ -81,9 +81,14 @@ class App:
             self._running = False
         
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
+            if event.key == pygame.K_ESCAPE and self.state == "PAUSE":
+                self.eventManager.publish("UNPAUSE")
+                return True
+            
+            if event.key == pygame.K_ESCAPE and self.state == "PLAYING":
                 self.eventManager.publish("PAUSE")
-
+                return True
+            
 
     # la logic et tout le reste se trouve ici dans la boucle
     def on_loop(self, dt):
@@ -92,10 +97,10 @@ class App:
             # Le SceneManager s'occupe du tri Z-Sort et du dessin via la caméra
             self.sceneManager.update(dt)
         
-        # Verifier si le joueur est toujours en vie
-        if not self.player.alive or not self.kernel.alive:
-            self.game_over = True
-            self.eventManager.publish("GAME_OVER")
+            # Verifier si le joueur est toujours en vie
+            if not self.player.alive or not self.kernel.alive:
+                self.game_over = True
+                self.eventManager.publish("GAME_OVER")
         
         self.ui_manager.root.update(dt)
 
@@ -118,7 +123,7 @@ class App:
 
     def start_game(self):
         # Reinitialiser le manager et les entite unique via l'event "RESTART_GAME"
-        self.eventManager.publish("NEW_GAME",data=None)
+        self.state = "PLAYING"
         self.game_over = False
 
 
@@ -129,6 +134,8 @@ class App:
     def freeze(self) -> None:
         self.state = "PAUSE"
 
+    def unfreeze(self) -> None:
+        self.state = "PLAYING"
 
     def edit(self) -> None:
         self.edit_mode = not self.edit_mode

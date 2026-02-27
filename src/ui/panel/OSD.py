@@ -50,7 +50,9 @@ class OSD(UIElement):
             x=self.game.st.SCREEN_WIDTH // 2 - 100, # Centré en haut
             y=20, 
             w=400, h=40,
-            uid="HUD_KERNEL_HP"
+            font_size= 35,
+            font_color=(100, 100, 100),
+            uid=f"{self.child_uid}KERNEL_HP"
         )
         self.kernel_hp_bar.dynamic_color = True
 
@@ -71,7 +73,7 @@ class OSD(UIElement):
 
     
     def get_wave_number(self) -> str:
-        return str(self.game.sceneManager.entityManager.waveManager.wave_number)
+        return str(self.game.sceneManager.waveManager.wave_number)
     
     def get_len_enemies(self) -> str:
         return str(len(self.game.sceneManager.entityManager.get_entities("ENEMY")))

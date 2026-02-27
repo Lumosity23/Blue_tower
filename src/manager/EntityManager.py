@@ -1,5 +1,6 @@
+from random import randint
 from entities.Entity import Entity
-from manager.WaveManager import WaveManager
+from entities.player import Player
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from main import App
@@ -9,11 +10,10 @@ if TYPE_CHECKING:
 class EntityManager:
     def __init__(self, game: "App"):
         self.game = game
+        self.st = self.game.st
         self.entities: list["Entity"] = []  # Notre pool global
-        self.root = Entity(0, 0, 0, 0, "ROOT", "Entity_manager_ROOT")
 
-        self.waveManager = WaveManager(game)
-        self.root.add_child(self.waveManager)
+        self.game.eventManager.subscribe("NEW_GAME", self.new_game)
 
 
     def spawn(self, entity_class, x, y, uid=None, **kwargs):
@@ -30,10 +30,10 @@ class EntityManager:
 
         # 2. Si on en trouve une, on la réactive
         if recycled_entity:
-            recycled_entity.spawn(x, y, uid)
-            # On peut passer des arguments supplémentaires si besoin
-            if hasattr(recycled_entity, 'reset'):
-                recycled_entity.reset(**kwargs)
+            recycled_entity.spawn(x, y, uid=uid, **kwargs)
+            # On l'attache à la caméra pour le rendu (SceneManager coordination)
+            self.game.sceneManager.main_camera.add_entity(recycled_entity)
+            
             return recycled_entity
 
         # 3. Sinon, on en crée une nouvelle
@@ -41,17 +41,22 @@ class EntityManager:
         self.entities.append(new_entity)
         
         # On l'attache à la caméra pour le rendu (SceneManager coordination)
-        if hasattr(self.game.sceneManager, "main_camera"):
-            self.game.sceneManager.main_camera.add_child(new_entity)
+        self.game.sceneManager.main_camera.add_entity(new_entity)
             
         return new_entity
 
     def update(self, dt):
         """ Update uniquement les entités actives """
-        e: "Entity"
-        for e in self.entities:
-            if e.active:
-                e.update(dt)
+        # Update tout le entites active
+        for entity in self.entities:
+            if entity.active:
+                entity.update(dt)
+
+                # Apres l'update si l'entite est morte, on la retire de la camera
+                if not entity.active:
+                    self.game.sceneManager.main_camera.remove_entity(entity)
+
+        self.check_bullet_collisions()
 
 
     def check_bullet_collisions(self):
@@ -64,22 +69,35 @@ class EntityManager:
                     b: "Bullet"
                     b.on_hit(e)
                     break # Une balle ne touche qu'un ennemi à la fois (sauf pénétration)
-
-
-    def get_active_entities(self):
-        """ Retourne la liste triée pour le rendu (Z-Sorting) """
-        active_list = [e for e in self.entities if e.active and e.visible]
-        # Tri par le bas du rect (pour la perspective 2D)
-        return sorted(active_list, key=lambda e: e.rect.bottom)
-    
+     
 
     def get_entities(self, tag: str) -> list["Entity"]:
-        ''' Retourne la liste de entites active du tag passer
+        ''' Retourne la liste de entites active du tag passer\n
             tag: nom en str qui reprenset le type d'enties voulu
         '''
-        return [e for e in self.entities if e.active and e.visible and e.tag == tag]
+        return [e for e in self.entities if e.active and e.visible and e.tag == tag.upper()]
         
 
     def clear_pool(self):
         """ Vide la mémoire (utile lors d'un changement de niveau) """
-        self.entities.clear()
+        for entity in self.entities:
+            entity.kill()
+            # On la retire de la camera
+            self.game.sceneManager.main_camera.remove_entity(entity)
+
+
+    def new_game(self) -> None:
+        
+        self.clear_pool()
+        
+        x = randint(self.st.WORLD_WIDTH // 2 - 300, self.st.WORLD_WIDTH // 2 + 300)
+        y = randint(self.st.WORLD_HEIGHT // 2 - 300, self.st.WORLD_HEIGHT // 2 + 300)
+        
+        # 1. On spawn le joueur via le système standard
+        # Le spawn() renvoie l'entité créée/recyclée, on l'assigne au pointeur global !
+        self.game.player = self.spawn(Player, x, y, uid="PLAYER_1", tag="PLAYER", game=self.game)
+        
+        # 2. On dit à la caméra de le suivre
+        self.game.sceneManager.main_camera.follow(self.game.player)
+
+        

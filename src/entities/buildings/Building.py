@@ -14,10 +14,10 @@ class Building(Entity):
         super().__init_subclass__(**kwargs)
         cls.BUILDING_TYPES[cls.__name__.upper()] = cls
 
-    def __init__(self, x, y, data: dict, game: "App", uid: str = None):
+    def __init__(self, x, y, data: dict, game: "App", tag, uid: str = None):
         # 1. Init Entity (Position Monde)
         w, h = data.get("size", (game.st.CELL_SIZE, game.st.CELL_SIZE))
-        super().__init__(x, y, w, h, uid)
+        super().__init__(x, y, w, h, tag=tag, uid=uid)
         
         self.game = game
         self.data = data # On garde le dictionnaire de config

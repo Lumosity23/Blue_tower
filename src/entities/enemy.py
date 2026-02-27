@@ -33,20 +33,21 @@ class Enemie(Entity):
         
         # --- ENFANT : Barre de vie ---
         # Elle est attachée à l'ennemi et suit ses mouvements automatiquement
-        self.hp_bar = UIProgressBar(x=0, y=-10, w=self.rect.w, h=5, uid=f"{uid}_hp" if uid else None)
+        self.hp_bar = UIProgressBar(x=0, y=-10, w=self.rect.w, h=5, uid=f"{uid}_hp" if uid else None, show_text=False)
         self.hp_bar.dynamic_color = True
         self.add_child(self.hp_bar)
 
 
-    def spawn(self, x, y, uid=None):
+    def spawn(self, x, y, size, game, uid=None):
         """ Surcharge de spawn pour réinitialiser la logique de l'ennemi """
         super().spawn(x, y, uid)
+        self.size = size
         self.current_hp = self.max_hp
         self.hp_bar.update_values(self.current_hp, self.max_hp)
         self.arrived = True
         # On s'assure que les enfants sont bien réactivés
-        self.set_child("active", own=True)
-        self.set_child("visible", own=True)
+        self.set_child("active", True)
+        self.set_child("visible", True)
 
 
     def update(self, dt):
@@ -104,14 +105,12 @@ class Enemie(Entity):
         self.hp_bar.update_values(self.current_hp, self.max_hp)
         
         if self.current_hp <= 0:
-            self.die()
+            self.kill()
 
 
-    def die(self):
+    def kill(self):
         """ Mort de l'ennemi : on désactive au lieu de supprimer (Pooling) """
-        self.active = False
-        self.visible = False
-        
         # On prévient le reste du jeu
         reward = self.type * 20
         self.game.eventManager.publish("ENEMY_KILLED", reward)
+        super().kill()

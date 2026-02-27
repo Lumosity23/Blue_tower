@@ -75,7 +75,7 @@ class UIButton(UIElement):
 
     
     def handle_event(self, event: pygame.event.EventType) -> bool:
-        abs_rect = self.get_absolute_rect()
+        abs_rect = self.get_screen_rect()
         mouse_pos = pygame.mouse.get_pos()
         is_hovered = abs_rect.collidepoint(mouse_pos)
 
