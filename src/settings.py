@@ -34,10 +34,11 @@ class Settings:
     
     # Taille du monde réel (La carte totale où la caméra voyage)
     # Ici, une carte de 50x50 cellules
-    WORLD_COLS: int = 50
-    WORLD_ROWS: int = 50
+    WORLD_COLS: int = 17 * 3
+    WORLD_ROWS: int = 17 * 3
     WORLD_WIDTH: int = WORLD_COLS * CELL_SIZE
     WORLD_HEIGHT: int = WORLD_ROWS * CELL_SIZE
+    CHUNK_SIZE: int = 3 # 3x3 CELLS
     
     # Utilisé pour le culling (ne pas dessiner hors champ)
     @property
@@ -59,8 +60,8 @@ class Settings:
     # Plus c'est haut, plus l'ennemi évite la zone. 0 = Infranchissable.
     TYPE_COST: Dict[str, int] = field(default_factory=lambda: {
         "EMPTY": 1,
-        "WALL": 0,    # 0 car infranchissable, l'ennemi doit contourner
-        "TURRET": 0,
+        "WALL": 50,    # 0 car infranchissable, l'ennemi doit contourner
+        "TURRET": 25,
         "PLAYER": 1
     })
 

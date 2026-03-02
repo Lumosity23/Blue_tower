@@ -15,7 +15,7 @@ class UIPanel(UIElement):
     
 
     def set_label(self, text, size_text: int=100) -> None:
-        self.label = UIText(self.rect.centerx, self.rect.top - 30, text, 100, uid="text_panel")
+        self.label = UIText(self.rect.centerx, self.rect.top - 30, text, 100, uid=f"{text}_text_panel")
         self.add_child(self.label)
     
     def draw(self, surface):

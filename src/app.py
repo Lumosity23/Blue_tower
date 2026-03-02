@@ -38,14 +38,16 @@ class App:
         # Init des differents composante du jeu
         self.eventManager = EventManager()
         self.spriteManager = SpriteManager(self)
+
+        # Declaration des variables de base
+        self.player = None
+        self.kernel = Kernel(self)
+        self.grid = Grid(self)
+        
         self.sceneManager = SceneManager(self)
         self.ui_manager = UIManager(self)
         self.walletManager = WalletManager(self)
         
-        # Declaration des variables de base
-        self.player = None
-        self.kernel = None
-        self.grid = Grid(self)
 
         # Init de HUD
         self.ui_manager.OSD.post_init()
@@ -125,6 +127,7 @@ class App:
         # Reinitialiser le manager et les entite unique via l'event "RESTART_GAME"
         self.state = "PLAYING"
         self.game_over = False
+        self.edit_mode = False
 
 
     def quit(self) -> None:

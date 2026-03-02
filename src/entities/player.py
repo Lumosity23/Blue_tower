@@ -99,6 +99,8 @@ class Player(Entity):
         self.constraints_world()
         #self.update_grid_logic()
         
+        self.check_chunk()
+            
         # Appel de l'update d'Entity pour propager aux enfants (barre de vie)
         super().update(dt)
     
@@ -119,6 +121,14 @@ class Player(Entity):
         self.pos.x = max(0, min(self.pos.x, self.game.st.WORLD_WIDTH - self.rect.w))
         self.pos.y = max(0, min(self.pos.y, self.game.st.WORLD_HEIGHT - self.rect.h))
         self.rect.topleft = self.pos
+
+
+    def check_chunk(self) -> None:
+        # Verifier si on a changer de chunk
+        new_chunk = ( self.pos.x // self.game.st.CHUNK_SIZE, self.pos.y // self.game.st.CHUNK_SIZE ) 
+        if new_chunk != self.old_chunk:
+            self.chunk_changed = True
+            self.chunk = new_chunk
 
 
     def take_damage(self, amount):

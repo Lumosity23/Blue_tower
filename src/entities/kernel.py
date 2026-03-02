@@ -1,6 +1,5 @@
 import pygame
 from .bullet import Bullet
-from ui.UIProgressBar import UIProgressBar
 from entities.Entity import Entity # Import de la nouvelle base
 from typing import TYPE_CHECKING
 
@@ -23,7 +22,7 @@ class Kernel(Entity):
         
         # Setup visuel
         self.image = self.game.spriteManager.get_custom_sprite(game.st.KERNEL, (w, h), 'circle')
-        
+
         # Stats
         self.max_hp = self.stats["hp"]
         self.current_hp = self.max_hp
@@ -31,9 +30,6 @@ class Kernel(Entity):
         self.last_shoot = pygame.time.get_ticks()
         self.cooldown = self.stats["cooldown"]
         self.alive = True
-
-        # Souscription
-        self.game.eventManager.subscribe("NEW_GAME", self.reset)
 
 
     def update(self, dt):
@@ -68,8 +64,8 @@ class Kernel(Entity):
     def reset(self):
         # On utilise spawn pour remettre l'entité en état "neuf"
         w, h = self.rect.size
-        spawn_x = (self.game.st.WORLD_WIDTH / 2) - (w / 2)
-        spawn_y = (self.game.st.WORLD_HEIGHT / 2) - (h / 2)
+        spawn_x = (self.game.st.WORLD_WIDTH / 2) #- (w / 2)
+        spawn_y = (self.game.st.WORLD_HEIGHT / 2) #- (h / 2)
         
         self.spawn(spawn_x, spawn_y, "KERNEL")
         self.current_hp = self.max_hp

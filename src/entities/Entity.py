@@ -11,7 +11,8 @@ class Entity:
         # Position dans l'espace du niveau
         self.rect = pygame.Rect(x, y, w, h)
         self.pos = pygame.math.Vector2(x, y)
-
+        self.chunk = None
+        self.old_chunk = None
         # Surface de l'entite
         self.image = pygame.Surface((w, h))
         # self.flip_x = False
@@ -21,6 +22,7 @@ class Entity:
         self.visible = True
         self.active = True
         self.alive = True
+        self.chunk_changed = False
 
         # Composite Paterne
         self.parent: "Entity" = None
@@ -39,7 +41,7 @@ class Entity:
             child.parent = None
         
     
-    def spawn(self, x, y, uid=None):
+    def spawn(self, x, y, uid=None, **kwargs):
         ''' Réactive l'entité et la place à une nouvelle position '''
         self.pos.update(x, y)
         self.rect.topleft = (x, y)
@@ -114,7 +116,7 @@ class Entity:
         if not self.visible: return
 
         # Syncronisation de la pos logic avec le rendu
-        self.rect.topleft = round(self.pos.x), round(self.pos.y)
+        self.rect.topleft = (round(self.pos.x), round(self.pos.y))
 
         # Logique de mouvement, IA, etc.
         child: "Entity"

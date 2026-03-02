@@ -28,6 +28,7 @@ class Cursor(Entity):
         # On s'abonne à l'événement de sélection
         self.game.eventManager.subscribe("BUILD_MODE", self.show)
         self.game.eventManager.subscribe("SELECT_BUILD", self.on_build_selected)
+        self.game.eventManager.subscribe("NEW_GAME", self.reset)
 
 
     def on_build_selected(self, build_key: str):
@@ -126,6 +127,11 @@ class Cursor(Entity):
         self.active = not self.active
 
 
+    def reset(self) -> None:
+        self.visible = False
+        self.on_build_canceled()
+
+        
     def get_pos_world(self) -> tuple[int, int]:
         mx, my = pygame.mouse.get_pos()
         cam_offset = self.game.sceneManager.main_camera.offset

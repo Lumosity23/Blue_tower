@@ -1,14 +1,48 @@
 {
     "ROOT": {
         "ShopPanel": {
-            "ShopPanel_btn_wall_buy": {
-                "ShopPanel_btn_wall_buy_text": "fin de branche"
+            "text_panel": "fin de branche",
+            "ShopPanel_00": {
+                "ShopPanel_00_label": "fin de branche",
+                "ShopPanel_00_sprite": "fin de branche",
+                "ShopPanel_00_btn": {
+                    "ShopPanel_00_btn_text": "fin de branche"
+                }
             },
-            "ShopPanel_btn_turret_buy": {
-                "ShopPanel_btn_turret_buy_text": "fin de branche"
+            "ShopPanel_01": {
+                "ShopPanel_01_label": "fin de branche",
+                "ShopPanel_01_sprite": "fin de branche",
+                "ShopPanel_01_btn": {
+                    "ShopPanel_01_btn_text": "fin de branche"
+                }
             },
-            "ShopPanel_btn_test": {
-                "ShopPanel_btn_test_text": "fin de branche"
+            "ShopPanel_02": {
+                "ShopPanel_02_label": "fin de branche",
+                "ShopPanel_02_sprite": "fin de branche",
+                "ShopPanel_02_btn": {
+                    "ShopPanel_02_btn_text": "fin de branche"
+                }
+            },
+            "ShopPanel_10": {
+                "ShopPanel_10_label": "fin de branche",
+                "ShopPanel_10_sprite": "fin de branche",
+                "ShopPanel_10_btn": {
+                    "ShopPanel_10_btn_text": "fin de branche"
+                }
+            },
+            "ShopPanel_11": {
+                "ShopPanel_11_label": "fin de branche",
+                "ShopPanel_11_sprite": "fin de branche",
+                "ShopPanel_11_btn": {
+                    "ShopPanel_11_btn_text": "fin de branche"
+                }
+            },
+            "ShopPanel_12": {
+                "ShopPanel_12_label": "fin de branche",
+                "ShopPanel_12_sprite": "fin de branche",
+                "ShopPanel_12_btn": {
+                    "ShopPanel_12_btn_text": "fin de branche"
+                }
             }
         },
         "OSD": {
@@ -17,7 +51,10 @@
             "OSD_enemis_restant": "fin de branche",
             "OSD_FPS": "fin de branche",
             "OSD_gameMode_text": "fin de branche",
-            "OSD_creatif_text": "fin de branche"
+            "OSD_creatif_text": "fin de branche",
+            "OSD_KERNEL_HP": {
+                "OSD_KERNEL_HP_text": "fin de branche"
+            }
         },
         "GameOverPanel": {
             "GameOverPanel_btn_restart": {
@@ -39,6 +76,18 @@
                 "PausePanel_btn_resume_text": "fin de branche"
             },
             "PausePanel_title_PAUSE": "fin de branche"
+        },
+        "MenuPanel": {
+            "text_panel": "fin de branche",
+            "MenuPanel_btn_quit": {
+                "MenuPanel_btn_quit_text": "fin de branche"
+            },
+            "MenuPanel_btn_restart": {
+                "MenuPanel_btn_restart_text": "fin de branche"
+            },
+            "MenuPanel_btn_resume": {
+                "MenuPanel_btn_resume_text": "fin de branche"
+            }
         }
     }
 }

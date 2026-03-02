@@ -37,22 +37,80 @@ class Enemie(Entity):
         self.hp_bar.dynamic_color = True
         self.add_child(self.hp_bar)
 
+        # Pipeline de vie
+        self.state = "MOVE"
+        self.action = {
+            "IDLE" : self.idle,
+            "MOVE" : self.move,
+            "ATTACK" : self.attack
+        }
 
-    def spawn(self, x, y, size, game, uid=None):
+
+    def spawn(self, x, y, size, uid=None, **kwargs):
         """ Surcharge de spawn pour réinitialiser la logique de l'ennemi """
         super().spawn(x, y, uid)
         self.size = size
         self.current_hp = self.max_hp
         self.hp_bar.update_values(self.current_hp, self.max_hp)
         self.arrived = True
-        # On s'assure que les enfants sont bien réactivés
-        self.set_child("active", True)
-        self.set_child("visible", True)
-
+    
 
     def update(self, dt):
         if not self.active: return
         
+        # Effectuer l'action de son statment
+        self.action[self.state](dt)
+
+        self.check_chunk()
+        # Update des enfants (Barre de vie)
+        super().update(dt)
+
+
+    def next_target(self) -> tuple[int, int]:
+        cx, cy = self.game.grid.get_cell_pos(self.pos.x, self.pos.y)
+        neighbors = self.game.grid.getNeighborsAndCost(cx, cy)
+        
+        next_cell = (cx, cy)
+        cheapest_cell = float('inf')
+        
+        for n, cost in neighbors.items():
+            if cost < cheapest_cell:
+                cheapest_cell = cost
+                next_cell = n
+
+        return next_cell
+
+
+    def check_chunk(self) -> None:
+        # Verifier si on a changer de chunk
+        new_chunk = ( self.pos.x // self.game.st.CHUNK_SIZE, self.pos.y // self.game.st.CHUNK_SIZE ) 
+        if new_chunk != self.old_chunk:
+            self.chunk_changed = True
+            self.chunk = new_chunk
+
+
+    def take_damage(self, amount):
+        if not self.active: return
+        
+        self.current_hp -= amount
+        self.hp_bar.update_values(self.current_hp, self.max_hp)
+        
+        if self.current_hp <= 0:
+            self.kill()
+
+
+    def kill( self ):
+        """ Mort de l'ennemi : on désactive au lieu de supprimer (Pooling) """
+        # On prévient le reste du jeu
+        reward = self.type * 20
+        self.game.eventManager.publish("ENEMY_KILLED", reward)
+        super().kill()
+    
+
+    def move(self, dt) -> None:
+        
+        # Verifier si pas cible prioritaire ( self.type[target] : ex -> self.player )
+        # entities_around = self.game.grid.get_entites_around(self.pos, radius=2)
         # 1. Logique de Pathfinding (Flow Field / Grid)
         if self.arrived:
             nx, ny = self.next_target()
@@ -75,42 +133,14 @@ class Enemie(Entity):
             # Déplacement fluide sur self.pos (float)
             self.pos += self.director_vector * self.velocity * dt
             # Mise à jour du Rect pour les collisions et get_screen_rect
-            self.rect.center = self.pos
+        
         else:
             self.arrived = True
 
-        # 3. Update des enfants (Barre de vie)
-        super().update(dt)
+
+    def attack(self, dt) -> None:
+        pass
 
 
-    def next_target(self) -> tuple[int, int]:
-        cx, cy = self.game.grid.get_cell_pos(self.pos.x, self.pos.y)
-        neighbors = self.game.grid.getNeighborsAndCost(cx, cy)
-        
-        next_cell = (cx, cy)
-        cheapest_cell = float('inf')
-        
-        for n, cost in neighbors.items():
-            if cost < cheapest_cell:
-                cheapest_cell = cost
-                next_cell = n
-
-        return next_cell
-
-
-    def take_damage(self, amount):
-        if not self.active: return
-        
-        self.current_hp -= amount
-        self.hp_bar.update_values(self.current_hp, self.max_hp)
-        
-        if self.current_hp <= 0:
-            self.kill()
-
-
-    def kill(self):
-        """ Mort de l'ennemi : on désactive au lieu de supprimer (Pooling) """
-        # On prévient le reste du jeu
-        reward = self.type * 20
-        self.game.eventManager.publish("ENEMY_KILLED", reward)
-        super().kill()
+    def idle(self, dt) -> None:
+        pass

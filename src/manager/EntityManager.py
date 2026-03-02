@@ -33,7 +33,7 @@ class EntityManager:
             recycled_entity.spawn(x, y, uid=uid, **kwargs)
             # On l'attache à la caméra pour le rendu (SceneManager coordination)
             self.game.sceneManager.main_camera.add_entity(recycled_entity)
-            
+            self.game.grid.set_entity_chunk(recycled_entity)
             return recycled_entity
 
         # 3. Sinon, on en crée une nouvelle
@@ -42,7 +42,8 @@ class EntityManager:
         
         # On l'attache à la caméra pour le rendu (SceneManager coordination)
         self.game.sceneManager.main_camera.add_entity(new_entity)
-            
+        self.game.grid.set_entity_chunk(new_entity)
+
         return new_entity
 
     def update(self, dt):
@@ -55,6 +56,7 @@ class EntityManager:
                 # Apres l'update si l'entite est morte, on la retire de la camera
                 if not entity.active:
                     self.game.sceneManager.main_camera.remove_entity(entity)
+                    self.game.grid.remove_entity_chunk(entity)
 
         self.check_bullet_collisions()
 

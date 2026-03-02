@@ -18,6 +18,9 @@ class BuildManager:
         # État
         self.selected_build: Building | None = None
 
+        ##### INIT KERNEL #####
+        self.entities.append(self.game.kernel)
+
         # Souscriptions
         self.game.eventManager.subscribe("PLACE_BUILDING", self.attempt_build_from_event)
         self.game.eventManager.subscribe("NEW_GAME", self.new_game)
@@ -33,7 +36,7 @@ class BuildManager:
                 # Apres l'update si l'entite est morte, on la retire de la camera
                 if not entity.active:
                     self.game.sceneManager.main_camera.remove_entity(entity)
-
+                    self.game.grid.remove_entity_chunk(entity)
         # self.check_build_collisions()
 
 
@@ -109,6 +112,8 @@ class BuildManager:
 
         # Mise à jour du monde
         self.game.grid.set_cell_value(pos.x, pos.y, type_name)
+        self.game.grid.set_entity_chunk(build)
+        print(self.game.grid.get_cell_pos(pos.x, pos.y))
 
         # On met à jour le chemin des ennemis vers le Kernel
         self.game.grid.update_flow_field(self.game.kernel.pos)
@@ -123,7 +128,6 @@ class BuildManager:
 
         # On inverse l'ordre pour la sélection (le dernier bâti est "au dessus")
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            clicked_build = None
             # IMPORTANT : Les bâtiments utilisent get_screen_rect() dans leur handle_event
             # On délègue la vérification de collision aux entités elles-mêmes
             for build in reversed(self.entities):
@@ -132,6 +136,7 @@ class BuildManager:
                     if self.selected_build and self.selected_build != build:
                         self.selected_build.deselect()
                     self.selected_build = build
+                    # print("Batiment selctionner")
                     return True
 
             # Si on clique ailleurs, on déselectionne tout
@@ -151,18 +156,7 @@ class BuildManager:
 
     
     def new_game(self):
+        # cache tout les element et remetre le kernel sur l'ecran
         self.clear_all()
-        
-        wx = self.game.st.WORLD_WIDTH // 2
-        wy = self.game.st.WORLD_HEIGHT // 2
-        
-        # Ici, tu peux faire une méthode dédiée ou utiliser ta logique de pool de bâtiment
-        # Imaginons que tu instancies directement ton Kernel (s'il hérite de Building) :
-        kernel = Kernel( self.game )
-        
-        # On l'ajoute au Manager et à la Camera
-        self.entities.append(kernel)
-        self.game.sceneManager.main_camera.add_entity(kernel)
-        
-        # On sauvegarde le pointeur global
-        self.game.kernel = kernel
+        self.game.sceneManager.main_camera.add_entity(self.game.kernel)
+        self.game.kernel.reset()

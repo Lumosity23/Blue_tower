@@ -56,6 +56,9 @@ class Bullet(Entity):
         self.pos += self.velocity_vector * dt
         self.rect.center = self.pos
 
+        # mise a jour de son chunk (utilise lors qu'on aura un monde infinie)
+        #self.check_chunk()
+
         # Suppression si sortie du MONDE (et pas seulement de l'écran)
         if not self.st.WORLD_RECT.colliderect(self.rect):
             self.kill()
@@ -73,3 +76,11 @@ class Bullet(Entity):
         
         # La balle disparaît après l'impact (ou perd 1 HP pour la pénétration)
         self.kill()
+    
+
+    """ def check_chunk(self) -> None:
+        # Verifier si on a changer de chunk
+        new_chunk = ( self.pos.x // self.game.st.CHUNK_SIZE, self.pos.y // self.game.st.CHUNK_SIZE ) 
+        if new_chunk != self.old_chunk:
+            self.chunk_changed = True
+            self.chunk = new_chunk """

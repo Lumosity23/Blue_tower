@@ -47,9 +47,13 @@ class Building(Entity):
         if not self.visible or not self.active: return False
 
         # On utilise get_screen_rect pour gérer le décalage caméra !
-        screen_rect = self.get_screen_rect()
+        world_rect = self.get_screen_rect()
         mouse_pos = pygame.mouse.get_pos()
-        is_hovered = screen_rect.collidepoint(mouse_pos)
+        cam_offset = self.game.sceneManager.main_camera.offset
+        world_mouse_pos = (mouse_pos[0] + cam_offset.x, mouse_pos[1] + cam_offset.y)
+
+        # 3. Maintenant les deux sont dans le World Space, on peut tester !
+        is_hovered = world_rect.collidepoint(world_mouse_pos)
 
         # 1. Gestion du Survol (Hover)
         if event.type == pygame.MOUSEMOTION:
@@ -74,10 +78,12 @@ class Building(Entity):
         self.game.eventManager.publish("BUILDING_SELECTED", self)
         self.on_state_change()
 
+
     def deselect(self) -> None:
         if self.state == "SELECTED":
             self.state = "IDLE"
             self.on_state_change()
+
 
     def on_state_change(self):
         """ Gère les effets visuels selon l'état """
@@ -91,6 +97,7 @@ class Building(Entity):
         elif self.state == "HOVER":
             # Petit effet de brillance/teinte légère
             self.image.fill((30, 30, 30), special_flags=pygame.BLEND_RGB_ADD)
+
 
     def take_damage(self, amount):
         self.current_hp -= amount
