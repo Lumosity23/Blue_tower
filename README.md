@@ -53,24 +53,24 @@ Clone le repo avec la commande suivante
 git clone https://github.com/Lumosity23/Blue_tower.git
 ```
 
-Installer UV si vous ne l'avez pas ( c'est un packages manager comme pip mais en mieux )
+### Installer UV si vous ne l'avez pas ( c'est un packages manager comme pip mais en mieux )
 
-pour linux :
+#### pour linux :
 ```
 sudo apt install uv
 ```
 
-pour windows :
+#### pour windows :
 ```
 winget install uv
 ```
 
-ensuite utiliser uv pour sync votre clonage pour avoir le meme environemnt que moi :
+#### ensuite utiliser uv pour sync votre clonage pour avoir le meme environemnt que moi :
 ```
 uv sync
 ```
 
-et pour finir pour lancer le jeu executer simplement la commande suivante :
+#### pour finir pour lancer le jeu executer simplement la commande suivante :
 ```
 uv run src/main.py
 ```
