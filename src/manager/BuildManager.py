@@ -18,9 +18,6 @@ class BuildManager:
         # État
         self.selected_build: Building | None = None
 
-        ##### INIT KERNEL #####
-        self.entities.append(self.game.kernel)
-
         # Souscriptions
         self.game.eventManager.subscribe("PLACE_BUILDING", self.attempt_build_from_event)
         self.game.eventManager.subscribe("NEW_GAME", self.new_game)
@@ -113,7 +110,7 @@ class BuildManager:
         # Mise à jour du monde
         self.game.grid.set_cell_value(pos.x, pos.y, type_name)
         self.game.grid.set_entity_chunk(build)
-        print(self.game.grid.get_cell_pos(pos.x, pos.y))
+        # print(self.game.grid.get_cell_pos(pos.x, pos.y))
 
         # On met à jour le chemin des ennemis vers le Kernel
         self.game.grid.update_flow_field(self.game.kernel.pos)
@@ -136,7 +133,7 @@ class BuildManager:
                     if self.selected_build and self.selected_build != build:
                         self.selected_build.deselect()
                     self.selected_build = build
-                    # print("Batiment selctionner")
+                    print(f"Batiment {self.selected_build.uid} selctionner")
                     return True
 
             # Si on clique ailleurs, on déselectionne tout

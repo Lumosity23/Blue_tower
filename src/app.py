@@ -41,13 +41,16 @@ class App:
 
         # Declaration des variables de base
         self.player = None
-        self.kernel = Kernel(self)
+        
         self.grid = Grid(self)
         
         self.sceneManager = SceneManager(self)
         self.ui_manager = UIManager(self)
         self.walletManager = WalletManager(self)
-        
+        self.kernel = Kernel(self)
+
+        ##### INIT KERNEL #####  <---------- A CHANGER CAR PAS PROPRE !!!! 
+        self.sceneManager.buildManager.entities.append(self.kernel)
 
         # Init de HUD
         self.ui_manager.OSD.post_init()

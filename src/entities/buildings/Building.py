@@ -1,6 +1,7 @@
 import pygame
 from entities.Entity import Entity
 from ui.UIProgressBar import UIProgressBar
+from ui.UIRange import UIRange
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -36,12 +37,22 @@ class Building(Entity):
         self.current_hp = self.max_hp
         self.cost = data.get("cost", 0)
         self.range = data.get("range", 0)
+        self.damage = data.get("damage", 0)
+        self.cooldown = data.get("cooldown", 0)
 
         # --- ENFANT : Barre de Vie ---
         # On la crée mais on la cache par défaut (elle ne s'affiche qu'au survol/clic)
-        self.hp_bar = UIProgressBar(x=5, y=-12, w=self.rect.w - 10, h=6, uid=f"{uid}_hp" if uid else None)
+        self.hp_bar = UIProgressBar(x=5, y=-12, w=self.rect.w - 10, h=6, uid=f"{uid}_hp" if uid else None, show_text=False)
         self.hp_bar.visible = False
         self.add_child(self.hp_bar)
+
+        if self.data["range"] > 0:
+            self.range_circle = UIRange((0 - self.range) + (self.data["size"][0] / 2), (0 - self.range) + (self.data["size"][1] / 2), self.data['range'], f"{uid}_range")
+            self.range_circle.visible = False
+            self.add_child(self.range_circle)
+        else:
+            self.range_circle = None
+            
 
     def handle_event(self, event) -> bool:
         if not self.visible or not self.active: return False
@@ -89,6 +100,8 @@ class Building(Entity):
         """ Gère les effets visuels selon l'état """
         # Visibilité de la barre de vie
         self.hp_bar.visible = (self.state in ["HOVER", "SELECTED"])
+        if self.range_circle:
+            self.range_circle.visible = (self.state in ["HOVER", "SELECTED"])
         
         # On recrée l'image avec un feedback (ex: contour blanc si sélectionné)
         self.image = self.source_image.copy()
@@ -103,15 +116,43 @@ class Building(Entity):
         self.current_hp -= amount
         self.hp_bar.update_values(self.current_hp, self.max_hp)
         if self.current_hp <= 0:
-            self.die()
+            self.kill()
 
-    def die(self):
-        self.active = False
-        self.visible = False
+
+    def kill(self):
         # Logique de destruction (libérer la grille)
         self.game.eventManager.publish("BUILDING_DESTROYED", self)
+        super().kill()
+
 
     def update(self, dt):
         # Les bâtiments n'ont souvent pas de mouvement, mais ils peuvent 
         # avoir des enfants qui s'animent (tourelles qui tournent)
         super().update(dt)
+    
+
+    def draw(self, surface: pygame.Surface):
+        if not self.visible: return
+        
+        # ATTENTION : get_screen_rect() de Entity renvoie la pos absolue du MONDE ! 
+        # (Le nom de la méthode est un peu trompeur, on devrait l'appeler get_world_rect)
+        world_rect = self.get_screen_rect()
+        cam_offset = self.game.sceneManager.main_camera.offset
+        
+        # World -> Screen (On SOUSTRAIT l'offset pour dessiner manuellement)
+        screen_x = world_rect.x - cam_offset.x
+        screen_y = world_rect.y - cam_offset.y
+
+        # 1. Dessiner le cercle (centré sur le screen_x/y)
+        if self.current_build_data and self.range_circle_surface:
+            r = self.current_build_data['range']
+            range_pos = (screen_x + (self.rect.w//2) - r, screen_y + (self.rect.h//2) - r)
+            surface.blit(self.range_circle_surface, range_pos)
+
+        # 2. Dessiner le Ghost Sprite
+        temp_image = self.image.copy()
+        if self.is_occupied:
+            temp_image.fill((255, 50, 50, 100), special_flags=pygame.BLEND_RGBA_MULT)
+        
+        # On dessine aux coordonnées calculées !
+        surface.blit(temp_image, (screen_x, screen_y))

@@ -92,6 +92,14 @@ class Settings:
             "range": 0,
             "sprite_id": "bank",
             "size": (64, 64)
+        },
+        "KERNEL" : {
+            "hp": 1000,
+            "range": 500,
+            "cooldown": 1000,
+            "damage": 15,
+            "sprite_id": "kernel",
+            "size": (128, 128)
         }
     })
 
@@ -134,7 +142,7 @@ class Settings:
     ASSET_PATHS: Dict[str, str] = field(default_factory=lambda: {
         "PLAYER": 'assets/player.png',
         "ENEMIE": 'assets/enemie.png',
-        "KERNEL": 'assets/kernel.png',
+        "kernel": 'assets/kernel.png',
         "wall": 'assets/wall_gab.png',
         "turret": 'assets/turret.png',
         "bullet": 'assets/bullet.png'

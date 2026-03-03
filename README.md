@@ -44,6 +44,37 @@ L'idee deriere ce jeu est d'apprendre la programmation et le Game Dev
 ## Future MAJ/Ajout pour le jeu (d'ici le 15 mars)
 Un systeme d'upgrade pour les batiments et le joueurs, un panel pour avoir des info sur les element selectionner.
 
+
+## Installation
+Pour installer et test mon jeu, rien de plus simple : 
+
+Clone le repo avec la commande suivante
+```
+git clone https://github.com/Lumosity23/Blue_tower.git
+```
+
+Installer UV si vous ne l'avez pas ( c'est un packages manager comme pip mais en mieux )
+
+pour linux :
+```
+sudo apt install uv
+```
+
+pour windows :
+```
+winget install uv
+```
+
+ensuite utiliser uv pour sync votre clonage pour avoir le meme environemnt que moi :
+```
+uv sync
+```
+
+et pour finir pour lancer le jeu executer simplement la commande suivante :
+```
+uv run src/main.py
+```
+
 ## Appropos de moi
 
 Je suis un dev junior, j'apprend la programation depuis maintenant `3 mois`, j'essaye de faire ce qui me passe par la tete tout en ecoutant les retours de mes amis sur mon projet.

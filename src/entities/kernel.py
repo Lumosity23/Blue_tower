@@ -1,35 +1,26 @@
 import pygame
 from .bullet import Bullet
-from entities.Entity import Entity # Import de la nouvelle base
+from .buildings.Building import Building # Import de la nouvelle base
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from main import App
 
-class Kernel(Entity):
+
+class Kernel(Building):
     def __init__(self, game: "App"):
         # 1. Initialisation de la base Entity
         # On le place au centre du monde
-        self.game = game
-        
-        self.stats = self.game.st.KERNEL_STATS
-        w, h = self.stats['size']
+        data =  game.st.BUILDINGS_DATA["KERNEL"]
+        w, h = data['size']
 
         spawn_x = (game.st.WORLD_WIDTH / 2) - (w / 2)
         spawn_y = (game.st.WORLD_HEIGHT / 2) - (h / 2)
         
-        super().__init__(spawn_x, spawn_y, w, h, tag="KERNEL", uid="KERNEL")
-        
-        # Setup visuel
-        self.image = self.game.spriteManager.get_custom_sprite(game.st.KERNEL, (w, h), 'circle')
+        super().__init__(spawn_x, spawn_y, data, game, tag="KERNEL", uid="KERNEL")
 
         # Stats
-        self.max_hp = self.stats["hp"]
-        self.current_hp = self.max_hp
-        self.kills = 0
         self.last_shoot = pygame.time.get_ticks()
-        self.cooldown = self.stats["cooldown"]
-        self.alive = True
 
 
     def update(self, dt):
@@ -41,8 +32,9 @@ class Kernel(Entity):
             # On utilise le centre du Kernel pour chercher l'ennemi
             target = self.game.sceneManager.waveManager.nearest_enemy(self.rect.center)
             if target:
-                self.shoot(target.rect.center)
-                self.last_shoot = current_time
+                if self.pos.distance_to(target.pos) <= self.data["range"]:
+                    self.shoot(target.rect.center)
+                    self.last_shoot = current_time
 
         # Propagation automatique de l'update aux enfants (comme la barre de vie)
         super().update(dt)
@@ -64,8 +56,8 @@ class Kernel(Entity):
     def reset(self):
         # On utilise spawn pour remettre l'entité en état "neuf"
         w, h = self.rect.size
-        spawn_x = (self.game.st.WORLD_WIDTH / 2) #- (w / 2)
-        spawn_y = (self.game.st.WORLD_HEIGHT / 2) #- (h / 2)
+        spawn_x = (self.game.st.WORLD_WIDTH / 2) - (w / 2)
+        spawn_y = (self.game.st.WORLD_HEIGHT / 2) - (h / 2)
         
         self.spawn(spawn_x, spawn_y, "KERNEL")
         self.current_hp = self.max_hp

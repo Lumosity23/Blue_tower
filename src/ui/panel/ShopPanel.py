@@ -24,12 +24,24 @@ class ShopPanel(UIPanel):
         self.set_label("SHOP")
 
         # 2. Création des Boutons DANS le panneau
-        sprite_id = self.game.st.BUILDINGS_DATA["WALL"]["sprite_id"]
-        cost = self.game.st.BUILDINGS_DATA["WALL"]["cost"]
-
+        sprite_id = self.game.st.BUILDINGS_DATA["TURRET"]["sprite_id"]
+        
+        size = self.game.st.CELL_SIZE, self.game.st.CELL_SIZE
         for col in range(2):
             for row in range(3):
-                element = UICompose(30 + (col * 230), 160 + (row * 230), 200, 200, "test", self.game.spriteManager.get_base_image(sprite_id), self.buy_turret, f"{str(cost)} $", f"{child_uid}{col}{row}" )
+                if (col + row) % 2 == 0:
+                    action = self.buy_turret
+                    sprite_id = self.game.st.BUILDINGS_DATA["TURRET"]["sprite_id"]
+                    cost = self.game.st.BUILDINGS_DATA["TURRET"]["cost"]
+                else:
+                    action = self.buy_wall
+                    sprite_id = self.game.st.BUILDINGS_DATA["WALL"]["sprite_id"]
+                    cost = self.game.st.BUILDINGS_DATA["WALL"]["cost"]
+
+                element = UICompose(30 + (col * 230), 160 + (row * 230), 200, 200, "test",
+                                     self.game.spriteManager.get_sprite_resize(sprite_id, size),
+                                       action,
+                                         f"{str(cost)} $", f"{child_uid}{col}{row}" )
                 self.add_child(element)
 
 
