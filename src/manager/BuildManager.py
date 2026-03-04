@@ -133,13 +133,14 @@ class BuildManager:
                     if self.selected_build and self.selected_build != build:
                         self.selected_build.deselect()
                     self.selected_build = build
-                    print(f"Batiment {self.selected_build.uid} selctionner")
+                    self.game.eventManager.publish( "ELEMENT_SELECTED", build.data )
                     return True
 
             # Si on clique ailleurs, on déselectionne tout
             if self.selected_build:
                 self.selected_build.deselect()
                 self.selected_build = None
+                self.game.eventManager.publish( "ELEMENT_UNSELECTED" )
 
         return False
     

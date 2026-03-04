@@ -3,17 +3,15 @@
 Est un jeu tower defense/degestion une sorte de `Bloon TD5` fusionner avec un `Clash of Clan` le tout code en python avec Pygame.
 
 ## Histoire du jeu
-Blue est une petite creature bleu, qui se retrouve seul au millieu d'une Ile dessertique.
-Pensant etre seul il pars a la decouverte de se nouveau monde, mais il se rendra tres vite compte qu'il n'est pas le seul a s'etre retouver ici qu'il y aurai un peu plus que du hasrad pour que d'autre creature comme lui se retrouve comme lui.
-Pour survire fasse au autre creature hostile il va devoir explorer, et ameliorer son campemant
-pour survire le plus longtemps et qui sais peut-etre pourra t-il lui aussi rejoindre `LES GRANDS` ...
+Blue est une petite créature bleue, qui se retrouve seule au milieu d’une île déserte. Pensant être seul, il part à la découverte de ce nouveau monde, mais il se rend très vite compte qu’il n’est pas le seul à s’être retrouvé ici, qu’il y aurait un peu plus que du hasard pour que d’autres créatures comme lui se retrouvent comme lui. Pour survivre face aux autres créatures hostiles, il va devoir explorer, et améliorer son campement pour survivre le plus longtemps et qui sait, peut-être pourra-t-il lui aussi rejoindre les ```grands``` …
 
-## Fonctionnalite du moteur de jeu
-pour l'instant le jeu embarque un editeur de UI, ce qui permet de maniere visuel de deplacer les element afficher a l'ecran comme le ``score``, les `boutons` ou encore les `element du shop` juste avec la souris en activant le mode edit via la touche F1.
+## Fonctionnalités du moteur de jeu :
+Pour l’instant, le jeu embarque un éditeur d’UI, ce qui permet de manière visuelle de déplacer les éléments affichés à l’écran comme le score, les boutons ou encore les éléments du shop, juste avec la souris en activant le mode edit via la touche F1. 
 
-Il enporte aussi avec lui plein d'elemtn de base comme un UIgraph avec ne nombreux UIElement pour pouvoir developper de maniere rapide son UI,
+Il emporte aussi avec lui pleins d’éléments de base comme un UIgraph avec de nombreux UIelement pour pouvoir développer de manière rapide son UI. 
 
-On y retoiuve aussi un systeme d'Entity,une Camera et Une Scene. ce qui permet de facilement diviser son jeu en couche logic
+On y retrouve aussi un système d’entité, une caméra et une scène. Ce qui permet de facilement diviser son jeu en couches logiques. 
+
 
 ``` 
 App -> Managers -> Entity
@@ -23,13 +21,14 @@ App -> Managers -> Entity
 ``` 
 
 ```
-L'idee deriere ce jeu est d'apprendre la programmation et le Game Dev
+L'idée derrière ce jeu est d’apprendre la programmation et le Game Dev.
 ```
 
-## Qql image de mon jeu
+## Quelques images de mon jeu
+
 ### Blue 
 <img src="assets/player.png" alt="drawing" width="50">
- le perso principale
+ personnage principale [ vue de face ]
 
 ### Image (Menu/Pause/Shop/Ingame)
 #### MENU
@@ -78,3 +77,5 @@ uv run src/main.py
 ## Appropos de moi
 
 Je suis un dev junior, j'apprend la programation depuis maintenant `3 mois`, j'essaye de faire ce qui me passe par la tete tout en ecoutant les retours de mes amis sur mon projet.
+
+## [CREDITS](CREDITS.md)

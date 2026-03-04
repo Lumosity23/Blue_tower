@@ -64,6 +64,8 @@ class Kernel(Building):
         self.kills = 0
         self.game.eventManager.publish("UPDATE_KERNEL_HP", self.current_hp)
         self.alive = True
+        self.range_circle.visible = False
+        self.hp_bar.visible = False
     
 
     def shoot(self, target: tuple) -> None:

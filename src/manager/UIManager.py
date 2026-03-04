@@ -7,6 +7,7 @@ from ui.panel.OSD import OSD
 from ui.panel.GameOverPanel import GameOverPanel
 from ui.panel.PausePanel import PausePanel
 from ui.panel.MenuPanel import MenuPanel
+from ui.panel.InfoPanel import InfoPanel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -42,13 +43,13 @@ class UIManager():
         self.game_over_panel = GameOverPanel(game)
         self.pause = PausePanel(game)
         self.menu = MenuPanel(game)
+        self.info = InfoPanel(game)
 
-        # Ajout des enfants
-        self.root.add_child(self.shop_panel)
-        self.root.add_child(self.OSD)
-        self.root.add_child(self.game_over_panel)
-        self.root.add_child(self.pause)
-        self.root.add_child(self.menu)
+        # Ajout des enfants dans l'odre de profondeur d'affichage
+        enfants = [self.shop_panel, self.info, self.OSD, self.game_over_panel, self.pause, self.menu ]
+        for e in enfants:
+            self.root.add_child(e)
+        
 
         # Declaration des event sur ecoute
         # self.game.eventManager.subscribe("OPEN_UPGRADE_PANEL", self.upgrade_panel.show)

@@ -51,6 +51,9 @@ class UIElement:
         # Pour l'animation
         self.target: tuple = None
         self.speed: int = 300 # Pixel par secondes (rapide)
+        self.bouncing: bool = False
+        self.start_pos = x, y
+        self.end_pos = None
 
     
     def home_position(self) -> None:
@@ -190,6 +193,9 @@ class UIElement:
             Permet d'affcher l'ement sur l'ecran
         """
         self.visible = True
+        if self.start_pos and self.end_pos:
+            self.target = self.start_pos
+
         """ self.reset_position()
         
         child: "UIElement"
@@ -202,4 +208,17 @@ class UIElement:
         '''
             Masque l'element de l'ecran et reinitialise sa position de depart
         '''
-        self.visible = False
+        if not self.end_pos:
+            self.visible = False
+
+        else:
+            self.target = self.end_pos
+
+
+    def set_animation( self, start_pos: tuple[int, int], end_pos: tuple[int, int], speed: int, bouncing: bool=False) -> None:
+
+        self.bouncing = True
+        self.speed = speed
+
+        self.start_pos = start_pos
+        self.end_pos = end_pos
