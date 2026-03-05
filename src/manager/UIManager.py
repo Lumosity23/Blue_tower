@@ -123,12 +123,12 @@ class UIManager():
             return True
 
         if event.type == pygame.KEYDOWN and event.key == pygame.K_g:
-            if not self.shop_panel.visible:
-                self.shop_panel.show()
-                return
+            if not self.shop_panel.open:
+                self.game.eventManager.publish( "OPEN_SHOP" )
+                return True
             else : 
-                self.shop_panel.kill()
-                return
+                self.game.eventManager.publish( "CLOSE_SHOP" )
+                return True
 
         # SI ON EST EN MODE ÉDITION : ON DÉPLACE 
         if self.edit_mode:

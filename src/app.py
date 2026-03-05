@@ -58,6 +58,7 @@ class App:
         # Declaration des ecoute sur les event
         self.eventManager.subscribe("NEW_GAME", self.start_game)
         self.eventManager.subscribe("QUIT", self.quit)
+        self.eventManager.subscribe( "QUIT_GAME", self.on_menu )
         self.eventManager.subscribe("PAUSE", self.freeze)
         self.eventManager.subscribe("UNPAUSE", self.unfreeze)
         self.eventManager.subscribe("BUILD_MODE", self.edit)
@@ -94,6 +95,10 @@ class App:
                 self.eventManager.publish("PAUSE")
                 return True
             
+            if event.key == pygame.K_f:
+                self.eventManager.publish( "GAMEOVER" )
+                return True
+
 
     # la logic et tout le reste se trouve ici dans la boucle
     def on_loop(self, dt):
@@ -136,6 +141,8 @@ class App:
     def quit(self) -> None:
         self._running = False
 
+    def on_menu(self) -> None:
+        self.state = "MENU"
 
     def freeze(self) -> None:
         self.state = "PAUSE"

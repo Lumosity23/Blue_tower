@@ -58,13 +58,12 @@ class Building(Entity):
         if not self.visible or not self.active: return False
 
         # On utilise get_screen_rect pour gérer le décalage caméra !
-        world_rect = self.get_screen_rect()
         mouse_pos = pygame.mouse.get_pos()
         cam_offset = self.game.sceneManager.main_camera.offset
         world_mouse_pos = (mouse_pos[0] + cam_offset.x, mouse_pos[1] + cam_offset.y)
 
         # 3. Maintenant les deux sont dans le World Space, on peut tester !
-        is_hovered = world_rect.collidepoint(world_mouse_pos)
+        is_hovered = self.get_screen_rect().collidepoint(world_mouse_pos)
 
         # 1. Gestion du Survol (Hover)
         if event.type == pygame.MOUSEMOTION:

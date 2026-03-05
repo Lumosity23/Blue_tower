@@ -168,9 +168,23 @@ class Player(Entity):
 
     def handle_event(self, event):
         
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1 and not self.game.edit_mode:
+        mouse_pos = pygame.mouse.get_pos()
+        cam_offset = self.game.sceneManager.main_camera.offset
+        world_mouse_pos = (mouse_pos[0] + cam_offset.x, mouse_pos[1] + cam_offset.y)
+
+        # Exemple d'interaction basique : détection du clic sur l'entité
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.get_screen_rect().collidepoint(world_mouse_pos):
+                self.game.eventManager.publish( "ELEMENT_SELECTED" , self.stats )
+                self.selected = True
+                return True
+            
+            # Si clique ailleurs
+            if self.selected:
+                self.game.eventManager.publish( "ELEMENT_UNSELECTED" )
+
+            if not self.game.edit_mode:
                 self.shoot()
                 return True
-
+     
         super().handle_event(event)

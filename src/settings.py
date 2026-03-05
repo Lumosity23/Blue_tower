@@ -2,6 +2,9 @@ import pygame
 from dataclasses import dataclass, field
 from typing import Dict, Tuple, List
 
+
+BASIC, FAST, TANK, BOSS = 1, 2, 3, 4
+
 @dataclass
 class Settings:
     """
@@ -104,25 +107,65 @@ class Settings:
     })
 
     # ==========================================
-    # 5. UNITÉS (PLAYER & ENEMIES)
+    # 5. DATA MASTER : ENTITÉS GÉNÉRALES
     # ==========================================
-    PLAYER_STATS: dict = field(default_factory=lambda: {
-        "hp": 100,
-        "velocity": 500,
-        "size": (44, 76) # 22x38 * 2
+    ENTITIES_DATA: Dict[str, dict] = field(default_factory=lambda: {
+        "PLAYER": {
+            "hp": 100,
+            "velocity": 500,
+            "sprite_id": "player",
+            "size": (44, 76)
+        },
+        "KERNEL": {
+            "hp": 1000,
+            "cooldown": 1000,
+            "damage": 15,
+            "sprite_id": "kernel",
+            "size": (128, 128)
+        }
     })
 
-    ENEMIE_STATS: dict = field(default_factory=lambda: {
-        "hp": 15,
-        "velocity": 150,
-        "damage": 5,
-        "size": (30, 30)
-    })
+    # ==========================================
+    # 6. DATA MASTER : ENNEMIS (DDA COMPATIBLE)
+    # ==========================================
 
-    KERNEL_STATS: dict = field(default_factory=lambda: {
-        "hp": 1000,
-        "cooldown": 1000,
-        "size": (128, 128)
+    ENEMIES_DATA: Dict[str, dict] = field(default_factory=lambda: {
+        BASIC: {
+            "hp": 15,          
+            "armor": 2,        
+            "velocity": 150,
+            "damage": 5,
+            "sprite_id": "enemy", # _basic
+            "size": (30, 30),
+            "reward": 10       
+        },
+        FAST: {
+            "hp": 10,
+            "armor": 0,
+            "velocity": 250,
+            "damage": 3,
+            "sprite_id": "enemy", # _fast
+            "size": (25, 25),
+            "reward": 15
+        },
+        TANK: {
+            "hp": 60,
+            "armor": 12,
+            "velocity": 80,
+            "damage": 15,
+            "sprite_id": "enemy", # _tank
+            "size": (50, 50),
+            "reward": 50
+        },
+        BOSS: { # Apparaît tous les 5 waves
+            "hp": 250,
+            "armor": 25,
+            "velocity": 100,
+            "damage": 30,
+            "sprite_id": "enemy", # _boss
+            "size": (90, 90),
+            "reward": 200
+        }
     })
 
     # ==========================================

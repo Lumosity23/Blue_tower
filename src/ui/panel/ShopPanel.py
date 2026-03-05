@@ -12,16 +12,21 @@ class ShopPanel(UIPanel):
     def __init__(self, game: "App"):
         self.game = game
         self.st = self.game.st
-        super().__init__(self.st.SCREEN_WIDTH - 530, 90, 490, 800)
+        super().__init__(self.st.SCREEN_WIDTH, 90, 490, 800)
         self.uid = "ShopPanel"
-        self.visible = False
-
+        self.open = False
+        
         if self.uid:
             child_uid = f"{self.uid}_"
         else:
             child_uid = ""
 
         self.set_label("SHOP")
+        self.set_animation( (self.st.SCREEN_WIDTH - 530, 90), (self.st.SCREEN_WIDTH, 90), 600 )
+
+        # Souscription
+        self.game.eventManager.subscribe( "OPEN_SHOP", self.show)
+        self.game.eventManager.subscribe( "CLOSE_SHOP", self.kill)
 
         # 2. Création des Boutons DANS le panneau
         sprite_id = self.game.st.BUILDINGS_DATA["TURRET"]["sprite_id"]
@@ -50,3 +55,14 @@ class ShopPanel(UIPanel):
 
     def buy_turret(self):
         self.game.eventManager.publish("SELECT_BUILD", "TURRET")
+
+    def show(self):
+
+        self.open = True
+        super().show()
+
+    
+    def kill(self):
+
+        self.open = False
+        super().kill()

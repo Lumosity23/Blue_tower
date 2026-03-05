@@ -9,11 +9,11 @@ if TYPE_CHECKING:
 class GameOverPanel(UIPanel):
 
     def __init__(self, game: "App", uid = None):
-        super().__init__(50, 50, game.st.SCREEN_WIDTH - 100, game.st.SCREEN_HEIGHT - 100, (45, 45, 45), uid)
+        super().__init__(50, -(game.st.SCREEN_WIDTH - 100), game.st.SCREEN_WIDTH - 100, game.st.SCREEN_HEIGHT - 100, (45, 45, 45), uid)
         self.game = game
         self.st = game.st
-        self.visible = False
         self.uid = "GameOverPanel"
+        self.set_animation( (50, 50), (50, -(game.st.SCREEN_WIDTH - 100)))
         if self.uid:
             child_uid = f"{self.uid}_"
         else:
@@ -27,13 +27,20 @@ class GameOverPanel(UIPanel):
         self.add_child(btn_quit)
         self.add_child(text)
 
+        self.game.eventManager.subscribe( "GAMEOVER", self.show )
+
 
     def restart_game(self) -> None:
 
-        self.game.eventManager.publish("RESTART_GAME")
+        self.game.eventManager.publish("NEW_GAME")
         return
 
     def quit(self) -> None:
 
-        self.game.eventManager.publish("QUIT")
+        self.game.eventManager.publish("QUIT_GAME")
         return
+    
+    def show(self):
+        
+        print("GAMEOVER")
+        super().show()

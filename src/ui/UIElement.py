@@ -215,7 +215,7 @@ class UIElement:
             self.target = self.end_pos
 
 
-    def set_animation( self, start_pos: tuple[int, int], end_pos: tuple[int, int], speed: int, bouncing: bool=False) -> None:
+    def set_animation( self, start_pos: tuple[int, int], end_pos: tuple[int, int], speed: int=300, bouncing: bool=False) -> None:
 
         self.bouncing = True
         self.speed = speed
