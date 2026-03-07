@@ -47,7 +47,7 @@ class Camera:
 
 
     def draw(self, surface: pygame.Surface):
-        
+
         sorted_entities = sorted(
             self.entities_to_show, 
             key=lambda e: e.get_screen_rect().bottom
@@ -65,7 +65,7 @@ class Camera:
                 e.custom_draw(surface, self.offset)
 
             else:
-                # --- Ancien comportement standard ---
+                # --- comportement standard ---
                 rect = e.get_screen_rect()
                 pos_on_screen = (rect.x - self.offset.x, rect.y - self.offset.y)
                 fast_blit(e.image, pos_on_screen)

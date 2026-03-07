@@ -26,5 +26,6 @@ class InfoPanel( UIPanel ):
     def show_element( self, data: dict ) -> None:
 
         # print(len(data))
+        self.game.eventManager.publish( "CLOSE_SHOP" )
 
         super().show()

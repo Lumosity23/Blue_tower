@@ -4,10 +4,12 @@ from entities.Entity import Entity
 from manager.BuildManager import BuildManager
 from manager.EntityManager import EntityManager
 from manager.WaveManager import WaveManager
+from manager.WorldManager import WorldManager
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from main import App
-    
+    import pygame
+
 
 class SceneManager:
     def __init__(self, game: "App"):
@@ -20,6 +22,7 @@ class SceneManager:
         self.buildManager = BuildManager(game)
         self.entityManager = EntityManager(game)
         self.waveManager = WaveManager(game)
+        self.worldManager = WorldManager(game)
 
         # 3. Le Curseur de jeu (Pont entre UI et Monde)
         self.cursor = Cursor(game)
@@ -41,6 +44,13 @@ class SceneManager:
         """ 
         C'est ici qu'on gère le rendu global du monde physique.
         """
+        # Dessiner le background ( Les chunks )
+        self.worldManager.TileMap.draw(screen)
+
+        # Afficher la grille si EDIT_MODE
+        if self.game.edit_mode:
+                self.game.grid.draw(screen)
+
         # La camera dessine tout les entites active
         self.main_camera.draw(screen)
 

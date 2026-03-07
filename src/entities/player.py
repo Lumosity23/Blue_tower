@@ -15,13 +15,13 @@ class Player(Entity):
         # Position initiale au centre du monde
         self.game = game
         
-        self.stats = self.game.st.PLAYER_STATS
+        self.stats = self.game.st.ENTITIES_DATA["PLAYER"]
         w, h = self.stats['size']
 
         super().__init__(spawn_x, spawn_y, w, h, tag=tag, uid=uid)
         
         # Setup de l'image
-        self.image = self.game.spriteManager.get_custom_sprite(self.game.st.PLAYER, (w, h))
+        self.image = self.game.spriteManager.get_custom_sprite(self.stats["sprite_id"], (w, h))
         
         # Stats
         self.velocity = 500

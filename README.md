@@ -32,17 +32,26 @@ L'idée derrière ce jeu est d’apprendre la programmation et le Game Dev.
 
 ### Image (Menu/Pause/Shop/Ingame)
 #### MENU
-![](assets/Screenshot%20from%202026-03-02%2022-11-27.png)
+![](assets/ScreenShots/Screenshot%20from%202026-03-02%2022-11-27.png)
 #### IN-GAME
-![](assets/Screenshot%20from%202026-03-02%2022-11-40.png)
+![](assets/ScreenShots/Screenshot%20from%202026-03-02%2022-11-40.png)
 #### PAUSE
-![](assets/Screenshot%20from%202026-03-02%2022-11-44.png)
+![](assets/ScreenShots/Screenshot%20from%202026-03-02%2022-11-44.png)
 #### SHOP
-![](assets/Screenshot%20from%202026-03-02%2022-11-59.png)
+![](assets/ScreenShots/Screenshot%20from%202026-03-02%2022-11-59.png)
 
 ## Future MAJ/Ajout pour le jeu (d'ici le 15 mars)
 Un systeme d'upgrade pour les batiments et le joueurs, un panel pour avoir des info sur les element selectionner.
 
+## Update du JOUR ( 7 mars )
+J'ai ajoute un systeme de background avec des chunks, j'ai changer qql effet visu pour que cela match mieux avec le nouveau font.
+
+J'ai donc cree deux nouvelle class -> TileMap ( qui gere donc le background et bientot la map entiere avec de biomes )
+
+Le WorldManager ( Qui va gere tout ce qui conserne la Map donc GRID et TILES )
+
+### voici un petit screen de ces Ajouts :
+![](assets/ScreenShots/image.png)
 
 ## Installation
 Pour installer et test mon jeu, rien de plus simple : 

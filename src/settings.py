@@ -37,8 +37,8 @@ class Settings:
     
     # Taille du monde réel (La carte totale où la caméra voyage)
     # Ici, une carte de 50x50 cellules
-    WORLD_COLS: int = 17 * 3
-    WORLD_ROWS: int = 17 * 3
+    WORLD_COLS: int = 18 * 3
+    WORLD_ROWS: int = 18 * 3
     WORLD_WIDTH: int = WORLD_COLS * CELL_SIZE
     WORLD_HEIGHT: int = WORLD_ROWS * CELL_SIZE
     CHUNK_SIZE: int = 3 # 3x3 CELLS
@@ -183,10 +183,11 @@ class Settings:
     
     # Dictionnaire des chemins pour le SpriteManager
     ASSET_PATHS: Dict[str, str] = field(default_factory=lambda: {
-        "PLAYER": 'assets/player.png',
-        "ENEMIE": 'assets/enemie.png',
+        "player": 'assets/player.png',
+        "enemy" : 'assets/enemie.png',
         "kernel": 'assets/kernel.png',
-        "wall": 'assets/wall_gab.png',
+        "chunk" : 'assets/chunk.png',
+        "wall"  : 'assets/wall_gab.png',
         "turret": 'assets/turret.png',
         "bullet": 'assets/bullet.png'
     })

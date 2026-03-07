@@ -54,7 +54,7 @@ class Cursor(Entity):
         if data['range'] > 0:
             r = data['range']
             self.range_circle_surface = pygame.Surface((r*2, r*2), pygame.SRCALPHA)
-            pygame.draw.circle(self.range_circle_surface, (200, 200, 200, 80), (r, r), r, 2)
+            pygame.draw.circle(self.range_circle_surface, (255, 255, 255), (r, r), r, 2)
         else:
             self.range_circle_surface = None
 

@@ -22,8 +22,9 @@ class Entity:
         self.visible = True
         self.active = True
         self.alive = True
+        self.selected = False
         self.chunk_changed = False
-        self.kills = 0    
+        self.kills = 0
 
         # Composite Paterne
         self.parent: "Entity" = None

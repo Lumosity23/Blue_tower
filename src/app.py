@@ -120,8 +120,6 @@ class App:
         self._display_surf.fill((10, 10, 10)) # Fond neutre
         
         if self.state == "PLAYING" or self.state == "PAUSE":
-            if self.edit_mode:
-                self.grid.draw(self._display_surf)
             # Le SceneManager s'occupe du tri Z-Sort et du dessin via la caméra
             self.sceneManager.draw(self._display_surf)
 

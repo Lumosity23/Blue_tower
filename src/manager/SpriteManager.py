@@ -79,3 +79,24 @@ class SpriteManager:
             return final_surf
     
         return image
+    
+
+    def slice_sprite(self, sprite_id: str, slicing: tuple[int, int], margin: int=0, spacing: int=0 ) -> dict[tuple[int, int], pygame.Surface]:
+        ''' Permet de couper un grand sprite en plus petit Rect '''
+
+        bigSprite = self.get_base_image(sprite_id)
+        wBT, hBT = bigSprite.get_size()
+        w, h = slicing
+        tiles = {}
+
+        # On soustrait les marges pour calculer le bon nombre de colonnes/lignes
+        cols = (wBT - 2 * margin + spacing) // (w + spacing)
+        rows = (hBT - 2 * margin + spacing) // (h + spacing)
+
+        for col in range( cols ):
+            for row in range( rows ):
+                x = margin + col * (w + spacing)
+                y = margin + row * (h + spacing)
+                tiles[col, row] = bigSprite.subsurface(pygame.Rect(x, y, w, h))
+            
+        return tiles

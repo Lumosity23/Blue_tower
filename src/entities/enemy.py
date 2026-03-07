@@ -15,11 +15,11 @@ class Enemie(Entity):
         
         self.game = game
         self.type = type
-        self.stats = self.game.st.ENEMIE_STATS
+        self.stats = self.game.st.ENEMIES_DATA[type]
         self.size = self.stats["size"]
 
         # Setup visuel
-        self.image = self.game.spriteManager.get_custom_sprite(self.game.st.ENEMIE, size, 'circle')
+        self.image = self.game.spriteManager.get_custom_sprite(self.stats["sprite_id"], size, 'circle')
         
         # Logique de mouvement
         self.velocity = 150

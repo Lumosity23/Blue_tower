@@ -134,7 +134,6 @@ class BuildManager:
                         self.selected_build.deselect()
                     self.selected_build = build
                     self.game.eventManager.publish( "ELEMENT_SELECTED", build.data )
-                    self.game.eventManager.publish( "CLOSE_SHOP" )
                     return True
 
             # Si on clique ailleurs, on déselectionne tout

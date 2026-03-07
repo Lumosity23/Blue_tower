@@ -72,7 +72,7 @@ class WaveManager:
 
             # 3. Ajustement de la santé selon la formule DDA [cite: 191]
             # %HM = Base_HP * Status_Point + (20% de DPG)
-            base_hp = self.game.st.ENEMIE_STATS["hp"]
+            base_hp = enemy.stats["hp"]
             enemy.max_hp = base_hp * self.status_point + (20 * self.dpg / 100)
             enemy.current_hp = enemy.max_hp
 

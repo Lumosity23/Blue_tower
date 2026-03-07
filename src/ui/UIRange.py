@@ -28,7 +28,7 @@ class UIRange(UIElement):
         r = self.range
 
         self.range_circle_surface = pygame.Surface((r*2, r*2), pygame.SRCALPHA)
-        pygame.draw.circle(self.range_circle_surface, (200, 200, 200, 80), (r, r), r, 2)
+        pygame.draw.circle(self.range_circle_surface, (255, 255, 255), (r, r), r, 2) # , 80 dans la couleur -> (200, 200, 200)
         
         range_pos = (screen_x + (self.rect.w//2) - r, screen_y + (self.rect.h//2) - r)
         surface.blit(self.range_circle_surface, range_pos)  
