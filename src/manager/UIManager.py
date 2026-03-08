@@ -49,7 +49,6 @@ class UIManager():
         enfants = [self.shop_panel, self.info, self.OSD, self.game_over_panel, self.pause, self.menu ]
         for e in enfants:
             self.root.add_child(e)
-        
 
         # Declaration des event sur ecoute
         # self.game.eventManager.subscribe("OPEN_UPGRADE_PANEL", self.upgrade_panel.show)
@@ -69,53 +68,6 @@ class UIManager():
         print(f" UI Edit Mode: {'ON' if self.edit_mode else 'OFF'}")
 
 
-    def load_layout(self) -> dict:
-
-        if not os.path.exists(self.layout_path):
-            return {}
-        
-        try:
-            with open(self.layout_path, "r") as f:
-                return json.load(f)
-            
-        except json.JSONDecodeError:
-            print(" Erreur de lecture du JSON, retour à vide.")
-            return {}
-    
-
-    def save_layout(self):
-        """Parcourt l'arbre UI et sauvegarde les positions."""
-        print(" Sauvegarde du layout en cours...")
-        
-        # On va remplir ce dictionnaire
-        data_to_save = {}
-        
-        # Fonction récursive interne pour visiter tout l'arbre
-        def collect_data(element: "UIElement"):
-            # Si l'élément a un ID, on sauvegarde ses infos
-            if element.uid:
-                data_to_save[element.uid] = {
-                    "x": element.rect.x,
-                    "y": element.rect.y,
-                    "w": element.rect.width,
-                    "h": element.rect.height
-                }
-            
-            # On visite les enfants
-            
-            for child in element.children:
-                collect_data(child)
-
-        # On lance la collecte depuis la racine
-        collect_data(self.root)
-
-        # On écrit dans le fichier
-        with open(self.layout_path, 'w') as f:
-            json.dump(data_to_save, f, indent=4) # indent=4 pour que ce soit joli à lire
-            
-        print(f"Layout sauvegardé dans {self.layout_path} !")
-    
-
     def handle_event(self, event):
         # 1. Activation du mode avec F1
         if event.type == pygame.KEYDOWN and event.key == pygame.K_F1:
@@ -125,6 +77,7 @@ class UIManager():
         if event.type == pygame.KEYDOWN and event.key == pygame.K_g:
             if not self.shop_panel.open:
                 self.game.eventManager.publish( "OPEN_SHOP" )
+                self.game.eventManager.publish( "ELEMENT_UNSELECTED" )
                 return True
             else : 
                 self.game.eventManager.publish( "CLOSE_SHOP" )
@@ -211,34 +164,6 @@ class UIManager():
 
         else: return None
 
-    def save_tree(self, parent: "UIElement") -> None:
-        """Parcourt l'arbre UI et sauvegarde les positions."""
-        print(" Sauvegarde du Tree en cours...")
-
-        # Fonction récursive interne pour visiter tout l'arbre
-        def collect_data(element: "UIElement") -> dict | str:
-            # Si l'élément a un ID, on sauvegarde ses infos
-            own_tree = {}
-            if element.uid:
-                if element.children:
-                    # print("enfant detecter...")
-                    for child in element.children:
-                        own_tree[f"{child.uid}"] = collect_data(child)
-                else:
-                    return "fin de branche"
-                    
-            # retourne l'arbre de l'element
-            return own_tree
-            
-        # On lance la collecte depuis la racine
-        data_to_save = {f"{parent.uid}" : collect_data(parent)}
-
-        # On écrit dans le fichier
-        with open(self.tree_path, 'w') as f:
-            json.dump(data_to_save, f, indent=4) # indent=4 pour que ce soit joli à lire
-            
-        print(f"Tree sauvegardé dans {self.layout_path} !")
-
 
     def on_upgade_panel(self) -> None:
 
@@ -272,3 +197,81 @@ class UIManager():
             child.visible = False
         
         self.menu.visible = True
+
+    
+################ ZONE DE CONFIG POUR LE UI #################
+
+    def save_tree(self, parent: "UIElement") -> None:
+        """Parcourt l'arbre UI et sauvegarde les positions."""
+        print(" Sauvegarde du Tree en cours...")
+
+        # Fonction récursive interne pour visiter tout l'arbre
+        def collect_data(element: "UIElement") -> dict | str:
+            # Si l'élément a un ID, on sauvegarde ses infos
+            own_tree = {}
+            if element.uid:
+                if element.children:
+                    # print("enfant detecter...")
+                    for child in element.children:
+                        own_tree[f"{child.uid}"] = collect_data(child)
+                else:
+                    return "fin de branche"
+                    
+            # retourne l'arbre de l'element
+            return own_tree
+            
+        # On lance la collecte depuis la racine
+        data_to_save = {f"{parent.uid}" : collect_data(parent)}
+
+        # On écrit dans le fichier
+        with open(self.tree_path, 'w') as f:
+            json.dump(data_to_save, f, indent=4) # indent=4 pour que ce soit joli à lire
+            
+        print(f"Tree sauvegardé dans {self.layout_path} !")
+    
+
+    def load_layout(self) -> dict:
+
+        if not os.path.exists(self.layout_path):
+            return {}
+        
+        try:
+            with open(self.layout_path, "r") as f:
+                return json.load(f)
+            
+        except json.JSONDecodeError:
+            print(" Erreur de lecture du JSON, retour à vide.")
+            return {}
+    
+
+    def save_layout(self):
+        """Parcourt l'arbre UI et sauvegarde les positions."""
+        print(" Sauvegarde du layout en cours...")
+        
+        # On va remplir ce dictionnaire
+        data_to_save = {}
+        
+        # Fonction récursive interne pour visiter tout l'arbre
+        def collect_data(element: "UIElement"):
+            # Si l'élément a un ID, on sauvegarde ses infos
+            if element.uid:
+                data_to_save[element.uid] = {
+                    "x": element.rect.x,
+                    "y": element.rect.y,
+                    "w": element.rect.width,
+                    "h": element.rect.height
+                }
+            
+            # On visite les enfants
+            
+            for child in element.children:
+                collect_data(child)
+
+        # On lance la collecte depuis la racine
+        collect_data(self.root)
+
+        # On écrit dans le fichier
+        with open(self.layout_path, 'w') as f:
+            json.dump(data_to_save, f, indent=4) # indent=4 pour que ce soit joli à lire
+            
+        print(f"Layout sauvegardé dans {self.layout_path} !")

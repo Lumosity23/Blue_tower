@@ -17,6 +17,7 @@ class UIButton(UIElement):
         self.text = UIText(20, 10, text, size_text, text_color, uid=uid_text)
         super().__init__(x, y, self.text.rect.w + 40, self.text.rect.h + 20, uid)
         self.add_child(self.text)
+        self.type = "button"
 
         # Arrondi des coins du bouton
         self.border_radius = border_radius

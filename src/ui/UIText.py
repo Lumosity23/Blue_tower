@@ -29,6 +29,7 @@ class UIText(UIElement):
         super().__init__(x, y, 0, 0, uid)
 
         self.uid = uid
+        self.type = "text"
         self.text = callback
         self.text_update = text_update
         self.color = color

@@ -38,12 +38,14 @@ class ShopPanel(UIPanel):
                     action = self.buy_turret
                     sprite_id = self.game.st.BUILDINGS_DATA["TURRET"]["sprite_id"]
                     cost = self.game.st.BUILDINGS_DATA["TURRET"]["cost"]
+                    text = "Turret"
                 else:
                     action = self.buy_wall
                     sprite_id = self.game.st.BUILDINGS_DATA["WALL"]["sprite_id"]
                     cost = self.game.st.BUILDINGS_DATA["WALL"]["cost"]
+                    text = "Wall"
 
-                element = UICompose(30 + (col * 230), 160 + (row * 230), 200, 200, "test",
+                element = UICompose(30 + (col * 230), 160 + (row * 230), 200, 200, text,
                                      self.game.spriteManager.get_sprite_resize(sprite_id, size),
                                        action,
                                          f"{str(cost)} $", f"{child_uid}{col}{row}" )

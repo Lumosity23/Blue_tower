@@ -28,3 +28,9 @@ class Turret(Building):
     
     def shoot(self, target: tuple):
         self.game.sceneManager.entityManager.spawn(Bullet, self.rect.centerx, self.rect.centery, uid=f"{self.uid}_Bullet", target_pos=target, owner=self, bullet_damage=self.damage)
+
+
+Turret.ui_config(
+    ("BAR",  "Vie", "current_hp", "max_hp"),
+    ("TEXT", "Dégâts", "damage")
+)

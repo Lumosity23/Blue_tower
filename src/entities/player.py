@@ -175,7 +175,7 @@ class Player(Entity):
         # Exemple d'interaction basique : détection du clic sur l'entité
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.get_screen_rect().collidepoint(world_mouse_pos):
-                self.game.eventManager.publish( "ELEMENT_SELECTED" , self.stats )
+                self.game.eventManager.publish( "ELEMENT_SELECTED" , self )
                 self.selected = True
                 return True
             

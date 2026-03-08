@@ -45,6 +45,8 @@ class UIElement:
 
         self.debug = False
         self.visible: bool = True
+        self.active: bool = True
+        self.type: str = "Element"
         self.parent: "UIElement" = None
         self.children = []
         
@@ -71,7 +73,14 @@ class UIElement:
         new_child.parent = self # Definition du lien de parente
         new_child.home_position()
 
+
+    def remove_child(self, child: "UIElement") -> None:
+        ''' Retire l'enfant voulue de la list de ces derniers '''
+        if child in self.children:
+            self.children.remove(child)
+            child.parent = None
     
+
     def get_screen_rect(self) -> pygame.Rect:
         '''
             permet de connaitre sa position absolue sur l'ecran

@@ -17,6 +17,7 @@ class UICompose(UIElement):
     def __init__(self, x: int, y: int, w: int, h: int, label_text: str, sprite: pygame.Surface, action_button, text_button: str, uid: str | None = None):
         super().__init__(x, y, w, h, uid)
 
+        self.type = "compose"
         child_uid = f"{uid}_" if uid else ""
         pygame.draw.rect(self.image, (100, 100, 100), (0, 0, self.rect.w, self.rect.h), border_radius=15)
         pygame.draw.rect(self.image, (255, 0, 0), (0, 0, self.rect.w, self.rect.h), 4, 15)

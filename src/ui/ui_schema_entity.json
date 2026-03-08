@@ -1,0 +1,21 @@
+{
+    "TURRET": [
+        {
+            "type": "bar",
+            "ui_class": "UIProgressBar",
+            "label": "Vie",
+            "mapping": {
+                "current": "current_hp",
+                "max": "max_hp"
+            }
+        },
+        {
+            "type": "text",
+            "ui_class": "UIText",
+            "label": "Dégâts",
+            "mapping": {
+                "string": "damage"
+            }
+        }
+    ]
+}

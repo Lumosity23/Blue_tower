@@ -9,6 +9,7 @@ class   UIProgressBar(UIElement):
                  border_color=None, show_text=True, font_size=25, font_color=(255,255,255),
                  uid=None):
         super().__init__(x, y, w, h, uid)
+        self.type = "bar"
         
         # 1. Données de progression
         self.current_val = current_val
@@ -32,10 +33,12 @@ class   UIProgressBar(UIElement):
             # Centrage du texte au milieu de la barre
             self.text_element.rect.center = (w // 2, h // 2)
 
+
     def _get_text_string(self) -> str:
         ''' Fonction interne pour mettre à jour le texte automatiquement '''
         percentage = int(self.display_ratio * 100)
         return f"{percentage}%"
+
 
     def update_values(self, current, max_val=None):
         ''' Met à jour les valeurs et recalcule la cible de l'animation '''
@@ -47,6 +50,7 @@ class   UIProgressBar(UIElement):
             self.target_ratio = self.current_val / self.max_val
         else:
             self.target_ratio = 0
+
 
     def update(self, dt):
         super().update(dt)

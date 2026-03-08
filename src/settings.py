@@ -59,6 +59,15 @@ class Settings:
     KERNEL = "KERNEL"
     ENEMIE = "ENEMIE"
 
+    REFERENT = {
+    "BAR":  ("bar",  "UIProgressBar", ["current", "max"]),
+    "TEXT": ("text", "UIText",        ["string"]),
+    "BOOL": ("bool", "UIBoolean",     ["state"]),
+    "ICON": ("icon", "UIElement",     ["icon_id"])
+    }
+
+    UI_SCHEMA_PATH = "src/ui/ui_schema_entity.json"
+
     # Coût de passage pour le Pathfinding (Flow Field)
     # Plus c'est haut, plus l'ennemi évite la zone. 0 = Infranchissable.
     TYPE_COST: Dict[str, int] = field(default_factory=lambda: {

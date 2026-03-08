@@ -36,7 +36,7 @@ class Bullet(Entity):
             # On pourrait transformer self.image ici si c'est un sprite allongé
             
         # Visuel temporaire (un petit cercle rouge)
-        self.image.fill((0,0,0,0)) # Transparent
+        # self.image.fill((0,0,0,0)) # Transparent
         pygame.draw.circle(self.image, "Red", (self.rect.w//2, self.rect.h//2), 5)
 
 

@@ -5,8 +5,8 @@ class Entity:
 
     def __init__(self, x: int, y: int, w: int, h: int, tag: str, uid: str | None) -> None:
         # ID de l'element
-        self.uid = uid
-        self.tag = tag
+        self.uid: str = uid
+        self.tag: str = tag
 
         # Position dans l'espace du niveau
         self.rect = pygame.Rect(x, y, w, h)
@@ -124,6 +124,24 @@ class Entity:
         child: "Entity"
         for child in self.children:
             child.update(dt)
+
+
+    @classmethod
+    def ui_config(cls, *elements):
+        """
+        La passerelle : elle prend des tuples (Type, Label, Map1, Map2...)
+        et les envoie au configurateur.\n
+        elements: (Type, Lable, Map1, Map2...)
+        """
+        from utils.ui_config import save_entity_schema # Import local pour éviter les cercles
+        
+        # On passe juste le nom de la classe et les données brutes
+        save_entity_schema(name=cls.__name__.upper(), raw_data=elements)
+
+
+
+
+
 
 
 ################################################ DEBUG ########################################################

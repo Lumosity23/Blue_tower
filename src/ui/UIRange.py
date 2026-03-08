@@ -12,7 +12,7 @@ class UIRange(UIElement):
         w, h = self.range * 2, self.range * 2
 
         super().__init__(x, y, w, h, uid)
-
+        self.type = "range"
 
     def custom_draw(self, surface: pygame.Surface, cam_offset: pygame.math.Vector2):
         """ Appelé UNIQUEMENT par la Caméra (OFFSET APPLIQUÉ) """

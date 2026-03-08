@@ -133,7 +133,7 @@ class BuildManager:
                     if self.selected_build and self.selected_build != build:
                         self.selected_build.deselect()
                     self.selected_build = build
-                    self.game.eventManager.publish( "ELEMENT_SELECTED", build.data )
+                    self.game.eventManager.publish( "ELEMENT_SELECTED", build )
                     return True
 
             # Si on clique ailleurs, on déselectionne tout
