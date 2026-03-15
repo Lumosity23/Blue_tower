@@ -49,11 +49,12 @@ class OSD(UIElement):
         self.kernel_hp_bar = UIProgressBar(
             x=self.game.st.SCREEN_WIDTH // 2 - 100, # Centré en haut
             y=20, 
-            w=400, h=40,
-            font_size= 35,
-            font_color=(100, 100, 100),
             uid=f"{self.child_uid}KERNEL_HP"
         )
+        self.kernel_hp_bar.setup(
+            w=400, h=40,
+            font_size= 35,
+            font_color=(100, 100, 100),)
         self.kernel_hp_bar.dynamic_color = True
 
         # Liste des text enfants

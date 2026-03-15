@@ -1,13 +1,16 @@
 import pygame
-from UIElement import UIElement
+from .UIElement import UIElement
 
 
 class UIDot(UIElement):
 
-    def __init__(self, x, y, radius, color, uid = None):
-        # Creation du point simple
-        w, h = radius * 2, radius * 2
-        super().__init__(x, y, w, h, uid)
+    def __init__(self, x, y, uid = None):
+        super().__init__(x, y, 0, 0, uid)
+        self.type = "dot"
+
+
+    def setup(self, radius: int, color ) -> None:
+        self.rect.w, self.rect.h = radius * 2, radius * 2
     
         self.radius = radius
         self.color = color

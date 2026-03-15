@@ -46,9 +46,9 @@ class UIElement:
         self.debug = False
         self.visible: bool = True
         self.active: bool = True
-        self.type: str = "Element"
+        self.type: str = "element"
         self.parent: "UIElement" = None
-        self.children = []
+        self.children: list["UIElement"] = []
         
         # Pour l'animation
         self.target: tuple = None

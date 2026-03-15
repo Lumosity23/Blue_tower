@@ -1,9 +1,11 @@
 import json
 from ui.UIPanel import UIPanel
+from ui import UIProgressBar, UIDot, UIStat, UIIcon
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from main import App
     from entities.Entity import Entity
+    from UIElement import UIElement
 
 
 class InfoPanel( UIPanel ):
@@ -26,12 +28,14 @@ class InfoPanel( UIPanel ):
 
         # Entity INFO
         self.current_entity: Entity = None
-        self.amount_ui_elements = {
-            "icon" : 1,
-            "bar"  : 5,
-            "dot" : 3,
-            "stat" : 4,
+        self.ui_pool = {}
+        self.amount_ui_elements: dict[str, list[int, "UIElement"]] = {
+            "icon" : [1, UIIcon.UIIcon],
+            "bar"  : [5, UIProgressBar.UIProgressBar],
+            "dot"  : [3, UIDot.UIDot],
+            "stat" : [4, UIStat.UIStat]
         }
+        self.init_pool_child()
 
         # Souscription
         self.game.eventManager.subscribe( "ELEMENT_SELECTED", self.show_element )
@@ -39,21 +43,27 @@ class InfoPanel( UIPanel ):
     
 
     def init_pool_child( self ) -> None:
-
-        pass
-
+        for uielement, numAndClass in self.amount_ui_elements.items():
+            num, cls = numAndClass
+            self.ui_pool[uielement] = []
+            for _ in range(num):
+                element: "UIElement" = cls( 0, 0 )
+                element.active = False
+                self.ui_pool[uielement].append(element)
+        
 
     def show_element( self, entity: "Entity" ) -> None:
 
         self.game.eventManager.publish( "CLOSE_SHOP" )
         # self.make_data(entity)
-
+        
         super().show()
     
     
     def reset_data_child( self ) -> None:
 
-        for child in self.data_children:
+        for child in self.children:
+            child.active = False
             self.remove_child(child)
 
 
@@ -68,9 +78,13 @@ class InfoPanel( UIPanel ):
         else: return
 
         for item in entity_schema:
-            # 1. Trouver la classe correspondante dans le registre
-            ui_class = item["ui_class"]
-
+            # Recupere un element correspondant encore non utiliser
+            for e in self.ui_pool[item["type"]]:
+                if not e.active:
+                    element = e
+                    element.active = True
+                    self.add_child(element)
+            
 
 
 
