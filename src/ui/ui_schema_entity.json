@@ -10,8 +10,8 @@
             }
         },
         {
-            "type": "text",
-            "ui_class": "UIText",
+            "type": "stat",
+            "ui_class": "UIStat",
             "label": "Dégâts",
             "mapping": {
                 "string": "damage"

@@ -1,5 +1,6 @@
 import pygame
 from .UIElement import UIElement
+from .UIText import UIText
 
 
 class UIDot(UIElement):
@@ -18,6 +19,19 @@ class UIDot(UIElement):
         self.state_color = None
 
         pygame.draw.circle( self.image, self.color, (self.rect.center), self.radius )
+
+
+    def custom_setup(self, x, y, label, color, **kwargs) -> None:
+
+        self.remove_all_child()
+
+        self.setup(5, color)
+        self.rect.topleft = x, y
+
+        self.label = UIText(0, 0, label)
+        self.label.rect.midleft = self.rect.midleft
+        self.label.rect.x += self.radius * 2 + 5
+        self.add_child(self.label)
 
 
     def set_state(self, dict_states: dict[str, tuple[int, int, int]], pt_state ) -> None:

@@ -29,6 +29,7 @@ class InfoPanel( UIPanel ):
         # Entity INFO
         self.current_entity: Entity = None
         self.ui_pool = {}
+        self.active_children: list["UIElement"] = []
         self.amount_ui_elements: dict[str, list[int, "UIElement"]] = {
             "icon" : [1, UIIcon.UIIcon],
             "bar"  : [5, UIProgressBar.UIProgressBar],
@@ -55,14 +56,15 @@ class InfoPanel( UIPanel ):
     def show_element( self, entity: "Entity" ) -> None:
 
         self.game.eventManager.publish( "CLOSE_SHOP" )
-        # self.make_data(entity)
+        self.make_data(entity)
         
         super().show()
     
     
     def reset_data_child( self ) -> None:
 
-        for child in self.children:
+        for i in range(len(self.active_children)):
+            child = self.active_children.pop(i)
             child.active = False
             self.remove_child(child)
 
@@ -77,6 +79,10 @@ class InfoPanel( UIPanel ):
             entity_schema = self.schemas.get(entity.tag)
         else: return
 
+        # Variable de pos pour les different elements
+        pos_x = 20 # constante le long de notre infoPanel
+        pos_y = 100 # valeur qui va augmenter au cours de la boucle de creation
+
         for item in entity_schema:
             # Recupere un element correspondant encore non utiliser
             for e in self.ui_pool[item["type"]]:
@@ -84,6 +90,36 @@ class InfoPanel( UIPanel ):
                     element = e
                     element.active = True
                     self.add_child(element)
+
+                    # Recuperation des info utile
+                    label = item["label"]
+                    map: dict = item["mapping"]
+
+                    # Recupere les eventuelles pointers
+                    def get_attribut(attr):
+                        if attr is None: return None
+                        if hasattr(entity, attr):
+                             return entity.__getattribute__(attr)
+                        print(f"aucun attribut du nom de {attr} n'as ete trouver sur {entity.__name__()}")
+         
+                    sprite = get_attribut(map.get("icon_id"))
+                    value = get_attribut(map.get("string"))
+                    max_val = get_attribut(map.get("max"))
+                    current_val = get_attribut(map.get("current"))
+
+                    # Activation de l'element
+                    element.custom_setup(x=pos_x,
+                                        y=pos_y,
+                                        w=self.rect.w - 40,
+                                        h=20,
+                                        label=label,
+                                        sprite=sprite,
+                                        color=map.get("color", (255,255,255)),
+                                        current_val=current_val,
+                                        max_val=max_val,
+                                        value=value
+                                        )
+                    pos_y += 40
             
 
 

@@ -81,6 +81,12 @@ class UIElement:
             child.parent = None
     
 
+    def remove_all_child(self) -> None:
+        ''' Permet de retirer tout les enfants actifs de soit '''
+        for child in self.children:
+            self.remove_child(child)
+            
+
     def get_screen_rect(self) -> pygame.Rect:
         '''
             permet de connaitre sa position absolue sur l'ecran

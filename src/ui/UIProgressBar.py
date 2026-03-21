@@ -40,6 +40,19 @@ class   UIProgressBar(UIElement):
             self.text_element.rect.center = (w // 2, h // 2)
 
 
+    def custom_setup(self, x, y, w, h, current_val, max_val, label, color, **kwargs) -> None:
+        
+        self.remove_all_child()
+
+        self.setup(w, h, current_val, max_val, color)
+        self.text_element.rect.bottomright = self.rect.width, -5
+        self.rect.topleft = x, y
+
+        self.label = UIText(0, 0, label, uid=f"{self.uid}_bar_text")
+        self.label.rect.y = -5
+        self.add_child(self.label)
+
+
     def _get_text_string(self) -> str:
         ''' Fonction interne pour mettre à jour le texte automatiquement '''
         percentage = int(self.display_ratio * 100)
