@@ -35,7 +35,8 @@ class Player(Entity):
 
         # --- GESTION DES ENFANTS ---
         # Plus besoin de gérer la position de la barre manuellement dans update !
-        self.hp_bar = UIProgressBar(x=0, y=-15, w=self.rect.w, h=8, uid="PLAYER_HP", show_text=False)
+        self.hp_bar = UIProgressBar(x=0, y=-15, uid="PLAYER_HP")
+        self.hp_bar.setup(w=self.rect.w, h=8, show_text=False)
         self.hp_bar.dynamic_color = True
         self.add_child(self.hp_bar)
 
@@ -188,3 +189,9 @@ class Player(Entity):
                 return True
      
         super().handle_event(event)
+
+Player.ui_config(
+    ("ICON", "you", "image"),
+    ("STAT", "kills", "kills"),
+    ("BAR", "Vie", "current_hp", "max_hp")
+)

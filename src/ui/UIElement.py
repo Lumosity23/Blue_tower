@@ -88,9 +88,7 @@ class UIElement:
             
 
     def get_screen_rect(self) -> pygame.Rect:
-        '''
-            permet de connaitre sa position absolue sur l'ecran
-        '''
+        '''permet de connaitre sa position absolue sur l'ecran'''
         abs_x = self.rect.x
         abs_y = self.rect.y
 
@@ -102,7 +100,18 @@ class UIElement:
 
         return pygame.Rect(abs_x, abs_y, self.rect.width, self.rect.height)
 
+        
+    def get_size(self) -> pygame.Rect:
+        # On commence par la position absolue de l'élément actuel
+        total_rect = self.get_screen_rect()
+
+        for child in self.children:
+            # On fusionne avec le rectangle total (écran) de chaque enfant
+            total_rect.union_ip(child.get_size())
     
+        return total_rect
+
+            
     def update(self, dt) -> None:
         '''
             Pour pouvoir faire de l'animation (deplacement, disparition)

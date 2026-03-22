@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 class GameOverPanel(UIPanel):
 
     def __init__(self, game: "App", uid = None):
-        super().__init__(50, -(game.st.SCREEN_WIDTH - 100), game.st.SCREEN_WIDTH - 100, game.st.SCREEN_HEIGHT - 100, (45, 45, 45), uid)
+        super().__init__(50, 0 , game.st.SCREEN_WIDTH - 100, game.st.SCREEN_HEIGHT - 100, (45, 45, 45), uid)
         self.game = game
         self.st = game.st
         self.uid = "GameOverPanel"
@@ -27,6 +27,7 @@ class GameOverPanel(UIPanel):
         self.add_child(btn_quit)
         self.add_child(text)
 
+        self.rect.bottom = -50
         self.game.eventManager.subscribe( "GAMEOVER", self.show )
 
 

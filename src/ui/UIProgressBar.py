@@ -48,9 +48,12 @@ class   UIProgressBar(UIElement):
         self.text_element.rect.bottomright = self.rect.width, -5
         self.rect.topleft = x, y
 
-        self.label = UIText(0, 0, label, uid=f"{self.uid}_bar_text")
-        self.label.rect.y = -5
+        self.label = UIText(0, 0, label)
+        self.label.rect.bottom = 0
         self.add_child(self.label)
+
+        # Repositionement
+        self.rect.y += self.label.rect.h
 
 
     def _get_text_string(self) -> str:

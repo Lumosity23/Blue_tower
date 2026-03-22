@@ -1,6 +1,14 @@
 {
     "TURRET": [
         {
+            "type": "stat",
+            "ui_class": "UIStat",
+            "label": "Dégâts",
+            "mapping": {
+                "string": "damage"
+            }
+        },
+        {
             "type": "bar",
             "ui_class": "UIProgressBar",
             "label": "Vie",
@@ -8,13 +16,32 @@
                 "current": "current_hp",
                 "max": "max_hp"
             }
+        }
+    ],
+    "PLAYER": [
+        {
+            "type": "icon",
+            "ui_class": "UIIcon",
+            "label": "you",
+            "mapping": {
+                "icon_id": "image"
+            }
         },
         {
             "type": "stat",
             "ui_class": "UIStat",
-            "label": "Dégâts",
+            "label": "kills",
             "mapping": {
-                "string": "damage"
+                "string": "kills"
+            }
+        },
+        {
+            "type": "bar",
+            "ui_class": "UIProgressBar",
+            "label": "Vie",
+            "mapping": {
+                "current": "current_hp",
+                "max": "max_hp"
             }
         }
     ]

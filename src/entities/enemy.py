@@ -33,7 +33,8 @@ class Enemie(Entity):
         
         # --- ENFANT : Barre de vie ---
         # Elle est attachée à l'ennemi et suit ses mouvements automatiquement
-        self.hp_bar = UIProgressBar(x=0, y=-10, w=self.rect.w, h=5, uid=f"{uid}_hp" if uid else None, show_text=False)
+        self.hp_bar = UIProgressBar(x=0, y=-10 , uid=f"{uid}_hp" if uid else None)
+        self.hp_bar.setup( w=self.rect.w, h=5, show_text=False )
         self.hp_bar.dynamic_color = True
         self.add_child(self.hp_bar)
 

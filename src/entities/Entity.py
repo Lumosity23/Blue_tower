@@ -129,6 +129,20 @@ class Entity:
     @classmethod
     def ui_config(cls, *elements):
         """
+        Example :\n
+        Entity.ui_config(
+            ("Element", "label", "mapping*"),\n
+            (...),\n
+            ("lastElement", "label", "mapping*")\n
+        )\n
+
+        MAPPING ->\n
+            "BAR"  : ["current", "max"]\n
+            "STAT" : ["string"]\n
+            "BOOL" : ["state"]\n
+            "ICON" : ["icon_id"]\n
+
+
         La passerelle : elle prend des tuples (Type, Label, Map1, Map2...)
         et les envoie au configurateur.\n
         elements: (Type, Lable, Map1, Map2...)
@@ -138,6 +152,10 @@ class Entity:
         # On passe juste le nom de la classe et les données brutes
         save_entity_schema(name=cls.__name__.upper(), raw_data=elements)
 
+
+    def __name__():
+        ''' Permet de retourner le nom de la classe de notre entity'''
+        return __class__.__name__()
 
 
 

@@ -1,27 +1,24 @@
-from .UIElement import UIElement
 from .UIText import UIText
 
 
-class UIStat(UIElement):
+class UIStat(UIText):
 
     def __init__(self, x, y, uid=None):
-        super().__init__(x, y, 0, 0, uid)
+        super().__init__(x, y, "stat", uid=uid)
         self.type = "stat"
 
 
     def setup(self, label) -> None:
         ''' Init la stat avec le label '''
-        self.stat_label = UIText( 0, 0, f"{label} : " )
-
-        
-        self.add_child(self.stat_label)
+        self.set_text(f"{label} : ")
 
 
     def set_value(self, value) -> None:
-        ''' Permet de setup un valeur a surveiller ( dois etre un pointeur de fonction qui retourne un str 'la dite value' )'''
+        ''' Permet de setup un valeur a surveiller ( dois etre un pointeur )'''
         self.value = value
-        self.stat_value = UIText(self.stat_label.rect.width, 0 , self._get_value , text_update=True)
-        self.add_child(self.stat_value)
+        stat_value = UIText(0, 0 , self._get_value , text_update=True)
+        stat_value.rect.left = self.rect.right - 20
+        self.add_child(stat_value)
 
 
     def _get_value(self):
@@ -31,7 +28,6 @@ class UIStat(UIElement):
     def custom_setup(self, x, y ,label, value, **kwargs) -> None:
 
         self.remove_all_child()
-
-        self.rect.topleft = x, y
         self.setup(label)
+        self.rect.topleft = x, y
         self.set_value(value)

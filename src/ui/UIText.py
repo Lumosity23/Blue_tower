@@ -35,12 +35,7 @@ class UIText(UIElement):
         self.color = color
         self.cache = {}
         self.st = Settings()
-        self.font: pygame.font.Font = self._FONTS_CACHE.get(size_text, None)
-
-        if self.font is None and self._FONTS_CACHE:
-            # Si la taille précise n'existe pas, on prend la plus proche
-            closest = min(self._FONTS_CACHE.keys(), key=lambda v: abs(v - size_text))
-            self.font = self._FONTS_CACHE[closest]
+        self.font = self.set_font(size_text)
 
         if not self.text_update:
             self.image = self.font.render(self.text, True, self.color)
@@ -51,7 +46,33 @@ class UIText(UIElement):
         if not self.cfg_loaded:
             self.rect = self.image.get_rect()
 
+
+    def set_font(self, size) -> pygame.font.Font:
+        font: pygame.font.Font = self._FONTS_CACHE.get(size, None)
+
+        if font is None and self._FONTS_CACHE:
+            # Si la taille précise n'existe pas, on prend la plus proche
+            closest = min(self._FONTS_CACHE.keys(), key=lambda v: abs(v - size))
+            return self._FONTS_CACHE[closest]
+        return font
+
+
+    def set_text(self, text, size=None, color=None) -> None:
+        self.text = str(text)
+        if size:
+            self.font = self.set_font(size)
+        if color:
+            self.color = color
+
+        self.image = self.font.render(text, True, self.color)
+        self.rect = self.image.get_rect()
     
+
+    def set_callback(self, cb) -> None:
+        self.text = cb
+        self.text_update = True
+
+
     def update(self, dt):
         super().update(dt)
         
@@ -70,3 +91,6 @@ class UIText(UIElement):
         else:
             self.image = self.font.render(text, True, self.color)
             self.cache[text] = self.image
+
+            if len(self.cache) > 100 :
+                self.cache.clear()

@@ -31,6 +31,6 @@ class Turret(Building):
 
 
 Turret.ui_config(
-    ("BAR",  "Vie", "current_hp", "max_hp"),
-    ("TEXT", "Dégâts", "damage")
+    ("STAT", "Dégâts", "damage"),
+    ("BAR",  "Vie", "current_hp", "max_hp")
 )

@@ -61,9 +61,9 @@ class Settings:
 
     REFERENT = {
     "BAR":  ("bar",  "UIProgressBar", ["current", "max"]),
-    "TEXT": ("text", "UIText",        ["string"]),
-    "BOOL": ("bool", "UIBoolean",     ["state"]),
-    "ICON": ("icon", "UIElement",     ["icon_id"])
+    "STAT": ("stat", "UIStat",        ["string"]),
+    "BOOL": ("bool", "UIDot",     ["state"]),
+    "ICON": ("icon", "UIIcon",     ["icon_id"])
     }
 
     UI_SCHEMA_PATH = "src/ui/ui_schema_entity.json"

@@ -22,7 +22,7 @@ class InfoPanel( UIPanel ):
 
         super().__init__( game.st.SCREEN_WIDTH, 0, w, h, uid="InfoPanel" )
 
-        self.set_label("INFO", 200)
+        self.set_label("INFO", 100)
         self.set_animation( (self.game.st.SCREEN_WIDTH - self.size[0], 0), (self.game.st.SCREEN_WIDTH, 0), 1000 )
         self.visible = False
 
@@ -63,8 +63,8 @@ class InfoPanel( UIPanel ):
     
     def reset_data_child( self ) -> None:
 
-        for i in range(len(self.active_children)):
-            child = self.active_children.pop(i)
+        while self.active_children:
+            child = self.active_children.pop(0)
             child.active = False
             self.remove_child(child)
 
@@ -81,15 +81,17 @@ class InfoPanel( UIPanel ):
 
         # Variable de pos pour les different elements
         pos_x = 20 # constante le long de notre infoPanel
-        pos_y = 100 # valeur qui va augmenter au cours de la boucle de creation
+        pos_y = self.label.rect.bottom + 70 # valeur qui va augmenter au cours de la boucle de creation
+        padding = 20
 
         for item in entity_schema:
             # Recupere un element correspondant encore non utiliser
             for e in self.ui_pool[item["type"]]:
                 if not e.active:
-                    element = e
+                    element: "UIElement" = e
                     element.active = True
                     self.add_child(element)
+                    self.active_children.append(element)
 
                     # Recuperation des info utile
                     label = item["label"]
@@ -117,15 +119,10 @@ class InfoPanel( UIPanel ):
                                         color=map.get("color", (255,255,255)),
                                         current_val=current_val,
                                         max_val=max_val,
-                                        value=value
+                                        value=value,
+                                        mid_pos=self.rect.w // 2
                                         )
-                    pos_y += 40
-            
-
-
-
-
-
-        
-
-        
+                    rect = element.get_size()
+                    pos_y += rect.height + padding
+                    # print(f" ma taille : {rect.h} et mon topleft = {rect.topleft} -> la soustraction des deux dois faire mon topleft = {element.rect.h - pos_y}")
+                    break
