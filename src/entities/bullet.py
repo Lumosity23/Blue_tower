@@ -57,7 +57,7 @@ class Bullet(Entity):
         self.rect.center = self.pos
 
         # mise a jour de son chunk (utilise lors qu'on aura un monde infinie)
-        #self.check_chunk()
+        # self.check_chunk()
 
         # Suppression si sortie du MONDE (et pas seulement de l'écran)
         if not self.st.WORLD_RECT.colliderect(self.rect):
@@ -73,7 +73,7 @@ class Bullet(Entity):
             if hasattr(self.owner, "increment_kills"):
                 self.owner: "Entity"
                 self.owner.increment_kills()
-        
+                
         # La balle disparaît après l'impact (ou perd 1 HP pour la pénétration)
         self.kill()
     

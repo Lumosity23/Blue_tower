@@ -28,6 +28,15 @@
             }
         },
         {
+            "type": "bar",
+            "ui_class": "UIProgressBar",
+            "label": "Vie",
+            "mapping": {
+                "current": "current_hp",
+                "max": "max_hp"
+            }
+        },
+        {
             "type": "stat",
             "ui_class": "UIStat",
             "label": "kills",
@@ -36,12 +45,23 @@
             }
         },
         {
-            "type": "bar",
-            "ui_class": "UIProgressBar",
-            "label": "Vie",
+            "type": "dot",
+            "ui_class": "UIDot",
+            "label": "Alive",
             "mapping": {
-                "current": "current_hp",
-                "max": "max_hp"
+                "state": [
+                    0,
+                    255,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "stat",
+            "ui_class": "UIStat",
+            "label": "CHUNK",
+            "mapping": {
+                "string": "chunk"
             }
         }
     ]

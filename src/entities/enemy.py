@@ -26,10 +26,13 @@ class Enemie(Entity):
         self.director_vector = pygame.math.Vector2(0, 0)
         self.target_pos = pygame.math.Vector2(x, y)
         self.arrived = True
-        
+        self.is_prio_target = False
+        self.is_obstacle = False
+
         # Stats
         self.max_hp = self.stats['hp']
         self.current_hp = self.max_hp
+        self.damage = self.stats['damage']
         
         # --- ENFANT : Barre de vie ---
         # Elle est attachée à l'ennemi et suit ses mouvements automatiquement
@@ -59,6 +62,10 @@ class Enemie(Entity):
     def update(self, dt):
         if not self.active: return
         
+        # Debut du Pipline
+        self._view()
+        self._think()
+
         # Effectuer l'action de son statment
         self.action[self.state](dt)
 
@@ -67,27 +74,31 @@ class Enemie(Entity):
         super().update(dt)
 
 
-    def next_target(self) -> tuple[int, int]:
+    def next_target(self, cell_pos=False) -> tuple[int, int]:
         cx, cy = self.game.grid.get_cell_pos(self.pos.x, self.pos.y)
         neighbors = self.game.grid.getNeighborsAndCost(cx, cy)
         
-        next_cell = (cx, cy)
         cheapest_cell = float('inf')
         
         for n, cost in neighbors.items():
             if cost < cheapest_cell:
                 cheapest_cell = cost
-                next_cell = n
+                nx, ny = n
 
-        return next_cell
+        if cell_pos:
+            return nx, ny
+        
+        dx = ((nx * self.game.st.CELL_SIZE) + self.game.st.CELL_SIZE / 2) - self.size[0] / 2
+        dy = ((ny * self.game.st.CELL_SIZE) + self.game.st.CELL_SIZE / 2) - self.size[1] / 2
+
+        return dx, dy
 
 
     def check_chunk(self) -> None:
         # Verifier si on a changer de chunk
-        new_chunk = ( self.pos.x // self.game.st.CHUNK_SIZE, self.pos.y // self.game.st.CHUNK_SIZE ) 
+        new_chunk = self.game.grid.get_chunk_cell(self.rect.center)
         if new_chunk != self.old_chunk:
             self.chunk_changed = True
-            self.chunk = new_chunk
 
 
     def take_damage(self, amount):
@@ -107,23 +118,37 @@ class Enemie(Entity):
         self.game.eventManager.publish("ENEMY_KILLED", reward)
         super().kill()
     
+    def _view(self) -> None:
+
+        # Regarder si target_prio in range
+        """ if self.game.player in self.game.grid.get_entities_around(self.pos, radius=1):
+            self.is_prio_target = True
+            self.prio_target_pos = self.game.player.pos
+        self.is_prio_target = False """
+        
+        self.target_pos.update(self.next_target())
+
+        # Regarder si un mur devant
+        if self.game.grid.get_cell_value(*self.target_pos.xy) != self.game.st.EMPTY and self.pos.distance_to(self.target_pos) <= (self.rect.width + 10):
+            self.is_obstacle = True
+        else : self.is_obstacle = False
+
+        # 1. Logique de Pathfinding (Flow Field / Grid)
+        if self.arrived and not self.is_obstacle:
+            self.arrived = False
+
+    
+    def _think(self) -> None:
+
+        if self.is_obstacle:
+            self.state = "ATTACK"
+
+        else : self.state = "MOVE"
+    
 
     def move(self, dt) -> None:
-        
-        # Verifier si pas cible prioritaire ( self.type[target] : ex -> self.player )
-        # entities_around = self.game.grid.get_entites_around(self.pos, radius=2)
-        # 1. Logique de Pathfinding (Flow Field / Grid)
-        if self.arrived:
-            nx, ny = self.next_target()
-            
-            # Calcul de la position cible au centre de la cellule
-            dx = ((nx * self.game.st.CELL_SIZE) + self.game.st.CELL_SIZE / 2) - self.size[0] / 2
-            dy = ((ny * self.game.st.CELL_SIZE) + self.game.st.CELL_SIZE / 2) - self.size[1] / 2
-
-            self.target_pos.update(dx, dy)
-            self.arrived = False
-              
-        # 2. Calcul du vecteur de direction
+      
+        # Calcul du vecteur de direction
         self.director_vector = self.target_pos - self.pos
         length = self.director_vector.length()
 
@@ -140,7 +165,9 @@ class Enemie(Entity):
 
 
     def attack(self, dt) -> None:
-        pass
+        entity: "Entity"  = self.game.grid.get_entity_at(*self.target_pos)
+        if entity :
+            self.kick(entity, self.damage)
 
 
     def idle(self, dt) -> None:

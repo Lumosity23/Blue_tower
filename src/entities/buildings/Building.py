@@ -84,6 +84,7 @@ class Building(Entity):
 
         return super().handle_event(event) # Propagation aux enfants si besoin
 
+
     def select(self) -> None:
         self.state = "SELECTED"
         self.game.eventManager.publish("BUILDING_SELECTED", self)
@@ -113,46 +114,11 @@ class Building(Entity):
 
 
     def take_damage(self, amount):
-        self.current_hp -= amount
         self.hp_bar.update_values(self.current_hp, self.max_hp)
-        if self.current_hp <= 0:
-            self.kill()
+        super().take_damage(amount)
 
 
     def kill(self):
         # Logique de destruction (libérer la grille)
         self.game.eventManager.publish("BUILDING_DESTROYED", self)
         super().kill()
-
-
-    def update(self, dt):
-        # Les bâtiments n'ont souvent pas de mouvement, mais ils peuvent 
-        # avoir des enfants qui s'animent (tourelles qui tournent)
-        super().update(dt)
-    
-
-    def draw(self, surface: pygame.Surface):
-        if not self.visible: return
-        
-        # ATTENTION : get_screen_rect() de Entity renvoie la pos absolue du MONDE ! 
-        # (Le nom de la méthode est un peu trompeur, on devrait l'appeler get_world_rect)
-        world_rect = self.get_screen_rect()
-        cam_offset = self.game.sceneManager.main_camera.offset
-        
-        # World -> Screen (On SOUSTRAIT l'offset pour dessiner manuellement)
-        screen_x = world_rect.x - cam_offset.x
-        screen_y = world_rect.y - cam_offset.y
-
-        # 1. Dessiner le cercle (centré sur le screen_x/y)
-        if self.current_build_data and self.range_circle_surface:
-            r = self.current_build_data['range']
-            range_pos = (screen_x + (self.rect.w//2) - r, screen_y + (self.rect.h//2) - r)
-            surface.blit(self.range_circle_surface, range_pos)
-
-        # 2. Dessiner le Ghost Sprite
-        temp_image = self.image.copy()
-        if self.is_occupied:
-            temp_image.fill((255, 50, 50, 100), special_flags=pygame.BLEND_RGBA_MULT)
-        
-        # On dessine aux coordonnées calculées !
-        surface.blit(temp_image, (screen_x, screen_y))

@@ -25,11 +25,11 @@ class UIDot(UIElement):
 
         self.remove_all_child()
 
-        self.setup(5, color)
+        self.setup(10, color)
         self.rect.topleft = x, y
 
         self.label = UIText(0, 0, label)
-        self.label.rect.midleft = self.rect.midleft
+        self.label.rect.top = (self.rect.h // 2) - (self.label.rect.h // 2)
         self.label.rect.x += self.radius * 2 + 5
         self.add_child(self.label)
 

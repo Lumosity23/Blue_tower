@@ -10,7 +10,7 @@ class TileMap:
         
         self.game = game
         self.st = self.game.st
-        self.chunk_size = self.st.CHUNK_SIZE
+        self.chunk_size = self.st.CELLS_FOR_CHUNK
         self.cell_size = self.st.CELL_SIZE
         self.chunk_pixel_size = self.cell_size * self.chunk_size
 

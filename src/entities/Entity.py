@@ -30,6 +30,10 @@ class Entity:
         self.parent: "Entity" = None
         self.children = []
 
+        # States de bases
+        self.max_hp = 1
+        self.current_hp = self.max_hp
+
 
     def add_child(self, new_child: "Entity") -> None:
         if new_child not in self.children:
@@ -50,12 +54,14 @@ class Entity:
         self.uid = uid
         self.set_child("active", True)
         self.set_child("visible", True)
+        self.set_child("alive", True)
 
 
     def kill(self):
         ''' Détruit l'entité et ses enfants en se retirant de l'ecran '''
         self.visible = False
         self.active = False
+        self.alive = False
 
         # On propage aussi la mort au enfants
         child: "Entity"
@@ -65,7 +71,22 @@ class Entity:
 
     def increment_kills(self):
         self.kills += 1
-        
+    
+
+    def take_damage(self, amount: int) -> None:
+
+        self.current_hp -= amount
+
+        if self.current_hp <= 0:
+            self.kill()
+            return True
+    
+
+    def kick(self, entity: "Entity", amount: int) -> None:
+
+        if entity.take_damage(amount):
+            self.increment_kills()
+    
 
     def get_screen_rect(self) -> pygame.Rect:
         """ 

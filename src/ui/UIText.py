@@ -40,7 +40,7 @@ class UIText(UIElement):
         if not self.text_update:
             self.image = self.font.render(self.text, True, self.color)
         else:
-            text = self.text()
+            text = str(self.text())
             self.image = self.font.render(text, True, self.color)
 
         if not self.cfg_loaded:
@@ -81,7 +81,7 @@ class UIText(UIElement):
             return
         
         # mise a jour du text
-        text = self.text()
+        text = str(self.text())
 
         # Si deja en cache alors on recupere
         if text in self.cache:

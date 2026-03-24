@@ -103,11 +103,22 @@ class InfoPanel( UIPanel ):
                         if hasattr(entity, attr):
                              return entity.__getattribute__(attr)
                         print(f"aucun attribut du nom de {attr} n'as ete trouver sur {entity.__name__()}")
-         
+                    
+                    def get_attribut_pointer(attr):
+                        if attr is None: 
+                            return lambda: None # Retourne une fonction qui renvoie None
+
+                        if hasattr(entity, attr):
+                            # On retourne une fonction (un "getter")
+                            return lambda name=attr: getattr(entity, name)
+
+                        print(f"aucun attribut du nom de {attr} sur {type(entity).__name__}")
+                        return lambda: None
+
                     sprite = get_attribut(map.get("icon_id"))
-                    value = get_attribut(map.get("string"))
+                    value = get_attribut_pointer(map.get("string"))
                     max_val = get_attribut(map.get("max"))
-                    current_val = get_attribut(map.get("current"))
+                    current_val = get_attribut_pointer(map.get("current"))
 
                     # Activation de l'element
                     element.custom_setup(x=pos_x,

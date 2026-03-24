@@ -40,9 +40,10 @@ class Settings:
     WORLD_COLS: int = 18 * 3
     WORLD_ROWS: int = 18 * 3
     WORLD_WIDTH: int = WORLD_COLS * CELL_SIZE
-    WORLD_HEIGHT: int = WORLD_ROWS * CELL_SIZE
-    CHUNK_SIZE: int = 3 # 3x3 CELLS
-    
+    WORLD_HEIGHT: int = WORLD_ROWS * CELL_SIZE 
+    CELLS_FOR_CHUNK: int = 3 # 3x3 CELLS
+    CHUNK_SIZE: int = CELLS_FOR_CHUNK * CELL_SIZE
+
     # Utilisé pour le culling (ne pas dessiner hors champ)
     @property
     def WORLD_RECT(self) -> pygame.Rect:
@@ -62,7 +63,7 @@ class Settings:
     REFERENT = {
     "BAR":  ("bar",  "UIProgressBar", ["current", "max"]),
     "STAT": ("stat", "UIStat",        ["string"]),
-    "BOOL": ("bool", "UIDot",     ["state"]),
+    "DOT": ("dot", "UIDot",     ["state"]),
     "ICON": ("icon", "UIIcon",     ["icon_id"])
     }
 

@@ -98,6 +98,10 @@ class App:
             if event.key == pygame.K_f:
                 self.eventManager.publish( "GAMEOVER" )
                 return True
+            
+            if event.key == pygame.K_c:
+                self.grid.show_chunk()
+                return True
 
 
     # la logic et tout le reste se trouve ici dans la boucle

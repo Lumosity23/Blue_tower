@@ -32,6 +32,7 @@ class Player(Entity):
         
         # Logique de grille
         # self.current_cell: tuple[int, int] = self.game.grid.get_cell_pos(self.pos.x, self.pos.y)
+        self.old_chunk = self.chunk
 
         # --- GESTION DES ENFANTS ---
         # Plus besoin de gérer la position de la barre manuellement dans update !
@@ -126,11 +127,11 @@ class Player(Entity):
 
     def check_chunk(self) -> None:
         # Verifier si on a changer de chunk
-        new_chunk = ( self.pos.x // self.game.st.CHUNK_SIZE, self.pos.y // self.game.st.CHUNK_SIZE ) 
-        if new_chunk != self.old_chunk:
+        self.new_chunk = self.game.grid.get_chunk_cell(self.rect.center)
+        if self.new_chunk != self.old_chunk:
             self.chunk_changed = True
-            self.chunk = new_chunk
-
+            self.old_chunk = self.chunk
+    
 
     def take_damage(self, amount):
         self.current_hp -= amount
@@ -192,6 +193,8 @@ class Player(Entity):
 
 Player.ui_config(
     ("ICON", "you", "image"),
+    ("BAR", "Vie", "current_hp", "max_hp"),
     ("STAT", "kills", "kills"),
-    ("BAR", "Vie", "current_hp", "max_hp")
+    ("DOT", "Alive", (0, 255, 0)),
+    ("STAT", "CHUNK", "chunk")
 )

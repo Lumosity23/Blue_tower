@@ -46,6 +46,7 @@ class EntityManager:
 
         return new_entity
 
+
     def update(self, dt):
         """ Update uniquement les entités actives """
         # Update tout le entites active
@@ -57,6 +58,10 @@ class EntityManager:
                 if not entity.active:
                     self.game.sceneManager.main_camera.remove_entity(entity)
                     self.game.grid.remove_entity_chunk(entity)
+
+            if entity.chunk_changed:
+                new_chunk_entity = self.game.grid.get_chunk_cell(entity.rect.center)
+                self.game.grid.move_entity_chunk(entity, entity.old_chunk, new_chunk_entity)
 
         self.check_bullet_collisions()
 

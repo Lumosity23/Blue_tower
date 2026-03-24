@@ -8,12 +8,13 @@ class   UIProgressBar(UIElement):
     def __init__(self, x, y, uid=None):
         super().__init__(x, y, 0, 0 ,uid )
         self.type = "bar"
-        
+        self.iscustom_setup = False
+
 
     def setup(self, w, h, current_val=100, max_val=100, 
                 fill_color=(0, 255, 0), back_color=(60, 60, 60), 
                 border_color=None, show_text=True, font_size=25, font_color=(255,255,255) ):
-        
+
         self.rect.width, self.rect.height = w, h
         self.image = pygame.Surface((self.rect.w, self.rect.h), pygame.SRCALPHA)
 
@@ -44,7 +45,9 @@ class   UIProgressBar(UIElement):
         
         self.remove_all_child()
 
-        self.setup(w, h, current_val, max_val, color)
+        self.iscustom_setup = True
+        self.current_val_updater = current_val
+        self.setup(w, h, self.current_val_updater(), max_val, color)
         self.text_element.rect.bottomright = self.rect.width, -5
         self.rect.topleft = x, y
 
@@ -54,6 +57,7 @@ class   UIProgressBar(UIElement):
 
         # Repositionement
         self.rect.y += self.label.rect.h
+        
 
 
     def _get_text_string(self) -> str:
@@ -78,6 +82,9 @@ class   UIProgressBar(UIElement):
         super().update(dt)
         # --- Animation "Lerp" (Lissage) ---
         # La barre rejoint la cible à une vitesse de 5.0 (ajustable)
+        if self.iscustom_setup:
+            self.update_values(self.current_val_updater())
+        
         lerp_speed = 5.0 * dt
         diff = self.target_ratio - self.display_ratio
         
