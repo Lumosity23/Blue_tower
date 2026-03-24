@@ -43,11 +43,13 @@ L'idée derrière ce jeu est d’apprendre la programmation et le Game Dev.
 ## Future MAJ/Ajout pour le jeu (d'ici le debut avril)
 Un systeme d'upgrade pour les batiments et le joueurs.
 
-## Update du JOUR ( 22 mars )
-J'ai ajoute le InfoPanel, il est fonctionnel et dynamique !!!! 
+## Update du JOUR ( 24 mars )
+Entrain de travailler sur les ennemis, pour qu'ils soit affecter par les murs et qu'ils puissent les detruire.
+Je travail aussi sur les systeme de chunk qui est encore un peu approximatif...
 
 ### voici un petit screen de cet Ajouts :
-![](assets/ScreenShots/ajout_22mars.png)
+#### c'est pour montrer que mtn les ennemis sont bloquer par les murs
+![](assets/ScreenShots/update_24_mars.png)
 
 ## Installation
 Pour installer et test mon jeu, rien de plus simple : 
