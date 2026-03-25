@@ -30,7 +30,7 @@ class UIDot(UIElement):
 
         self.label = UIText(0, 0, label)
         self.label.rect.top = (self.rect.h // 2) - (self.label.rect.h // 2)
-        self.label.rect.x += self.radius * 2 + 5
+        self.label.rect.x += self.radius * 2 + 20
         self.add_child(self.label)
 
 
@@ -50,10 +50,12 @@ class UIDot(UIElement):
         # Update la couleur
         self.color = self.state_color[self.state]
 
+        super().update(dt)
+
+
+    def draw(self, surface):
+        
         # Redessine le cecle
         pygame.draw.circle(self.image, self.color, (self.rect.center), self.radius )
 
-        super().update(dt)
-        
-
-        
+        super().draw(surface)

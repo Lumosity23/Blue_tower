@@ -32,7 +32,6 @@ class Player(Entity):
         
         # Logique de grille
         # self.current_cell: tuple[int, int] = self.game.grid.get_cell_pos(self.pos.x, self.pos.y)
-        self.old_chunk = self.chunk
 
         # --- GESTION DES ENFANTS ---
         # Plus besoin de gérer la position de la barre manuellement dans update !

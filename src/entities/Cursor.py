@@ -63,6 +63,7 @@ class Cursor(Entity):
         self.current_build_data = None
         self.image = self.default_image
         self.range_circle_surface = None
+        self.game.edit_mode = False
 
 
     def update(self, dt):
@@ -79,21 +80,18 @@ class Cursor(Entity):
         self.pos.update(px, py)
         self.rect.topleft = self.pos
 
-        self.check_validity(world_mx, world_my)
 
-
-    def check_validity(self, mx, my):
-        # Vérification sur la grille
-        cell_val = self.game.grid.get_cell_value(mx, my)
+    def check_validity(self) -> bool:
+    
+        if self.game.grid.get_cell_isOccupied(*self.pos):
+            return True
         
         # Vérification collision avec entités (Ennemis/Joueur) via EntityManager
-        collision_entity = any(e.rect.colliderect(self.rect) for e in self.game.sceneManager.entityManager.entities if e.active)
+        for entity in self.game.grid.get_entities_around(self.pos, 1):
+            if self.rect.colliderect(entity.rect):
+                return True
 
-        if cell_val != self.game.st.EMPTY or collision_entity:
-            self.is_occupied = True
-        else:
-            self.is_occupied = False
-
+        return False
 
     def draw(self, surface: pygame.Surface):
         if not self.visible: return
@@ -115,16 +113,16 @@ class Cursor(Entity):
 
         # 2. Dessiner le Ghost Sprite
         temp_image = self.image.copy()
-        if self.is_occupied:
+        if self.check_validity():
             temp_image.fill((255, 50, 50, 100), special_flags=pygame.BLEND_RGBA_MULT)
         
         # On dessine aux coordonnées calculées !
         surface.blit(temp_image, (screen_x, screen_y))
     
 
-    def show(self) -> None:
-        self.visible = not self.visible
-        self.active = not self.active
+    def show(self, state: bool=False) -> None:
+        self.visible = state
+        self.active = state
 
 
     def reset(self) -> None:
@@ -146,6 +144,7 @@ class Cursor(Entity):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 3:
                 self.on_build_canceled()
+                self.show(False)
                 return True
 
             if event.button == 1 and self.current_build_data != None:

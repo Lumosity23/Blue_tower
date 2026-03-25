@@ -155,7 +155,7 @@ class Grid:
 
     def get_entity_at(self, wx, wy) -> "Entity":
         ''' Renvoi l'entity au corrdonne proposer, si personne renvoir None '''
-        chunk_entity = self.get_chunk_cell(self.get_cell_pos(wx, wy))
+        chunk_entity = self.get_chunk_cell((wx, wy))
 
         for entity in self.get_chunk(chunk_entity):
             if entity.rect.collidepoint(wx, wy):
@@ -176,6 +176,7 @@ class Grid:
             self.chunks[new_chunk_coords] = set()
         self.chunks[new_chunk_coords].add(entity)
         entity.chunk = new_chunk_coords
+        entity.old_chunk = new_chunk_coords
 
 
     def set_entity_chunk(self, entity: "Entity") -> None:
@@ -185,12 +186,15 @@ class Grid:
         if chunk in self.chunks:
             self.chunks[chunk].add(entity)
             entity.chunk = chunk
+            entity.old_chunk = chunk
     
 
     def remove_entity_chunk(self, entity: "Entity") -> None:
         ''' Enleve une entity de son chunk ( ex : lors de sa mort ) '''
         if entity.chunk in self.chunks:
             self.chunks[entity.chunk].discard(entity)
+            print(f"{entity} a ete retire de son chunk !")
+        else: print(f"l'entity : {entity} n'as pa pu etre retirer de son chunk : {entity.chunk}")
  
 
     def show_chunk(self) -> None:

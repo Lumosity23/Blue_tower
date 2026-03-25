@@ -42,7 +42,7 @@ class Building(Entity):
 
         # --- ENFANT : Barre de Vie ---
         # On la crée mais on la cache par défaut (elle ne s'affiche qu'au survol/clic)
-        self.hp_bar = UIProgressBar(x=5, y=-12, uid=f"{uid}_hp" if uid else None)
+        self.hp_bar = UIProgressBar(x=5, y=self.rect.height - 12, uid=f"{uid}_hp" if uid else None)
         self.hp_bar.setup(w=self.rect.w - 10, h=6, show_text=False)
         self.hp_bar.visible = False
         self.add_child(self.hp_bar)

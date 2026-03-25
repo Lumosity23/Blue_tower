@@ -34,6 +34,8 @@ class BuildManager:
                 if not entity.active:
                     self.game.sceneManager.main_camera.remove_entity(entity)
                     self.game.grid.remove_entity_chunk(entity)
+                    self.game.grid.set_cell_value(*entity.rect.center, self.game.st.EMPTY)
+
         # self.check_build_collisions()
 
 
@@ -61,14 +63,14 @@ class BuildManager:
         cost = build_data.get("cost", 0)
         type_name = build_data.get("sprite_id").upper() # On utilise l'ID comme type
 
-        # 1. Vérification Argent
-        if not self.game.walletManager.buy(cost):
-            self.game.eventManager.publish("ERROR_PAYMENT")
-            return
-
         # 2. Vérification Grille (L'occupation a déjà été checkée par le Cursor, mais on re-vérifie ici)
         if self.game.grid.get_cell_isOccupied(world_pos.x, world_pos.y):
             self.game.eventManager.publish("ERROR_SOUND")
+            return
+
+        # 1. Vérification Argent
+        if not self.game.walletManager.buy(cost):
+            self.game.eventManager.publish("ERROR_PAYMENT")
             return
 
         # 3. Création / Recyclage
@@ -119,8 +121,12 @@ class BuildManager:
     def handle_event(self, event) -> bool:
         
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_e:
-                self.game.eventManager.publish("BUILD_MODE")
+            if event.key == pygame.K_e and not self.game.edit_mode:
+                self.game.eventManager.publish("BUILD_MODE", True)
+                return True
+            
+            if event.key == pygame.K_e and self.game.edit_mode:
+                self.game.eventManager.publish("BUILD_MODE", False)
                 return True
 
         # On inverse l'ordre pour la sélection (le dernier bâti est "au dessus")

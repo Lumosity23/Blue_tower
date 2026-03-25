@@ -17,7 +17,8 @@ class Enemie(Entity):
         self.type = type
         self.stats = self.game.st.ENEMIES_DATA[type]
         self.size = self.stats["size"]
-
+        self.old_chunk = self.chunk
+        
         # Setup visuel
         self.image = self.game.spriteManager.get_custom_sprite(self.stats["sprite_id"], size, 'circle')
         
@@ -96,9 +97,10 @@ class Enemie(Entity):
 
     def check_chunk(self) -> None:
         # Verifier si on a changer de chunk
-        new_chunk = self.game.grid.get_chunk_cell(self.rect.center)
-        if new_chunk != self.old_chunk:
+        self.new_chunk = self.game.grid.get_chunk_cell(self.rect.center)
+        if self.new_chunk != self.old_chunk:
             self.chunk_changed = True
+            self.old_chunk = self.chunk
 
 
     def take_damage(self, amount):
@@ -118,6 +120,7 @@ class Enemie(Entity):
         self.game.eventManager.publish("ENEMY_KILLED", reward)
         super().kill()
     
+
     def _view(self) -> None:
 
         # Regarder si target_prio in range
@@ -166,7 +169,7 @@ class Enemie(Entity):
 
     def attack(self, dt) -> None:
         entity: "Entity"  = self.game.grid.get_entity_at(*self.target_pos)
-        if entity :
+        if entity and self.delay(2, dt):
             self.kick(entity, self.damage)
 
 

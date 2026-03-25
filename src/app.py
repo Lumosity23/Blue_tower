@@ -152,8 +152,8 @@ class App:
     def unfreeze(self) -> None:
         self.state = "PLAYING"
 
-    def edit(self) -> None:
-        self.edit_mode = not self.edit_mode
+    def edit(self, state: bool=False) -> None:
+        self.edit_mode = state
 
 
     def on_cleanup(self):

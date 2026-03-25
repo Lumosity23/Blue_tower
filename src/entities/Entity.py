@@ -34,6 +34,9 @@ class Entity:
         self.max_hp = 1
         self.current_hp = self.max_hp
 
+        # Systeme de delay
+        self.timers = {}
+
 
     def add_child(self, new_child: "Entity") -> None:
         if new_child not in self.children:
@@ -146,6 +149,19 @@ class Entity:
         for child in self.children:
             child.update(dt)
 
+
+    def delay(self, time_s, dt) -> bool:
+        ''' Renvoie si le temps voulu es passer '''
+        if time_s in self.timers:
+            self.timers[time_s] += dt
+            if self.timers[time_s] >= time_s:
+                return True
+            return False
+        
+        else :
+            self.timers[time_s] = dt
+            return False
+        
 
     @classmethod
     def ui_config(cls, *elements):

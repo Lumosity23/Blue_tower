@@ -54,9 +54,13 @@ class ShopPanel(UIPanel):
 
     def buy_wall(self):
         self.game.eventManager.publish("SELECT_BUILD", "WALL")
+        self.game.eventManager.publish("BUILD_MODE", True)
+
 
     def buy_turret(self):
         self.game.eventManager.publish("SELECT_BUILD", "TURRET")
+        self.game.eventManager.publish("BUILD_MODE", True)
+
 
     def show(self):
 
