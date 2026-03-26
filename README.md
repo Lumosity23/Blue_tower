@@ -44,14 +44,11 @@ L'idée derrière ce jeu est d’apprendre la programmation et le Game Dev.
 Un systeme d'upgrade pour les batiments et le joueurs.
 
 ## Update du JOUR ( 25 mars )
-Les Ennemis peuvent enfin detruire les mur et sont affecter par eux mais j'ai des problemes de batiment fantome...
-Aussi au niveau des chunk mes ennemis se duplique dans les chunk il y a donc de plus en plus d'entity sur le terrain au cours d'une partie <---- A regler absolument
+Les Ennemis peuvent enfin detruire les mur et les traverser correctment les enemis comment reelement a devenir interessant !
 
-### voici un petit screen de cet Ajouts :
-#### Avant
-![](assets/ScreenShots/update_25_mars_0.png)
-#### Apres
-![](assets/ScreenShots/update_25_mars_1.png)
+### voici une petite video de cet Ajouts :
+<video src="assets/video/update_26_mars.mp4" controls="controls" width="300" height="200"></video>
+
 
 ## Installation
 Pour installer et test mon jeu, rien de plus simple : 

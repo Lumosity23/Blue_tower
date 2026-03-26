@@ -83,7 +83,8 @@ class Cursor(Entity):
 
     def check_validity(self) -> bool:
     
-        if self.game.grid.get_cell_isOccupied(*self.pos):
+        if self.game.grid.get_cell_isOccupied(*self.pos.xy):
+            # print(self.game.grid.get_cell_value(*self.pos.xy))
             return True
         
         # Vérification collision avec entités (Ennemis/Joueur) via EntityManager

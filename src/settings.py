@@ -36,12 +36,11 @@ class Settings:
     SCREEN_HEIGHT: int = 1080
     
     # Taille du monde réel (La carte totale où la caméra voyage)
-    # Ici, une carte de 50x50 cellules
-    WORLD_COLS: int = 18 * 3
-    WORLD_ROWS: int = 18 * 3
+    CELLS_FOR_CHUNK: int = 3 # 3x3 CELLS
+    WORLD_COLS: int = 18 * CELLS_FOR_CHUNK
+    WORLD_ROWS: int = 18 * CELLS_FOR_CHUNK
     WORLD_WIDTH: int = WORLD_COLS * CELL_SIZE
     WORLD_HEIGHT: int = WORLD_ROWS * CELL_SIZE 
-    CELLS_FOR_CHUNK: int = 3 # 3x3 CELLS
     CHUNK_SIZE: int = CELLS_FOR_CHUNK * CELL_SIZE
 
     # Utilisé pour le culling (ne pas dessiner hors champ)

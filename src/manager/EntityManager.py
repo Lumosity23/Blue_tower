@@ -53,6 +53,10 @@ class EntityManager:
         for entity in self.entities:
             if entity.active:
                 entity.update(dt)
+                
+                # Check de changement de chunk pour les entity qui n'on pas acces au Game.object
+                if entity.tag == "BULLET":
+                    self.check_chunk_entity(entity)
 
                 # Apres l'update si l'entite est morte, on la retire de la camera
                 if not entity.active:
@@ -62,6 +66,7 @@ class EntityManager:
             if entity.chunk_changed:
                 new_chunk_entity = self.game.grid.get_chunk_cell(entity.rect.center)
                 self.game.grid.move_entity_chunk(entity, entity.old_chunk, new_chunk_entity)
+                # print(f"| EntityManager LOG | : {entity} a bien ete retirer de son chunk chunk !")
 
         self.check_bullet_collisions()
 
@@ -91,6 +96,14 @@ class EntityManager:
             entity.kill()
             # On la retire de la camera
             self.game.sceneManager.main_camera.remove_entity(entity)
+
+
+    def check_chunk_entity(self, entity: Entity) -> None:
+        # Verifier si on a changer de chunk
+        entity.new_chunk = self.game.grid.get_chunk_cell(entity.rect.center)
+        if entity.new_chunk != entity.old_chunk:
+            entity.chunk_changed = True
+            entity.old_chunk = entity.chunk
 
 
     def new_game(self) -> None:

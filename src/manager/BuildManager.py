@@ -21,6 +21,7 @@ class BuildManager:
         # Souscriptions
         self.game.eventManager.subscribe("PLACE_BUILDING", self.attempt_build_from_event)
         self.game.eventManager.subscribe("NEW_GAME", self.new_game)
+        self.game.eventManager.subscribe("BUILDING_DESTROYED", self.clean_chunk)
 
 
     def update(self, dt):
@@ -30,13 +31,12 @@ class BuildManager:
             if entity.active:
                 entity.update(dt)
 
-                # Apres l'update si l'entite est morte, on la retire de la camera
-                if not entity.active:
-                    self.game.sceneManager.main_camera.remove_entity(entity)
-                    self.game.grid.remove_entity_chunk(entity)
-                    self.game.grid.set_cell_value(*entity.rect.center, self.game.st.EMPTY)
 
-        # self.check_build_collisions()
+    def clean_chunk(self, building: Building) -> None:
+        self.game.sceneManager.main_camera.remove_entity(building)
+        self.game.grid.remove_entity_chunk(building)
+        self.game.grid.set_cell_value(*building.rect.center, self.game.st.EMPTY)
+        print(f"la cell a bien ete changer : {self.game.grid.get_cell_value(*building.rect.center)}")
 
 
     """ def check_build_collisions(self):

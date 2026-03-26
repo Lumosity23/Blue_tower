@@ -9,8 +9,8 @@ if TYPE_CHECKING:
 class Grid:
     def __init__(self, game: "App"):
         self.game = game
-        self.rows = self.game.st.ROWS
-        self.cols = self.game.st.COLS
+        self.rows = self.game.st.WORLD_ROWS
+        self.cols = self.game.st.WORLD_COLS
         self.cell_size = self.game.st.CELL_SIZE
         self.chunk_size = self.game.st.CHUNK_SIZE
         
@@ -32,7 +32,8 @@ class Grid:
         self.grid = {(c, r): self.game.st.EMPTY for c in range(self.cols) for r in range(self.rows)}
         # Init de la grille ( CHUNKS )
         self.chunks = {(c, r): set() for c in range(self.cols // self.game.st.CELLS_FOR_CHUNK) for r in range(self.rows // self.game.st.CELLS_FOR_CHUNK)}
-            
+        #print(len(self.chunks))
+
 
     def draw(self, surface: pygame.Surface):
         cam_offset = self.game.sceneManager.main_camera.offset
@@ -79,6 +80,8 @@ class Grid:
         gx, gy = int(world_x // self.cell_size), int(world_y // self.cell_size)
         if (gx, gy) in self.grid:
             self.grid[(gx, gy)] = value
+            return
+        print(f"pas de cell a cet endroit la : {(gx, gy)}")
 
 
     def get_cell_isOccupied(self, world_x, world_y) -> bool:
@@ -172,29 +175,32 @@ class Grid:
         # else: print(f"l'ancien chunk de {entity} n'as pas ete trouve : {old_chunk_coords}")
 
         # O(1) : On ajoute au nouveau Set
-        if new_chunk_coords not in self.chunks:
-            self.chunks[new_chunk_coords] = set()
-        self.chunks[new_chunk_coords].add(entity)
-        entity.chunk = new_chunk_coords
-        entity.old_chunk = new_chunk_coords
+        if new_chunk_coords in self.chunks:
+            self.chunks[new_chunk_coords].add(entity)
+            entity.chunk = new_chunk_coords
+            entity.old_chunk = new_chunk_coords
 
 
     def set_entity_chunk(self, entity: "Entity") -> None:
         ''' Ajouter une entity a un chunk ( ex : lors de son spawn )'''
-        chunk = entity.pos.x // self.chunk_size, entity.pos.y // self.chunk_size
+        chunk = entity.rect.centerx // self.chunk_size, entity.rect.centery // self.chunk_size
+        # print(chunk)
 
         if chunk in self.chunks:
             self.chunks[chunk].add(entity)
             entity.chunk = chunk
             entity.old_chunk = chunk
+            return
+        
+        print(f"{entity.tag} n'as pas pu etre ajouter au chunk : {chunk}")
     
 
     def remove_entity_chunk(self, entity: "Entity") -> None:
         ''' Enleve une entity de son chunk ( ex : lors de sa mort ) '''
         if entity.chunk in self.chunks:
             self.chunks[entity.chunk].discard(entity)
-            print(f"{entity} a ete retire de son chunk !")
-        else: print(f"l'entity : {entity} n'as pa pu etre retirer de son chunk : {entity.chunk}")
+            # print(f"{entity} a ete retire de son chunk !")
+        else: print(f"l'entity : {entity} n'as pa pu etre retirer de son chunk : {entity.chunk} | son chunk actule {entity.chunk}")
  
 
     def show_chunk(self) -> None:
@@ -206,6 +212,6 @@ class Grid:
 
     def restart(self):
         
-        self.init_grid()
+        # self.init_grid()
         self.flow_field.clear()
         self.update_flow_field(self.game.kernel.pos)

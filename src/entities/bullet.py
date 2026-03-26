@@ -20,7 +20,7 @@ class Bullet(Entity):
         # Préparation du mouvement (sera reset dans spawn)
         self.velocity_vector = pygame.math.Vector2(0, 0)
         self.setup_movement(target_pos)
-
+        
 
     def setup_movement(self, target_pos):
         ''' Calcule la direction et l'angle de l'image '''
@@ -76,11 +76,4 @@ class Bullet(Entity):
                 
         # La balle disparaît après l'impact (ou perd 1 HP pour la pénétration)
         self.kill()
-    
-
-    """ def check_chunk(self) -> None:
-        # Verifier si on a changer de chunk
-        new_chunk = ( self.pos.x // self.game.st.CHUNK_SIZE, self.pos.y // self.game.st.CHUNK_SIZE ) 
-        if new_chunk != self.old_chunk:
-            self.chunk_changed = True
-            self.chunk = new_chunk """
+            
