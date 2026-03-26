@@ -50,6 +50,27 @@ Les Ennemis peuvent enfin detruire les mur et les traverser correctment les enem
 <video src="assets/video/update_26_mars_lite.webm" controls="controls" width="300" height="200"></video>
 
 
+## how to play
+pour les deplacements : WASD ou les fleches directionnelles
+pour ouvrire le shop : G
+pour activer le monde construction : E <- pas besoin car automatique lors de l'achat d'un batiment
+pour mettre en pause : ESC
+
+### Lors de la construction :
+clique gauche pour poser et construire
+clique droit pour annuler/arreter de construire avec le batiment selcetionner
+
+### pour aller plus loin ( Dev ):
+la touche F1 pour activer le `UIeditor`
+    -> `ctrl + s` pour sauvgarder la position
+
+#### CTRL + ...
+    - S  ----> save le layout de notre UI
+    - T  ----> permet de save le GraphTree dans un json pour le debug
+
+et touche `C` pour le debug des chunks
+
+
 ## Installation
 Pour installer et test mon jeu, rien de plus simple : 
 
