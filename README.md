@@ -47,7 +47,7 @@ Un systeme d'upgrade pour les batiments et le joueurs.
 Les Ennemis peuvent enfin detruire les mur et les traverser correctment les enemis comment reelement a devenir interessant !
 
 ### voici une petite video de cet Ajouts :
-<video src="assets/video/update_26_mars.mp4" controls="controls" width="300" height="200"></video>
+<video src="assets/video/update_26_mars_lite.webm" controls="controls" width="300" height="200"></video>
 
 
 ## Installation
