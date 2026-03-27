@@ -35,6 +35,8 @@ class UIElement:
             self.rect.width = cfg.get("w", w)
             self.rect.height = cfg.get("h", h)
             self.cfg_loaded = True
+            print(f'| LOG LAYOUT | : Layout applique a : {self.uid}')
+
 
         self.absolute_rect = None
         self.pos = pygame.math.Vector2(self.rect.x, self.rect.y)
