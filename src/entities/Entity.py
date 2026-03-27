@@ -195,10 +195,6 @@ class Entity:
         return __class__.__name__()
 
 
-
-
-
-
 ################################################ DEBUG ########################################################
 """ if self.debug:
     # Dessine un cadre vert neon autour de l'element lors du debug_mode

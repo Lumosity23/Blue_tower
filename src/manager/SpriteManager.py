@@ -1,6 +1,7 @@
 import pygame
 import os
 from typing import TYPE_CHECKING
+from utils.path import resource_path as rp
 
 if TYPE_CHECKING:
     from main import App
@@ -26,7 +27,7 @@ class SpriteManager:
         """ Génère des polices de caractères de façon dynamique """
         pygame.font.init()
         # On récupère le chemin depuis les settings ou un défaut
-        font_path = 'assets/font/boldpixels/BoldPixels.ttf'
+        font_path = rp('assets/font/boldpixels/BoldPixels.ttf')
         
         if not os.path.exists(font_path):
             print(f"Attention: Police introuvable à {font_path}. Utilisation de la police système.")
@@ -45,7 +46,7 @@ class SpriteManager:
         """ Récupère l'image originale (chargement 'paresseux') """
         if sprite_id not in self.image_cache:
             # On cherche le chemin dans Settings.ASSET_PATHS
-            path = self.st.ASSET_PATHS.get(sprite_id)
+            path = rp(self.st.ASSET_PATHS.get(sprite_id))
             if not path or not os.path.exists(path):
                 # Image de secours (Carré rose de debug)
                 surf = pygame.Surface((64, 64))

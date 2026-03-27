@@ -1,7 +1,6 @@
 import pygame
 #from pygame.locals import *
 from settings import Settings
-from entities.player import Player
 from manager.UIManager import UIManager
 from grid import Grid
 from entities.kernel import Kernel

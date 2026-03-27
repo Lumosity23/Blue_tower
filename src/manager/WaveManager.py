@@ -58,7 +58,7 @@ class WaveManager:
         
         # 1. Calcul du nombre d'ennemis (CPT) selon la formule du papier 
         # CPT = 20 + (30 * DPG / 100) + Spawn_Point
-        cpt = 20 + (30 * self.dpg / 100) + self.spawn_point
+        cpt = 20 + (30 * self.dpg / 100) + self.spawn_point * self.wave_number
         
         # recupere une zone de spawn
         spawn_area = self.get_spawn_area()
@@ -78,9 +78,8 @@ class WaveManager:
 
         # Logique de progression classique
         self.wave_number += 1
-        # Le papier suggère que le DDA remplace l'incrément manuel, 
-        # mais on peut garder un petit cooldown de confort.
-        self.cooldown += 1000 
+    
+        self.cooldown += 2000 
 
     def get_enemy_config(self, spawn_area: tuple[int, int]):
         """ Calcule une position et une taille valide """

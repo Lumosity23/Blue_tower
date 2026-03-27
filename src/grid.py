@@ -81,7 +81,7 @@ class Grid:
         if (gx, gy) in self.grid:
             self.grid[(gx, gy)] = value
             return
-        print(f"pas de cell a cet endroit la : {(gx, gy)}")
+        # print(f"pas de cell a cet endroit la : {(gx, gy)}")
 
 
     def get_cell_isOccupied(self, world_x, world_y) -> bool:
@@ -192,7 +192,7 @@ class Grid:
             entity.old_chunk = chunk
             return
         
-        print(f"{entity.tag} n'as pas pu etre ajouter au chunk : {chunk}")
+        # print(f"{entity.tag} n'as pas pu etre ajouter au chunk : {chunk}")
     
 
     def remove_entity_chunk(self, entity: "Entity") -> None:

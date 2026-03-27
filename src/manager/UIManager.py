@@ -1,6 +1,7 @@
 import pygame
 import os
 import json
+from utils.path import resource_path as rp
 from ui.UIElement import UIElement
 from ui.panel.ShopPanel import ShopPanel
 from ui.panel.OSD import OSD
@@ -224,7 +225,7 @@ class UIManager():
         data_to_save = {f"{parent.uid}" : collect_data(parent)}
 
         # On écrit dans le fichier
-        with open(self.tree_path, 'w') as f:
+        with open(rp(self.tree_path), 'w') as f:
             json.dump(data_to_save, f, indent=4) # indent=4 pour que ce soit joli à lire
             
         print(f"Tree sauvegardé dans {self.layout_path} !")
@@ -236,7 +237,7 @@ class UIManager():
             return {}
         
         try:
-            with open(self.layout_path, "r") as f:
+            with open(rp(self.layout_path), "r") as f:
                 return json.load(f)
             
         except json.JSONDecodeError:
@@ -271,7 +272,7 @@ class UIManager():
         collect_data(self.root)
 
         # On écrit dans le fichier
-        with open(self.layout_path, 'w') as f:
+        with open(rp(self.layout_path), 'w') as f:
             json.dump(data_to_save, f, indent=4) # indent=4 pour que ce soit joli à lire
             
         print(f"Layout sauvegardé dans {self.layout_path} !")

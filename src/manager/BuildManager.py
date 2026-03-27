@@ -36,7 +36,7 @@ class BuildManager:
         self.game.sceneManager.main_camera.remove_entity(building)
         self.game.grid.remove_entity_chunk(building)
         self.game.grid.set_cell_value(*building.rect.center, self.game.st.EMPTY)
-        print(f"la cell a bien ete changer : {self.game.grid.get_cell_value(*building.rect.center)}")
+        # print(f"la cell a bien ete changer : {self.game.grid.get_cell_value(*building.rect.center)}")
 
 
     """ def check_build_collisions(self):

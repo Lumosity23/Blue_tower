@@ -1,6 +1,7 @@
 import json
 import os
 from settings import Settings
+from utils.path import resource_path as rp
 
 
 def save_entity_schema( name, raw_data: tuple ):
@@ -8,7 +9,7 @@ def save_entity_schema( name, raw_data: tuple ):
         st = Settings()
 
         # On le chemin vers le ficher de config
-        filename = st.UI_SCHEMA_PATH
+        filename = rp(st.UI_SCHEMA_PATH)
 
         # Charger l'existant
         data = {}

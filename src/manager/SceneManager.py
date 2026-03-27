@@ -1,6 +1,5 @@
 from entities.Camera import Camera
 from entities.Cursor import Cursor
-from entities.Entity import Entity
 from manager.BuildManager import BuildManager
 from manager.EntityManager import EntityManager
 from manager.WaveManager import WaveManager
@@ -8,7 +7,6 @@ from manager.WorldManager import WorldManager
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from main import App
-    import pygame
 
 
 class SceneManager:
