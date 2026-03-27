@@ -238,7 +238,7 @@ class UIManager():
         
         try:
             with open(rp(self.layout_path), "r") as f:
-                print(" Le file de congif layout a bien ete charger ! ")
+                # print(f.read())
                 return json.load(f)
             
         except json.JSONDecodeError:

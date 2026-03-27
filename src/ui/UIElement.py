@@ -12,7 +12,9 @@ class UIElement:
     @classmethod
     def load_layout_cache(cls, data: dict):
         cls._LAYOUT_CACHE = data
-        print("💾 UIElement : Configuration Layout chargée !")
+        if data:
+            print("💾 UIElement : Configuration Layout chargée !")
+        else : print(" Erreur lors du chargement du fichier de configuration !")
 
     
     def __init__(self, x: int, y: int, w: int, h: int, uid: str | None = None):
@@ -36,7 +38,7 @@ class UIElement:
             self.rect.height = cfg.get("h", h)
             self.cfg_loaded = True
             print(f'| LOG LAYOUT | : Layout applique a : {self.uid}')
-
+        else: print(f"Erruer lors du load ! : {self.__class__.__name__} | {self.uid if self.uid else None}")
 
         self.absolute_rect = None
         self.pos = pygame.math.Vector2(self.rect.x, self.rect.y)
