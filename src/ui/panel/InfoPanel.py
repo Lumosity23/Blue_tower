@@ -1,4 +1,5 @@
 import json
+from utils.path import resource_path as rp
 from ui.UIPanel import UIPanel
 from ui import UIProgressBar, UIDot, UIStat, UIIcon
 from typing import TYPE_CHECKING
@@ -17,7 +18,7 @@ class InfoPanel( UIPanel ):
         self.size = w, h
 
         # Dans ton UIManager ou InfoPanel
-        with open( self.game.st.UI_SCHEMA_PATH, 'r') as f:
+        with open( rp(self.game.st.UI_SCHEMA_PATH), 'r') as f:
             self.schemas: dict[dict] = json.load(f)
 
         super().__init__( game.st.SCREEN_WIDTH, 0, w, h, uid="InfoPanel" )

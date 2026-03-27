@@ -17,3 +17,6 @@ wheels/
 test/
 add_event_doc.py
 ui_config_manager.py
+
+# Release
+release/
