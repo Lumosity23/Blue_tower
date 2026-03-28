@@ -1,12 +1,16 @@
 import pygame
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from manager.EventManager import EventManager
 
 class UIElement:
 
     
     # 1. LA VARIABLE PARTAGÉE (Dictionnaire vide au début)
     # Elle appartient à la classe, pas aux objets individuels.
-    _LAYOUT_CACHE = {} 
+    _LAYOUT_CACHE = {}
+    _EVENTBUS = None
 
     # 2. MÉTHODE POUR REMPLIR LE CACHE (Appelée par le Manager)
     @classmethod
@@ -15,6 +19,11 @@ class UIElement:
         if data:
             print("💾 UIElement : Configuration Layout chargée !")
         else : print(" Erreur lors du chargement du fichier de configuration !")
+
+
+    @classmethod
+    def get_eventBus(cls, eventBus: "EventManager"):
+        cls._EVENTBUS = eventBus
 
     
     def __init__(self, x: int, y: int, w: int, h: int, uid: str | None = None):
@@ -38,7 +47,7 @@ class UIElement:
             self.rect.height = cfg.get("h", h)
             self.cfg_loaded = True
             # print(f'| LOG LAYOUT | : Layout applique a : {self.uid}')
-        else: print(f"Erruer lors du load ! : {self.__class__.__name__} | {self.uid if self.uid else None}")
+        # else: print(f"Erruer lors du load ! : {self.__class__.__name__} | {self.uid if self.uid else None}")
 
         self.absolute_rect = None
         self.pos = pygame.math.Vector2(self.rect.x, self.rect.y)

@@ -24,6 +24,7 @@ class UIButton(UIElement):
         
         # Fonction qui realise lors de la pression du bouton
         self.callback = on_click_callback
+        self.sound = "click_default"
 
         # Couleur
         self.color_idle: tuple = color
@@ -58,9 +59,10 @@ class UIButton(UIElement):
         for c in list(color):
             self.color_pressed += (c * 0.8,)
 
-    
-    def draw(self, surface):
-        super().draw(surface)
+
+    def set_sound(self, sound: str) -> None:
+        self.sound = sound
+
 
     def render(self) -> None:
 
@@ -90,6 +92,7 @@ class UIButton(UIElement):
             if is_hovered and event.button == 1:
                 self.state = "PRESSED"
                 if self.callback:
+                    self._EVENTBUS.publish("CLICK_BUTTON", self.sound)
                     self.callback()
                 # On force le render ici car l'état vient de changer
                 self.render() 

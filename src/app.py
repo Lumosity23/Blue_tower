@@ -8,6 +8,7 @@ from manager.WalletManager import WalletManager
 from manager.EventManager import EventManager
 from manager.SpriteManager import SpriteManager
 from manager.SceneManager import SceneManager
+from audioDirector import AudioDirector
 
 
 class App:
@@ -44,13 +45,15 @@ class App:
         self.grid = Grid(self)
         
         self.sceneManager = SceneManager(self)
+        self.audio_director = AudioDirector(self)
         self.ui_manager = UIManager(self)
         self.walletManager = WalletManager(self)
         self.kernel = Kernel(self)
 
         ##### INIT KERNEL #####  <---------- A CHANGER CAR PAS PROPRE !!!! 
         self.sceneManager.buildManager.entities.append(self.kernel)
-
+        self.grid.set_entity_chunk(self.kernel)
+        
         # Init de HUD
         self.ui_manager.OSD.post_init()
 

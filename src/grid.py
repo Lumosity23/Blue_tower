@@ -71,7 +71,10 @@ class Grid:
         return int(cx * self.cell_size), int(cy * self.cell_size)
     
 
-    def get_cell_value(self, world_x, world_y):
+    def get_cell_value(self, world_x, world_y, iscellpos=False):
+        if iscellpos:
+            return self.grid.get((world_x, world_y))
+        
         gx, gy = int(world_x // self.cell_size), int(world_y // self.cell_size)
         return self.grid.get((gx, gy))
 

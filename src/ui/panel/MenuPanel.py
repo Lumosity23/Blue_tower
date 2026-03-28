@@ -20,13 +20,13 @@ class MenuPanel(UIPanel):
         else:
             child_uid = ""
 
-        btn_resume = UIButton(100, 100, "PLAY", self.play, (100, 100, 100), size_text=70, uid=f"{child_uid}btn_resume")
-        btn_restart = UIButton(100, 100, "SETTINGS", self.open_settings, (255,0,0),size_text=70, uid=f"{child_uid}btn_restart")
+        btn_play = UIButton(100, 100, "PLAY", self.play, (100, 100, 100), size_text=70, uid=f"{child_uid}btn_play")
+        btn_setting = UIButton(100, 100, "SETTINGS", self.open_settings, (255,0,0),size_text=70, uid=f"{child_uid}btn_restart")
         btn_quit = UIButton(100, 100, "QUIT", self.quit, (255,0,0),size_text=70, uid=f"{child_uid}btn_quit")
 
         self.add_child(btn_quit)
-        self.add_child(btn_restart)
-        self.add_child(btn_resume)
+        self.add_child(btn_setting)
+        self.add_child(btn_play)
 
 
     def open_settings(self) -> None:

@@ -1,8 +1,11 @@
-name: Build BlueTower Windows
+name: Build and Release BlueTower
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main ] # Se déclenche uniquement sur main
+
+permissions:
+  contents: write # Indispensable pour créer une Release
 
 jobs:
   build:
@@ -29,11 +32,18 @@ jobs:
         --add-data "assets/*.png;assets" `
         --add-data "assets/font;assets/font" `
         --add-data "src/ui/*.json;src/ui" `
+        --add-data "src/ui/panel/*.py;src/ui/panel" `
         --paths src `
         src/main.py
 
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
       with:
-        name: BlueTower-Windows-Release
-        path: dist/BlueTower.exe
+        files: dist/BlueTower.exe
+        tag_name: v1.0.${{ github.run_number }}
+        name: BlueTower Release v1.0.${{ github.run_number }}
+        body: |
+          Nouvelle version stable de BlueTower.
+          Générée automatiquement par GitHub Actions.
+        draft: false
+        prerelease: false

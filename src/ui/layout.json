@@ -347,6 +347,120 @@
         "w": 280,
         "h": 100
     },
+    "SettingsPanel": {
+        "x": 0,
+        "y": 0,
+        "w": 1920,
+        "h": 1080
+    },
+    "Settings_text_panel": {
+        "x": 705,
+        "y": 20,
+        "w": 546,
+        "h": 150
+    },
+    "SettingsPanel_Master": {
+        "x": 710,
+        "y": 430,
+        "w": 197,
+        "h": 50
+    },
+    "SettingsPanel_plus_Master": {
+        "x": 1085,
+        "y": 420,
+        "w": 62,
+        "h": 70
+    },
+    "SettingsPanel_plus_Master_text": {
+        "x": 20,
+        "y": 10,
+        "w": 22,
+        "h": 50
+    },
+    "SettingsPanel_moins_Master": {
+        "x": 1160,
+        "y": 420,
+        "w": 62,
+        "h": 70
+    },
+    "SettingsPanel_moins_Master_text": {
+        "x": 20,
+        "y": 5,
+        "w": 22,
+        "h": 50
+    },
+    "SettingsPanel_Music": {
+        "x": 710,
+        "y": 510,
+        "w": 175,
+        "h": 50
+    },
+    "SettingsPanel_plus_Music": {
+        "x": 1085,
+        "y": 500,
+        "w": 62,
+        "h": 70
+    },
+    "SettingsPanel_plus_Music_text": {
+        "x": 20,
+        "y": 10,
+        "w": 22,
+        "h": 50
+    },
+    "SettingsPanel_moins_Music": {
+        "x": 1160,
+        "y": 500,
+        "w": 62,
+        "h": 70
+    },
+    "SettingsPanel_moins_Music_text": {
+        "x": 20,
+        "y": 10,
+        "w": 22,
+        "h": 50
+    },
+    "SettingsPanel_SFX": {
+        "x": 710,
+        "y": 590,
+        "w": 143,
+        "h": 50
+    },
+    "SettingsPanel_plus_SFX": {
+        "x": 1085,
+        "y": 580,
+        "w": 62,
+        "h": 70
+    },
+    "SettingsPanel_plus_SFX_text": {
+        "x": 20,
+        "y": 10,
+        "w": 22,
+        "h": 50
+    },
+    "SettingsPanel_moins_SFX": {
+        "x": 1160,
+        "y": 580,
+        "w": 62,
+        "h": 70
+    },
+    "SettingsPanel_moins_SFX_text": {
+        "x": 20,
+        "y": 10,
+        "w": 22,
+        "h": 50
+    },
+    "Settings_Back": {
+        "x": 15,
+        "y": 15,
+        "w": 152,
+        "h": 70
+    },
+    "Settings_Back_text": {
+        "x": 20,
+        "y": 10,
+        "w": 112,
+        "h": 50
+    },
     "MenuPanel": {
         "x": -50,
         "y": -50,
@@ -360,7 +474,7 @@
         "h": 200
     },
     "MenuPanel_btn_quit": {
-        "x": 895,
+        "x": 910,
         "y": 730,
         "w": 196,
         "h": 90
@@ -372,7 +486,7 @@
         "h": 70
     },
     "MenuPanel_btn_restart": {
-        "x": 815,
+        "x": 830,
         "y": 600,
         "w": 352,
         "h": 90
@@ -383,13 +497,13 @@
         "w": 312,
         "h": 70
     },
-    "MenuPanel_btn_resume": {
-        "x": 895,
-        "y": 470,
+    "MenuPanel_btn_play": {
+        "x": 905,
+        "y": 475,
         "w": 196,
         "h": 90
     },
-    "MenuPanel_btn_resume_text": {
+    "MenuPanel_btn_play_text": {
         "x": 20,
         "y": 10,
         "w": 156,

@@ -124,11 +124,16 @@ class Enemie(Entity):
     def _view(self) -> None:
 
         # Regarder si target_prio in range
-        """ if self.game.player in self.game.grid.get_entities_around(self.pos, radius=1):
-            self.is_prio_target = True
-            self.prio_target_pos = self.game.player.pos
-        self.is_prio_target = False """
+        if self.game.player in self.game.grid.get_entities_around(self.pos, radius=2):
+            if self.pos.distance_to(self.game.player.pos) < self.pos.distance_to(self.game.kernel.pos):
+                self.target_pos.update(self.game.player.pos)
+            return
         
+        if self.game.grid.get_cell_value(*self.next_target(), True) == "KERNEL":
+            self.target_pos.update(self.game.kernel.pos)
+            self.is_obstacle = True
+            return
+            
         self.target_pos.update(self.next_target())
 
         # Regarder si un mur devant
@@ -169,6 +174,7 @@ class Enemie(Entity):
 
     def attack(self, dt) -> None:
         entity: "Entity"  = self.game.grid.get_entity_at(*self.target_pos)
+        print(entity)
         if entity and self.delay(2, dt):
             self.kick(entity, self.damage)
 

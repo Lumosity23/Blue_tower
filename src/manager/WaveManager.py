@@ -80,6 +80,8 @@ class WaveManager:
         self.wave_number += 1
     
         self.cooldown += 2000 
+        self.game.eventManager.publish("NEW_WAVE")
+        
 
     def get_enemy_config(self, spawn_area: tuple[int, int]):
         """ Calcule une position et une taille valide """

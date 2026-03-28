@@ -9,6 +9,7 @@ from ui.panel.GameOverPanel import GameOverPanel
 from ui.panel.PausePanel import PausePanel
 from ui.panel.MenuPanel import MenuPanel
 from ui.panel.InfoPanel import InfoPanel
+from ui.panel.SettingsPanel import Settings
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -29,6 +30,7 @@ class UIManager():
 
         # On injecte les données dans la classe statique
         UIElement.load_layout_cache(self.layout)
+        UIElement.get_eventBus(self.game.eventManager)
 
         from ui.UIText import UIText # Import local pour éviter les imports circulaires
         UIText.set_font_provider(self.game.spriteManager.fonts)
@@ -46,9 +48,10 @@ class UIManager():
         self.pause = PausePanel(game)
         self.menu = MenuPanel(game)
         self.info = InfoPanel(game)
+        self.settings = Settings(game)
 
         # Ajout des enfants dans l'odre de profondeur d'affichage
-        enfants = [self.shop_panel, self.info, self.OSD, self.game_over_panel, self.pause, self.menu ]
+        enfants = [self.shop_panel, self.info, self.OSD, self.game_over_panel, self.pause, self.settings, self.menu ]
         for e in enfants:
             self.root.add_child(e)
 
@@ -61,6 +64,7 @@ class UIManager():
         self.game.eventManager.subscribe("NEW_GAME", self.on_restart)
         self.game.eventManager.subscribe("MENU", self.on_menu)
         self.game.eventManager.subscribe("QUIT_GAME", self.on_menu)
+        self.game.eventManager.subscribe("OPEN_SETTINGS", self.on_settings)
 
 
     def toggle_edit_mode(self):
@@ -181,6 +185,7 @@ class UIManager():
     def on_pause(self) -> None:    
         self.pause.visible = True
     
+
     def on_playing(self) -> None:
         self.pause.visible = False
     
@@ -199,8 +204,15 @@ class UIManager():
             child.visible = False
         
         self.menu.visible = True
-
     
+    def on_settings(self) -> None:
+
+        for child in self.root.children:
+            child.visible = False
+        
+        self.settings.visible = True
+    
+
 ################ ZONE DE CONFIG POUR LE UI #################
 
     def save_tree(self, parent: "UIElement") -> None:

@@ -192,13 +192,23 @@ class Settings:
     
     # Dictionnaire des chemins pour le SpriteManager
     ASSET_PATHS: Dict[str, str] = field(default_factory=lambda: {
-        "player": 'assets/player.png',
-        "enemy" : 'assets/enemie.png',
-        "kernel": 'assets/kernel.png',
-        "chunk" : 'assets/chunk.png',
-        "wall"  : 'assets/wall_gab.png',
-        "turret": 'assets/turret.png',
-        "bullet": 'assets/bullet.png'
+        "player": 'assets/sprite/player.png',
+        "enemy" : 'assets/sprite/enemie.png',
+        "kernel": 'assets/sprite/kernel.png',
+        "chunk" : 'assets/sprite/chunk.png',
+        "wall"  : 'assets/sprite/wall_gab.png',
+        "turret": 'assets/sprite/turret.png',
+        "bullet": 'assets/sprite/bullet.png'
+    })
+
+    SOUND_PATH: Dict[str, str] = field(default_factory=lambda: {
+        "UI_CLICK": 'assets/audio/sfx/UI_click.mp3',
+        "ERROR" : 'assets/audio/sfx/error_sound.mp3',
+        "NEW_WAVE"  : 'assets/audio/sfx/new_wave.mp3'
+    })
+
+    MUSIC_PATH: Dict[str, str] = field(default_factory=lambda: {
+        "MAIN_THEME": 'assets/audio/music/main_theme.wav'
     })
 
     # ==========================================

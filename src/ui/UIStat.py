@@ -16,9 +16,9 @@ class UIStat(UIText):
     def set_value(self, value) -> None:
         ''' Permet de setup un valeur a surveiller ( dois etre un pointeur )'''
         self.value = value
-        stat_value = UIText(0, 0 , value , text_update=True)
-        stat_value.rect.left = self.rect.right - 20
-        self.add_child(stat_value)
+        self.stat_value = UIText(0, 0 , value , text_update=True)
+        self.stat_value.rect.left = self.rect.right - 20
+        self.add_child(self.stat_value)
 
 
     def custom_setup(self, x, y ,label, value, **kwargs) -> None:
