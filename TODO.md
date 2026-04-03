@@ -28,11 +28,6 @@ Les Appel API, sont super important car il permet d'avoir une structure propre e
 - [ ] Cree un NotificationManager
   - [ ] permetre de faire apparaitre des message de debug ou d'info en generale
 
-- [ ] Cree un VFXManager
-  - [ ] Cree un endPoint pour l'affichage de text instantane
-  - [ ] ajouter une animation de monter et fondu
-
-
 
 ## SFX and MUSIC
 
@@ -75,3 +70,7 @@ c'est un element essentiel, mais si peu attentdu par les joueur dans un premier 
 
 - [x] System de l'info panel dynamique
 - [x] Destruction de batiement par les ennemis
+
+- [x] Cree un VFXManager
+  - [x] Cree un endPoint pour l'affichage de text instantane
+  - [x] ajouter une animation de monter et fondu

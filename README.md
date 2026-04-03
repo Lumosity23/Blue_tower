@@ -32,22 +32,26 @@ L'idée derrière ce jeu est d’apprendre la programmation et le Game Dev.
 
 ### Image (Menu/Pause/Shop/Ingame)
 #### MENU
-![](assets/ScreenShots/Screenshot%20from%202026-03-02%2022-11-27.png)
+![](assets/ScreenShots/Screenshot_menu.png)
 #### IN-GAME
-![](assets/ScreenShots/Screenshot%20from%202026-03-02%2022-11-40.png)
+![](assets/ScreenShots/Screenshot_ingame.png)
 #### PAUSE
-![](assets/ScreenShots/Screenshot%20from%202026-03-02%2022-11-44.png)
+![](assets/ScreenShots/Screenshot_pause.png)
+#### INFOPANEL
+![](assets/ScreenShots/Screenshot_ip.png)
 #### SHOP
-![](assets/ScreenShots/Screenshot%20from%202026-03-02%2022-11-59.png)
+![](assets/ScreenShots/Screenshot_shop.png)
+### SETTINGS
+![](assets/ScreenShots/Screenshot_settings.png)
 
 ## Future MAJ/Ajout pour le jeu (d'ici le debut avril)
 Un systeme d'upgrade pour les batiments et le joueurs.
 
-## Update du JOUR ( 25 mars )
-Les Ennemis peuvent enfin detruire les mur et les traverser correctment les enemis comment reelement a devenir interessant !
+## Update du JOUR ( 4 avril )
+Ajout de text flotant et temporaire pour avoir un meilleur effet visuel lors des degats mis ou recu !
 
-### voici une petite video de cet Ajouts :
-<video src="assets/video/update_26_mars_lite.webm" controls="controls" width="300" height="200"></video>
+### voici un petit screen de cet Ajouts :
+![](assets/ScreenShots/update_4_avril.png)
 
 
 ## how to play
@@ -70,8 +74,11 @@ la touche F1 pour activer le `UIeditor`
 
 et touche `C` pour le debug des chunks
 
+## Pour y jouer
+rendez vous dans la section Release de ce repo et telecharger la dernier version qui corresepont a votre OS !
 
-## Installation
+
+## Installation pour dev
 Pour installer et test mon jeu, rien de plus simple : 
 
 Clone le repo avec la commande suivante
