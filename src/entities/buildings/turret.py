@@ -31,6 +31,9 @@ class Turret(Building):
 
 
 Turret.ui_config(
-    ("STAT", "Dégâts", "damage"),
-    ("BAR",  "Vie", "current_hp", "max_hp")
+    ("ICON", "TURRET", "image"),
+    ("BAR", "Vie", "current_hp", "max_hp"),
+    ("STAT", "kills", "kills"),
+    ("DOT", "Alive", (0, 255, 0)),
+    ("STAT", "CHUNK", "chunk")
 )

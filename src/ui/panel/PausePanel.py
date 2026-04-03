@@ -15,6 +15,7 @@ class PausePanel(UIPanel):
         self.visible = False
         self.image.set_alpha(230)
         self.uid = "PausePanel"
+        self.state = True
         if self.uid:
             child_uid = f"{self.uid}_"
         else:
@@ -24,11 +25,12 @@ class PausePanel(UIPanel):
         btn_resume = UIButton(100, 100, "RESUME", self.resume, (100, 100, 100), uid=f"{child_uid}btn_resume")
         btn_restart = UIButton(100, 100, "RESTART", self.restart_game, (255,0,0), uid=f"{child_uid}btn_restart")
         btn_quit = UIButton(100, 100, "QUIT", self.quit, (255,0,0), uid=f"{child_uid}btn_quit")
+        btn_setting = UIButton(0, 0, "SETTINGS", self.setting, (25, 65, 135), uid=f"{self.uid}_btn_settings")
 
-        self.add_child(btn_quit)
-        self.add_child(btn_restart)
-        self.add_child(btn_resume)
-        self.add_child(text)
+        children = [text, btn_quit, btn_restart, btn_resume, btn_setting]
+
+        for child in children:
+            self.add_child(child)
 
 
     def restart_game(self) -> None:
@@ -42,6 +44,11 @@ class PausePanel(UIPanel):
         return
 
     def resume(self) -> None:
+        
+        self.game.eventManager.publish("UNPAUSE")
+        return
 
-        self.game.eventManager.publish("PAUSE")
+    def setting(self) ->  None:
+
+        self._EVENTBUS.publish("OPEN_SETTINGS", "PAUSE")
         return

@@ -15,32 +15,15 @@ class Enemie(Entity):
         
         self.game = game
         self.type = type
-        self.stats = self.game.st.ENEMIES_DATA[type]
-        self.size = self.stats["size"]
+        self.pos: pygame.Vector2
         self.old_chunk = self.chunk
-        
-        # Setup visuel
-        self.image = self.game.spriteManager.get_custom_sprite(self.stats["sprite_id"], size, 'circle')
-        
-        # Logique de mouvement
-        self.velocity = 150
         self.director_vector = pygame.math.Vector2(0, 0)
         self.target_pos = pygame.math.Vector2(x, y)
-        self.arrived = True
         self.is_prio_target = False
         self.is_obstacle = False
-
-        # Stats
-        self.max_hp = self.stats['hp']
-        self.current_hp = self.max_hp
-        self.damage = self.stats['damage']
-        
-        # --- ENFANT : Barre de vie ---
-        # Elle est attachée à l'ennemi et suit ses mouvements automatiquement
-        self.hp_bar = UIProgressBar(x=0, y=-10 , uid=f"{uid}_hp" if uid else None)
-        self.hp_bar.setup( w=self.rect.w, h=5, show_text=False )
-        self.hp_bar.dynamic_color = True
-        self.add_child(self.hp_bar)
+    
+        # Activation des states 
+        self.set_states(type)
 
         # Pipeline de vie
         self.state = "MOVE"
@@ -51,24 +34,44 @@ class Enemie(Entity):
         }
 
 
-    def spawn(self, x, y, size, uid=None, **kwargs):
+    def spawn(self, x, y, type, uid=None, **kwargs):
         """ Surcharge de spawn pour réinitialiser la logique de l'ennemi """
         super().spawn(x, y, uid)
-        self.size = size
+        self.set_states(type)
+        
+    
+    def set_states(self, type) -> None:
+        for child in self.children:
+            self.remove_child(child)
+
+        self.stats = self.game.st.ENEMIES_DATA[type]
+        self.size = self.stats["size"]
+        self.image = self.game.spriteManager.get_custom_sprite(self.stats["sprite_id"], self.size, 'circle')
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos.xy
+        self.max_hp = self.stats["hp"]
+        self.velocity = self.stats["velocity"]
+        self.damage = self.stats["damage"]
+        self.reward = self.stats["reward"]
+        self.armor = self.stats["armor"]
         self.current_hp = self.max_hp
+        self.hp_bar = UIProgressBar(x=0, y=-10 , uid=f"{self.uid}_hp" if self.uid else None)
+        self.hp_bar.setup( w=self.rect.w, h=5, show_text=False )
+        self.hp_bar.dynamic_color = True
+        self.add_child(self.hp_bar)
         self.hp_bar.update_values(self.current_hp, self.max_hp)
         self.arrived = True
-    
+
 
     def update(self, dt):
         if not self.active: return
         
         # Debut du Pipline
         self._view()
-        self._think()
+        output = self._think()
 
         # Effectuer l'action de son statment
-        self.action[self.state](dt)
+        self.action[self.state](dt, output)
 
         self.check_chunk()
         # Update des enfants (Barre de vie)
@@ -76,7 +79,7 @@ class Enemie(Entity):
 
 
     def next_target(self, cell_pos=False) -> tuple[int, int]:
-        cx, cy = self.game.grid.get_cell_pos(self.pos.x, self.pos.y)
+        cx, cy = self.game.grid.get_cell_pos(self.rect.x, self.rect.y)
         neighbors = self.game.grid.getNeighborsAndCost(cx, cy)
         
         cheapest_cell = float('inf')
@@ -113,11 +116,10 @@ class Enemie(Entity):
             self.kill()
 
 
-    def kill( self ):
+    def kill(self):
         """ Mort de l'ennemi : on désactive au lieu de supprimer (Pooling) """
         # On prévient le reste du jeu
-        reward = self.type * 20
-        self.game.eventManager.publish("ENEMY_KILLED", reward)
+        self.game.eventManager.publish("ENEMY_KILLED", self.reward)
         super().kill()
     
 
@@ -130,6 +132,7 @@ class Enemie(Entity):
             return
         
         if self.game.grid.get_cell_value(*self.next_target(), True) == "KERNEL":
+            print("a atteint le KERNEL")
             self.target_pos.update(self.game.kernel.pos)
             self.is_obstacle = True
             return
@@ -150,11 +153,12 @@ class Enemie(Entity):
 
         if self.is_obstacle:
             self.state = "ATTACK"
+            return self.game.grid.get_entity_at(*self.target_pos)
 
         else : self.state = "MOVE"
     
 
-    def move(self, dt) -> None:
+    def move(self, dt, output) -> None:
       
         # Calcul du vecteur de direction
         self.director_vector = self.target_pos - self.pos
@@ -172,12 +176,11 @@ class Enemie(Entity):
             self.arrived = True
 
 
-    def attack(self, dt) -> None:
-        entity: "Entity"  = self.game.grid.get_entity_at(*self.target_pos)
-        print(entity)
-        if entity and self.delay(2, dt):
+    def attack(self, dt, entity) -> None:
+    
+        if entity and self.delay(1, dt):
             self.kick(entity, self.damage)
 
 
-    def idle(self, dt) -> None:
+    def idle(self, dt, **kwargs) -> None:
         pass

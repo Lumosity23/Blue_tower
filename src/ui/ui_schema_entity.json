@@ -1,11 +1,11 @@
 {
     "TURRET": [
         {
-            "type": "stat",
-            "ui_class": "UIStat",
-            "label": "Dégâts",
+            "type": "icon",
+            "ui_class": "UIIcon",
+            "label": "TURRET",
             "mapping": {
-                "string": "damage"
+                "icon_id": "image"
             }
         },
         {
@@ -15,6 +15,34 @@
             "mapping": {
                 "current": "current_hp",
                 "max": "max_hp"
+            }
+        },
+        {
+            "type": "stat",
+            "ui_class": "UIStat",
+            "label": "kills",
+            "mapping": {
+                "string": "kills"
+            }
+        },
+        {
+            "type": "dot",
+            "ui_class": "UIDot",
+            "label": "Alive",
+            "mapping": {
+                "state": [
+                    0,
+                    255,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "stat",
+            "ui_class": "UIStat",
+            "label": "CHUNK",
+            "mapping": {
+                "string": "chunk"
             }
         }
     ],
@@ -54,6 +82,80 @@
                     255,
                     0
                 ]
+            }
+        },
+        {
+            "type": "stat",
+            "ui_class": "UIStat",
+            "label": "CHUNK",
+            "mapping": {
+                "string": "chunk"
+            }
+        }
+    ],
+    "KERNEL": [
+        {
+            "type": "icon",
+            "ui_class": "UIIcon",
+            "label": "your base",
+            "mapping": {
+                "icon_id": "image"
+            }
+        },
+        {
+            "type": "bar",
+            "ui_class": "UIProgressBar",
+            "label": "Vie",
+            "mapping": {
+                "current": "current_hp",
+                "max": "max_hp"
+            }
+        },
+        {
+            "type": "stat",
+            "ui_class": "UIStat",
+            "label": "kills",
+            "mapping": {
+                "string": "kills"
+            }
+        },
+        {
+            "type": "dot",
+            "ui_class": "UIDot",
+            "label": "Alive",
+            "mapping": {
+                "state": [
+                    0,
+                    255,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "stat",
+            "ui_class": "UIStat",
+            "label": "CHUNK",
+            "mapping": {
+                "string": "chunk"
+            }
+        }
+    ],
+    "WALL": [
+        {
+            "type": "icon",
+            "ui_class": "UIIcon",
+            "label": "WALL",
+            "mapping": {
+                "icon_id": "image"
+            }
+        },
+        {
+            "type": "bar",
+            "ui_class": "UIProgressBar",
+            "label": "Vie",
+            "mapping": {
+                "current": "current_hp",
+                "max": "max_hp"
             }
         },
         {

@@ -15,6 +15,7 @@ Bienvenue dans les coulisses de ce projet ! Ce jeu est une aventure d'apprentiss
 
 * **Arthur** — Aide a la redaction et assistance pour le designe du jeu.
 * **Gabriel** — Testeur et dev a temps perdu.
+* **Amine** — Musicien, c'est a lui que reviens tout la vibe du jeu ! 
 * **Toi ?** — Si tu souhaites m'aider à tester l'équilibrage ou à chasser les bugs, n'hésite pas à ouvrir une *Issue* ou une *Pull Request* !
 
 ---
@@ -23,13 +24,14 @@ Bienvenue dans les coulisses de ce projet ! Ce jeu est une aventure d'apprentiss
 
 * **Sprites / Art :** Lumosity23 - Gabriel - Arthur.
 * **Polices (Fonts) :** [Licences](assets/font/boldpixels/license.txt).
-
+* **Music :** Amine
+* **SFX :** [SFX site](https://pixabay.com/sound-effects/).
 ---
 
 ##  Outils & Bibliothèques
 
 * **Langage :** Python.
 * **Moteur :** [Pygame](https://www.pygame.org/).
-* **Assistance IA :** Merci à Gemini (authentic adaptive AI) pour les sessions de brainstorming, le refactoring nodal et les explications théoriques.
+* **Assistance IA :** Gemini (authentic adaptive AI) pour les sessions de brainstorming, le refactoring nodal et les explications théoriques.
 
 ---

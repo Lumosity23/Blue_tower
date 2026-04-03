@@ -52,8 +52,7 @@ class App:
 
         ##### INIT KERNEL #####  <---------- A CHANGER CAR PAS PROPRE !!!! 
         self.sceneManager.buildManager.entities.append(self.kernel)
-        self.grid.set_entity_chunk(self.kernel)
-        
+
         # Init de HUD
         self.ui_manager.OSD.post_init()
 
@@ -95,10 +94,6 @@ class App:
             
             if event.key == pygame.K_ESCAPE and self.state == "PLAYING":
                 self.eventManager.publish("PAUSE")
-                return True
-            
-            if event.key == pygame.K_f:
-                self.eventManager.publish( "GAMEOVER" )
                 return True
             
             if event.key == pygame.K_c:

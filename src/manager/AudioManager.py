@@ -18,8 +18,8 @@ class AudioManager:
         
         # Volume settings
         self.masterV = 0.5
-        self.musicV = 1
-        self.sfxV = 1
+        self.musicV = 1.0
+        self.sfxV = 1.0
 
         # To play musique in game
         self.event.subscribe("PLAY_SFX", self.play_sfx)

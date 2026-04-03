@@ -56,6 +56,6 @@ class UIDot(UIElement):
     def draw(self, surface):
         
         # Redessine le cecle
-        pygame.draw.circle(self.parent.image, self.color, (self.rect.center), self.radius )
+        pygame.draw.circle(self.image, self.color, (self.rect.center), self.radius )
 
         super().draw(surface)

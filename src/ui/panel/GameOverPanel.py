@@ -28,7 +28,7 @@ class GameOverPanel(UIPanel):
         self.add_child(text)
 
         self.rect.bottom = -50
-        self.game.eventManager.subscribe( "GAMEOVER", self.show )
+        self.game.eventManager.subscribe( "GAME_OVER", self.show )
 
 
     def restart_game(self) -> None:
@@ -40,8 +40,7 @@ class GameOverPanel(UIPanel):
 
         self.game.eventManager.publish("QUIT_GAME")
         return
-    
+
     def show(self):
-        
-        print("GAMEOVER")
+        self.game.eventManager.publish("PAUSE")
         super().show()

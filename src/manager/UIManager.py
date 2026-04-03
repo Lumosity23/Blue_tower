@@ -51,7 +51,7 @@ class UIManager():
         self.settings = Settings(game)
 
         # Ajout des enfants dans l'odre de profondeur d'affichage
-        enfants = [self.shop_panel, self.info, self.OSD, self.game_over_panel, self.pause, self.settings, self.menu ]
+        enfants = [self.shop_panel, self.info, self.OSD, self.game_over_panel, self.pause, self.menu, self.settings ]
         for e in enfants:
             self.root.add_child(e)
 
@@ -65,6 +65,7 @@ class UIManager():
         self.game.eventManager.subscribe("MENU", self.on_menu)
         self.game.eventManager.subscribe("QUIT_GAME", self.on_menu)
         self.game.eventManager.subscribe("OPEN_SETTINGS", self.on_settings)
+        self.game.eventManager.subscribe("SHOW_OSD", self.on_osd)
 
 
     def toggle_edit_mode(self):
@@ -178,7 +179,9 @@ class UIManager():
     
 
     def on_game_over(self) -> None:
-
+        for child in self.root.children:
+            child.visible = False
+        
         self.game_over_panel.visible = True
 
 
@@ -205,13 +208,17 @@ class UIManager():
         
         self.menu.visible = True
     
-    def on_settings(self) -> None:
+    def on_settings(self, last_state) -> None:
 
         for child in self.root.children:
             child.visible = False
         
         self.settings.visible = True
-    
+        self.settings.last_state = last_state
+
+    def on_osd(self) -> None:
+        self.OSD.visible = True
+
 
 ################ ZONE DE CONFIG POUR LE UI #################
 

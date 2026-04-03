@@ -92,7 +92,7 @@ class Settings:
         "TURRET": {
             "hp": 50,
             "cost": 150,
-            "range": 300,
+            "range": 150,
             "cooldown": 1000,
             "damage": 10,
             "sprite_id": "turret",
@@ -154,7 +154,7 @@ class Settings:
             "velocity": 250,
             "damage": 3,
             "sprite_id": "enemy", # _fast
-            "size": (25, 25),
+            "size": (15, 15),
             "reward": 15
         },
         TANK: {
@@ -172,7 +172,7 @@ class Settings:
             "velocity": 100,
             "damage": 30,
             "sprite_id": "enemy", # _boss
-            "size": (90, 90),
+            "size": (60, 60),
             "reward": 200
         }
     })
@@ -204,7 +204,10 @@ class Settings:
     SOUND_PATH: Dict[str, str] = field(default_factory=lambda: {
         "UI_CLICK": 'assets/audio/sfx/UI_click.mp3',
         "ERROR" : 'assets/audio/sfx/error_sound.mp3',
-        "NEW_WAVE"  : 'assets/audio/sfx/new_wave.mp3'
+        "NEW_WAVE"  : 'assets/audio/sfx/new_wave.mp3',
+        "WALK"  : 'assets/audio/sfx/footsteps.mp3',
+        "PLAY"  : 'assets/audio/sfx/play_game.mp3',
+        "SHOOT"  : 'assets/audio/sfx/gun_shoot.mp3'
     })
 
     MUSIC_PATH: Dict[str, str] = field(default_factory=lambda: {

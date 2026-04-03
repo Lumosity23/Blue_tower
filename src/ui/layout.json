@@ -263,9 +263,15 @@
         "w": 80,
         "h": 35
     },
+    "OSD_msg_wave": {
+        "x": 766,
+        "y": 1015,
+        "w": 389,
+        "h": 50
+    },
     "GameOverPanel": {
         "x": 50,
-        "y": -1030,
+        "y": 50,
         "w": 1820,
         "h": 980
     },
@@ -294,7 +300,7 @@
         "h": 50
     },
     "GameOverPanel_title_gameOver": {
-        "x": 695,
+        "x": 640,
         "y": 35,
         "w": 573,
         "h": 100
@@ -304,6 +310,12 @@
         "y": -50,
         "w": 2020,
         "h": 1180
+    },
+    "PausePanel_title_PAUSE": {
+        "x": 875,
+        "y": 75,
+        "w": 280,
+        "h": 100
     },
     "PausePanel_btn_quit": {
         "x": 1775,
@@ -341,11 +353,65 @@
         "w": 168,
         "h": 50
     },
-    "PausePanel_title_PAUSE": {
-        "x": 875,
-        "y": 75,
-        "w": 280,
-        "h": 100
+    "PausePanel_btn_settings": {
+        "x": 1685,
+        "y": 70,
+        "w": 264,
+        "h": 70
+    },
+    "PausePanel_btn_settings_text": {
+        "x": 20,
+        "y": 10,
+        "w": 224,
+        "h": 50
+    },
+    "MenuPanel": {
+        "x": -50,
+        "y": -50,
+        "w": 2020,
+        "h": 1180
+    },
+    "Blue Tower_text_panel": {
+        "x": 520,
+        "y": 100,
+        "w": 967,
+        "h": 200
+    },
+    "MenuPanel_btn_quit": {
+        "x": 910,
+        "y": 730,
+        "w": 196,
+        "h": 90
+    },
+    "MenuPanel_btn_quit_text": {
+        "x": 25,
+        "y": 10,
+        "w": 156,
+        "h": 70
+    },
+    "MenuPanel_btn_restart": {
+        "x": 830,
+        "y": 600,
+        "w": 352,
+        "h": 90
+    },
+    "MenuPanel_btn_restart_text": {
+        "x": 20,
+        "y": 10,
+        "w": 312,
+        "h": 70
+    },
+    "MenuPanel_btn_play": {
+        "x": 905,
+        "y": 475,
+        "w": 196,
+        "h": 90
+    },
+    "MenuPanel_btn_play_text": {
+        "x": 20,
+        "y": 10,
+        "w": 156,
+        "h": 70
     },
     "SettingsPanel": {
         "x": 0,
@@ -385,7 +451,7 @@
     },
     "SettingsPanel_moins_Master_text": {
         "x": 20,
-        "y": 5,
+        "y": 10,
         "w": 22,
         "h": 50
     },
@@ -460,53 +526,5 @@
         "y": 10,
         "w": 112,
         "h": 50
-    },
-    "MenuPanel": {
-        "x": -50,
-        "y": -50,
-        "w": 2020,
-        "h": 1180
-    },
-    "Blue Tower_text_panel": {
-        "x": 520,
-        "y": 100,
-        "w": 967,
-        "h": 200
-    },
-    "MenuPanel_btn_quit": {
-        "x": 910,
-        "y": 730,
-        "w": 196,
-        "h": 90
-    },
-    "MenuPanel_btn_quit_text": {
-        "x": 25,
-        "y": 10,
-        "w": 156,
-        "h": 70
-    },
-    "MenuPanel_btn_restart": {
-        "x": 830,
-        "y": 600,
-        "w": 352,
-        "h": 90
-    },
-    "MenuPanel_btn_restart_text": {
-        "x": 20,
-        "y": 10,
-        "w": 312,
-        "h": 70
-    },
-    "MenuPanel_btn_play": {
-        "x": 905,
-        "y": 475,
-        "w": 196,
-        "h": 90
-    },
-    "MenuPanel_btn_play_text": {
-        "x": 20,
-        "y": 10,
-        "w": 156,
-        "h": 70
     }
 }

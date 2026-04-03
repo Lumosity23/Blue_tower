@@ -64,7 +64,7 @@ class Entity:
         ''' Détruit l'entité et ses enfants en se retirant de l'ecran '''
         self.visible = False
         self.active = False
-        self.alive = False
+        # self.alive = False
 
         # On propage aussi la mort au enfants
         child: "Entity"
@@ -151,10 +151,11 @@ class Entity:
 
 
     def delay(self, time_s, dt) -> bool:
-        ''' Renvoie si le temps voulu es passer '''
+        ''' Renvoie si le temps voulu est passe '''
         if time_s in self.timers:
             self.timers[time_s] += dt
             if self.timers[time_s] >= time_s:
+                self.timers[time_s] = 0
                 return True
             return False
         

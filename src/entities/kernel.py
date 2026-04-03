@@ -14,13 +14,17 @@ class Kernel(Building):
         data =  game.st.BUILDINGS_DATA["KERNEL"]
         w, h = data['size']
 
-        spawn_x = (game.st.WORLD_WIDTH / 2) - (w / 2)
-        spawn_y = (game.st.WORLD_HEIGHT / 2) - (h / 2)
+        spawn_x = (game.st.WORLD_WIDTH // 2) - (w // 2)
+        spawn_y = (game.st.WORLD_HEIGHT // 2) - (h // 2)
         
         super().__init__(spawn_x, spawn_y, data, game, tag="KERNEL", uid="KERNEL")
+        
+        self.rect.center = self.pos.xy
+        # print(self.rect.center)
 
         # Stats
         self.last_shoot = pygame.time.get_ticks()
+        
 
 
     def update(self, dt):
@@ -56,8 +60,8 @@ class Kernel(Building):
     def reset(self):
         # On utilise spawn pour remettre l'entité en état "neuf"
         w, h = self.rect.size
-        spawn_x = (self.game.st.WORLD_WIDTH / 2) - (w / 2)
-        spawn_y = (self.game.st.WORLD_HEIGHT / 2) - (h / 2)
+        spawn_x = (self.game.st.WORLD_WIDTH // 2) - (w // 2)
+        spawn_y = (self.game.st.WORLD_HEIGHT // 2) - (h // 2)
         
         self.spawn(spawn_x, spawn_y, "KERNEL")
         self.current_hp = self.max_hp
@@ -66,9 +70,22 @@ class Kernel(Building):
         self.alive = True
         self.range_circle.visible = False
         self.hp_bar.visible = False
-    
+
+        for corner in [self.rect.topleft, self.rect.topright, self.rect.bottomleft, self.rect.bottomright]:
+            # print(f"{corner} dois donner ce chunk -> :{self.game.grid.get_chunk_cell(corner)}")
+            self.game.grid.set_entity_at_chunk(self, corner)
+            # self.game.grid.show_chunk()
+
 
     def shoot(self, target: tuple) -> None:
         # Systeme de pooling
         self.game.sceneManager.entityManager.spawn(Bullet, self.rect.centerx, self.rect.centery, uid="Kernel_Bullet", target_pos=target, owner=self, bullet_damage=15)
-    
+
+
+Kernel.ui_config(
+    ("ICON", "your base", "image"),
+    ("BAR", "Vie", "current_hp", "max_hp"),
+    ("STAT", "kills", "kills"),
+    ("DOT", "Alive", (0, 255, 0)),
+    ("STAT", "CHUNK", "chunk")
+)

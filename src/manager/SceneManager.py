@@ -31,7 +31,7 @@ class SceneManager:
         # On update les different managers
         self.entityManager.update(dt)
         self.buildManager.update(dt)
-        self.waveManager.update()
+        self.waveManager.update(dt)
         self.cursor.update(dt)
 
         # Update la camera pour l'offset

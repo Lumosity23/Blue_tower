@@ -28,7 +28,8 @@ class Player(Entity):
         self.max_hp = self.stats['hp']
         self.current_hp = self.max_hp
         self.kills = 0
-        self.alive = True 
+        self.alive = True
+        self.is_moving = False
         
         # Logique de grille
         # self.current_cell: tuple[int, int] = self.game.grid.get_cell_pos(self.pos.x, self.pos.y)
@@ -77,10 +78,10 @@ class Player(Entity):
         # ---------------------------------------------------------
         if keys[pygame.K_UP] or keys[pygame.K_w]:
             self.pos.y -= self.velocity * dt
-            
+        
         if keys[pygame.K_DOWN] or keys[pygame.K_s]:
             self.pos.y += self.velocity * dt
-            
+
         # Synchronisation immédiate du rect pour le test de collision Y
         self.rect.y = self.pos.y
 
@@ -101,6 +102,17 @@ class Player(Entity):
         #self.update_grid_logic()
         
         self.check_chunk()
+
+        if keys[pygame.K_LEFT] or keys[pygame.K_a]\
+           or keys[pygame.K_RIGHT] or keys[pygame.K_d]\
+           or keys[pygame.K_UP] or keys[pygame.K_w]\
+           or keys[pygame.K_DOWN] or keys[pygame.K_s]:
+            self.is_moving = True
+        else : self.is_moving = False
+
+        # Play sound footstep
+        if self.is_moving and self.delay(0.40, dt):
+            self.game.eventManager.publish("PLAY_SFX", "WALK")
             
         # Appel de l'update d'Entity pour propager aux enfants (barre de vie)
         super().update(dt)
@@ -186,6 +198,7 @@ class Player(Entity):
 
             if not self.game.edit_mode:
                 self.shoot()
+                self.game.eventManager.publish("PLAY_SFX", "SHOOT")
                 return True
      
         super().handle_event(event)

@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from main import App
     from entities.bullet import Bullet
+    from entities.enemy import Enemie
 
 
 class EntityManager:
@@ -59,16 +60,19 @@ class EntityManager:
                     self.check_chunk_entity(entity)
 
                 # Apres l'update si l'entite est morte, on la retire de la camera
-                if not entity.active:
+                if not entity.alive:
                     self.game.sceneManager.main_camera.remove_entity(entity)
                     self.game.grid.remove_entity_chunk(entity)
+                    entity.active = False
+                    #print(f"{entity} a ete retirer de ce chunk : {self.game.grid.get_chunk_cell(entity.pos)}")
 
-            if entity.chunk_changed:
-                new_chunk_entity = self.game.grid.get_chunk_cell(entity.rect.center)
-                self.game.grid.move_entity_chunk(entity, entity.old_chunk, new_chunk_entity)
-                # print(f"| EntityManager LOG | : {entity} a bien ete retirer de son chunk chunk !")
+                if entity.chunk_changed:
+                    new_chunk_entity = self.game.grid.get_chunk_cell(entity.rect.center)
+                    self.game.grid.move_entity_chunk(entity, entity.old_chunk, new_chunk_entity)
+                    # print(f"| EntityManager LOG | : {entity} a bien ete retirer de son chunk chunk !")
 
         self.check_bullet_collisions()
+        self.check_enemies_collisions(dt)
 
 
     def check_bullet_collisions(self):
@@ -81,7 +85,21 @@ class EntityManager:
                     b: "Bullet"
                     b.on_hit(e)
                     break # Une balle ne touche qu'un ennemi à la fois (sauf pénétration)
-     
+    
+
+    def check_enemies_collisions(self, dt):
+        active_enemies = [e for e in self.entities if e.tag == "ENEMY" and e.active]
+
+        for e in active_enemies:
+            if e.rect.colliderect(self.game.player):
+                e: "Enemie"
+                e.attack(dt, self.game.player)
+                break
+            if e.rect.colliderect(self.game.kernel):
+                e: "Enemie"
+                e.attack(dt, self.game.kernel)
+                break
+
 
     def get_entities(self, tag: str) -> list["Entity"]:
         ''' Retourne la liste de entites active du tag passer\n

@@ -21,6 +21,8 @@ class MenuPanel(UIPanel):
             child_uid = ""
 
         btn_play = UIButton(100, 100, "PLAY", self.play, (100, 100, 100), size_text=70, uid=f"{child_uid}btn_play")
+        btn_play.set_sound("PLAY")
+        
         btn_setting = UIButton(100, 100, "SETTINGS", self.open_settings, (255,0,0),size_text=70, uid=f"{child_uid}btn_restart")
         btn_quit = UIButton(100, 100, "QUIT", self.quit, (255,0,0),size_text=70, uid=f"{child_uid}btn_quit")
 
@@ -31,7 +33,7 @@ class MenuPanel(UIPanel):
 
     def open_settings(self) -> None:
 
-        self.game.eventManager.publish("OPEN_SETTINGS")
+        self.game.eventManager.publish("OPEN_SETTINGS", "MENU")
         return
 
     def quit(self) -> None:

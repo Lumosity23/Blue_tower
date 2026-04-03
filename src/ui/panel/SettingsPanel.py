@@ -22,6 +22,7 @@ class Settings(UIPanel):
             "SFX": "sfxV"
         }
 
+        self.last_state = "MENU"
         self.set_label("Settings", 150)
 
         # Calcul de la position de départ (sous le titre)
@@ -88,8 +89,11 @@ class Settings(UIPanel):
     def go_back(self) -> None:
         """ Ferme les settings et retourne au menu pause """
         # Ici, utilise ton système de SceneManager ou EventBus pour changer de panel
-        self._EVENTBUS.publish("MENU")
-    
+        self._EVENTBUS.publish(self.last_state)
+        self.visible = False
+        if self.game.state == "PAUSE":
+            self._EVENTBUS.publish("SHOW_OSD")
+
 
     def get_attribut_pointer(elf, attr, element):
         if attr is None: 

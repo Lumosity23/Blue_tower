@@ -98,7 +98,9 @@ class Grid:
     
 
     def get_chunk(self, chunk_pos) -> set["Entity"]:
-        return self.chunks[chunk_pos]
+        if chunk_pos in self.chunks:
+            return self.chunks[chunk_pos]
+        return None
     
 
     def update_flow_field(self, target_world_pos):
@@ -160,12 +162,14 @@ class Grid:
 
 
     def get_entity_at(self, wx, wy) -> "Entity":
-        ''' Renvoi l'entity au corrdonne proposer, si personne renvoir None '''
+        ''' Renvoi l'entity au corrdonne proposer, si personne renvoie None '''
         chunk_entity = self.get_chunk_cell((wx, wy))
 
-        for entity in self.get_chunk(chunk_entity):
-            if entity.rect.collidepoint(wx, wy):
-                return entity
+        chunk = self.get_chunk(chunk_entity)
+        if chunk:
+            for entity in chunk:
+                if entity.rect.collidepoint(wx, wy):
+                    return entity
             
         return False
 
@@ -197,6 +201,18 @@ class Grid:
         
         # print(f"{entity.tag} n'as pas pu etre ajouter au chunk : {chunk}")
     
+
+    def set_entity_at_chunk(self, entity: "Entity", w_pos: tuple[int, int]) -> None:
+        ''' Ajouter une entity a un chunk avec une position donnee'''
+        chunk = self.get_chunk_cell(w_pos)
+        # print(chunk)
+
+        if chunk in self.chunks:
+            self.chunks[chunk].add(entity)
+            entity.chunk = chunk
+            entity.old_chunk = chunk
+            return True
+        
 
     def remove_entity_chunk(self, entity: "Entity") -> None:
         ''' Enleve une entity de son chunk ( ex : lors de sa mort ) '''

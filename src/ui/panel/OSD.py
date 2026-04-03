@@ -1,6 +1,7 @@
 from ui.UIElement import UIElement
 from ui.UIText import UIText
 from ui.UIProgressBar import UIProgressBar
+from ui.UIStat import UIStat
 from settings import Settings
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -26,6 +27,9 @@ class OSD(UIElement):
             self.child_uid = ""
 
         self.game.eventManager.subscribe("UPDATE_KERNEL_HP", self.update_hud_hp)
+        self.game.eventManager.subscribe("SHOW_COOLDOWN", self.show_msg_wave)
+        self.game.eventManager.subscribe("HIDE_COOLDOWN", self.hide_msg_wave)
+        self.game.eventManager.subscribe("SHOW_COOLDOWN", self.show_msg_wave)
 
 
     def post_init(self) -> None:
@@ -57,20 +61,27 @@ class OSD(UIElement):
             font_color=(100, 100, 100),)
         self.kernel_hp_bar.dynamic_color = True
 
+        x, y = self.game.st.SCREEN_WIDTH // 2, self.game.st.SCREEN_HEIGHT - 40
+        self.msg_wave = UIStat(0,0, f"{self.uid}_msg_wave")
+        self.msg_wave.custom_setup(x, y, "NEXT WAVE IN", self.game.sceneManager.waveManager.get_cooldown, 100, (255,0,0))
+        self.msg_wave.rect.center = x, y
+        self.msg_wave.stat_value.rect.midleft = self.msg_wave.rect.width, self.msg_wave.rect.h // 2
+        self.msg_wave.visible = False
+
         # Liste des text enfants
         if not self.wallet:
-            self.text = [self.wave_text, self.number_wave, self.nmb, self.FPS, self.gameMode, self.kernel_hp_bar]
+            self.text = [self.wave_text, self.number_wave, self.nmb, self.FPS, self.gameMode, self.kernel_hp_bar, self.msg_wave]
         else:
-            self.text = [self.wave_text, self.number_wave, self.nmb, self.FPS, self.gameMode, self.wallet, self.kernel_hp_bar]
+            self.text = [self.wave_text, self.number_wave, self.nmb, self.FPS, self.gameMode, self.wallet, self.kernel_hp_bar, self.msg_wave]
 
         # ajout des text aux enfants
         for child in self.text:
             self.add_child(child)
     
 
-    def update_hud_hp(self, current_hp):
+    def update_hud_hp(self, current_hp=0):
         # On met à jour la barre qui est dans le HUD
-        self.kernel_hp_bar.update_values(current_hp, self.game.kernel.current_hp)
+        self.kernel_hp_bar.update_values(current_hp, self.game.kernel.max_hp)
 
     
     def get_wave_number(self) -> str:
@@ -84,3 +95,9 @@ class OSD(UIElement):
     
     def get_amount_wallet(self) -> str:
         return str(self.game.walletManager.get_wallet_val())
+    
+    def show_msg_wave(self) -> None:
+        self.msg_wave.visible = True
+
+    def hide_msg_wave(self) -> None:
+        self.msg_wave.visible = False

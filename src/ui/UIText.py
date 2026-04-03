@@ -51,6 +51,7 @@ class UIText(UIElement):
         font: pygame.font.Font = self._FONTS_CACHE.get(size, None)
 
         if font is None and self._FONTS_CACHE:
+            print(size)
             # Si la taille précise n'existe pas, on prend la plus proche
             closest = min(self._FONTS_CACHE.keys(), key=lambda v: abs(v - size))
             return self._FONTS_CACHE[closest]
