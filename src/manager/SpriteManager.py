@@ -35,9 +35,12 @@ class SpriteManager:
 
         for size in range(start, end + step, step):
             self.fonts[size] = pygame.font.Font(font_path, size)
-        
+
         print(f"SpriteManager: {len(self.fonts)} tailles de polices chargées.")
 
+        from ui.UIText import UIText # Import local pour éviter les imports circulaires
+        UIText.set_font_provider(self.fonts)
+        
 
     # ==========================================
     # GESTION DES IMAGES

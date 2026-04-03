@@ -145,6 +145,14 @@ class Player(Entity):
     
 
     def take_damage(self, amount):
+        
+        mapping = {
+            "xy" : self.rect.center,
+            "text" : amount
+        }
+
+        self.game.eventManager.publish("SHOW_FT", mapping)
+        
         self.current_hp -= amount
         self.hp_bar.update_values(self.current_hp, self.max_hp)
         if self.current_hp <= 0:

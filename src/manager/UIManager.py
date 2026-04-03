@@ -32,12 +32,9 @@ class UIManager():
         UIElement.load_layout_cache(self.layout)
         UIElement.get_eventBus(self.game.eventManager)
 
-        from ui.UIText import UIText # Import local pour éviter les imports circulaires
-        UIText.set_font_provider(self.game.spriteManager.fonts)
-
         # Init de notre bloc logic pour le UI
         self.root = UIElement(0, 0, self.st.SCREEN_WIDTH, self.st.SCREEN_HEIGHT, uid="ROOT")
-        
+
         # pour le debug pour l'instant
         self.selected_element = None
         

@@ -11,5 +11,6 @@ class TutoPanel(UIPanel):
         super().__init__(0,0,game.st.SCREEN_WIDTH, game.st.SCREEN_HEIGHT, uid="TUTO_PANEL")
         self.game = game
 
+        self.btn_next = UIButton()
         
 

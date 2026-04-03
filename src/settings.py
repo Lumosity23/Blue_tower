@@ -196,7 +196,7 @@ class Settings:
         "enemy" : 'assets/sprite/enemie.png',
         "kernel": 'assets/sprite/kernel.png',
         "chunk" : 'assets/sprite/chunk.png',
-        "wall"  : 'assets/sprite/wall_gab.png',
+        "wall"  : 'assets/sprite/pillar_v1.png',
         "turret": 'assets/sprite/turret.png',
         "bullet": 'assets/sprite/bullet.png'
     })
@@ -207,11 +207,12 @@ class Settings:
         "NEW_WAVE"  : 'assets/audio/sfx/new_wave.mp3',
         "WALK"  : 'assets/audio/sfx/footsteps.mp3',
         "PLAY"  : 'assets/audio/sfx/play_game.mp3',
-        "SHOOT"  : 'assets/audio/sfx/gun_shoot.mp3'
+        "SHOOT"  : 'assets/audio/sfx/gun_shoot_v1.mp3'
     })
 
     MUSIC_PATH: Dict[str, str] = field(default_factory=lambda: {
-        "MAIN_THEME": 'assets/audio/music/main_theme.wav'
+        "MENU_THEME": 'assets/audio/music/main_theme.wav',
+        "GAME_THEME": 'assets/audio/music/blue_loop.mp3'
     })
 
     # ==========================================

@@ -43,7 +43,7 @@ class AudioDirector:
     # Dans ton AudioDirector ou AudioManager
     def prepare_next_wave(self, theme_name: str="MAIN_THEME"):
         # 1. On baisse la musique (Fade out de 500ms pour plus de douceur)
-        self.event_manager.publish("MSUIC_FADEOUT", 500)
+        self.event_manager.publish("MUSIC_FADEOUT", 500)
 
         # 2. On joue le son d'alerte sur un canal SFX
         # On utilise le bus pour être cohérent avec ton code

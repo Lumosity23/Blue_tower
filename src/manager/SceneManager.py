@@ -4,6 +4,7 @@ from manager.BuildManager import BuildManager
 from manager.EntityManager import EntityManager
 from manager.WaveManager import WaveManager
 from manager.WorldManager import WorldManager
+from manager.VFXManager import VFXManager
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from main import App
@@ -21,6 +22,7 @@ class SceneManager:
         self.entityManager = EntityManager(game)
         self.waveManager = WaveManager(game)
         self.worldManager = WorldManager(game)
+        self.VFXManager = VFXManager(game)
 
         # 3. Le Curseur de jeu (Pont entre UI et Monde)
         self.cursor = Cursor(game)
@@ -33,6 +35,7 @@ class SceneManager:
         self.buildManager.update(dt)
         self.waveManager.update(dt)
         self.cursor.update(dt)
+        self.VFXManager.update(dt)
 
         # Update la camera pour l'offset
         self.main_camera.update(dt)
@@ -51,6 +54,7 @@ class SceneManager:
 
         # La camera dessine tout les entites active
         self.main_camera.draw(screen)
+        self.VFXManager.draw(screen)
 
         # On dessine le curseur en dernier (toujours par dessus le monde)
         self.cursor.draw(screen)

@@ -45,6 +45,14 @@ class Kernel(Building):
 
 
     def take_damage(self, damage: int) -> None:
+        
+        mapping = {
+            "xy" : self.rect.center,
+            "text" : damage
+        }
+
+        self.game.eventManager.publish("SHOW_FT", mapping)
+
         self.current_hp -= damage
         # Mise à jour visuelle de la barre (enfant)
         self.game.eventManager.publish("UPDATE_KERNEL_HP", self.current_hp)
