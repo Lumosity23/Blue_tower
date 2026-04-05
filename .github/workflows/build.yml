@@ -12,18 +12,21 @@ jobs:
     name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false # EMPECHE l'annulation des autres OS si l'un plante
       matrix:
-        # On définit les 3 systèmes d'exploitation
         os: [windows-latest, ubuntu-latest, macos-latest]
         include:
           - os: windows-latest
-            artifact_name: BlueTower.exe
+            bin_ext: ".exe"
+            artifact_name: "BlueTower-Windows.exe"
             sep: ";"
           - os: ubuntu-latest
-            artifact_name: BlueTower-Linux
+            bin_ext: ""
+            artifact_name: "BlueTower-Linux"
             sep: ":"
           - os: macos-latest
-            artifact_name: BlueTower-Mac
+            bin_ext: ""
+            artifact_name: "BlueTower-Mac"
             sep: ":"
 
     steps:
@@ -41,7 +44,7 @@ jobs:
         pip install pygame pyinstaller
 
     - name: Build with PyInstaller
-      shell: bash # On force bash pour avoir la même syntaxe de variables partout
+      shell: bash
       run: |
         pyinstaller --noconsole --onefile \
         --name "BlueTower" \
@@ -51,11 +54,11 @@ jobs:
         --paths src \
         src/main.py
 
-    # On renomme le binaire pour qu'il soit clair dans la release
+    # RENOMMAGE PRECIS : On utilise le nom exact généré par PyInstaller
     - name: Rename binary
       shell: bash
       run: |
-        mv dist/BlueTower* dist/${{ matrix.artifact_name }}
+        mv dist/BlueTower${{ matrix.bin_ext }} dist/${{ matrix.artifact_name }}
 
     - name: Upload temporary artifact
       uses: actions/upload-artifact@v4
@@ -64,7 +67,7 @@ jobs:
         path: dist/${{ matrix.artifact_name }}
 
   release:
-    needs: build # On attend que les 3 builds soient finis
+    needs: build
     runs-on: ubuntu-latest
     steps:
     - name: Download all artifacts
@@ -78,18 +81,15 @@ jobs:
       with:
         files: all-binaries/*
         tag_name: v1.0.${{ github.run_number }}
-        name: "BlueTower v1.0.${{ github.run_number }} - Stable"
-        # MOT CUSTOM : Tu peux modifier ce texte ici
+        name: "BlueTower v1.0.${{ github.run_number }}"
         body: |
-          ### 🚀 BlueTower est enfin disponible !
+          ### 🚀 BlueTower Multi-OS Release
           
-          Cette version inclut les dernières mises à jour du système d'UI et de son.
+          Version stable générée automatiquement.
           
-          **Nouveautés :**
-          - Support Multi-OS (Windows, Linux, Mac)
-          - Système de réglages audio (Master/Music/SFX)
-          - Optimisation des performances de rendu
-          
-          *Note pour Mac : Il se peut que vous deviez faire un clic-droit > Ouvrir pour autoriser l'exécution.*
+          **Fichiers disponibles :**
+          - Windows (.exe)
+          - Linux (Binaire)
+          - Mac (Binaire)
         draft: false
         prerelease: false
