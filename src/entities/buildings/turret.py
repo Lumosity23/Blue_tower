@@ -13,6 +13,18 @@ class Turret(Building):
 
         self.last_shoot = pygame.time.get_ticks()
 
+        ## DAMAGE SECTION
+        self.damage = 10
+        self.max_dm = 100
+        self.price_dm = 200
+        self.rate_dm = 10
+
+        ## RANGE SECTION
+        self.range = self.data["range"]
+        self.max_rg = 1000
+        self.price_rg =300
+        self.rate_rg = 5
+
     
     def update(self, dt):
 
@@ -34,6 +46,10 @@ Turret.ui_config(
     ("ICON", "TURRET", "image"),
     ("BAR", "Vie", "current_hp", "max_hp"),
     ("STAT", "kills", "kills"),
-    ("DOT", "Alive", (0, 255, 0)),
     ("STAT", "CHUNK", "chunk")
+)
+
+Turret.upgrade_config(
+    ("Damage", "damage", "max_dm", "price_dm", "rate_dm"),
+    ("Range", "range", "max_rg", "price_rg", "rate_rg")
 )

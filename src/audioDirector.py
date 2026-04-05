@@ -10,11 +10,13 @@ class AudioDirector:
 
     def __init__(self, game: "App"):
         
+        self.game = game
         self.event_manager = game.eventManager
         self.audio_manager = AudioManager(game)
         self.event_to_track = {
             "CLICK_BUTTON": self.button,
             "MENU": self.menu,
+            "NEW_GAME": self.in_game,
             "NEW_WAVE": self.prepare_next_wave
         }
 
@@ -36,12 +38,17 @@ class AudioDirector:
     
 
     def menu(self) -> None:
-        if not self.audio_manager.is_playing():
-            self.event_manager.publish("PLAY_MUSIC_LOOP", "MAIN_THEME")
-        
+        if not self.audio_manager.is_playing() or self.game.state != "MENU":
+            self.event_manager.publish("PLAY_MUSIC_LOOP", "MENU_THEME")
+    
+
+    def in_game(self) -> None:    
+        if not self.audio_manager.is_playing() or self.game.state != "PLAYING": 
+            self.event_manager.publish("PLAY_MUSIC_LOOP", "MENU_THEME")
+
 
     # Dans ton AudioDirector ou AudioManager
-    def prepare_next_wave(self, theme_name: str="MAIN_THEME"):
+    def prepare_next_wave(self, theme_name: str="GAME_THEME"):
         # 1. On baisse la musique (Fade out de 500ms pour plus de douceur)
         self.event_manager.publish("MUSIC_FADEOUT", 500)
 

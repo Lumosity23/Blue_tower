@@ -51,12 +51,13 @@ class   UIProgressBar(UIElement):
         self.text_element.rect.bottomright = self.rect.width, -5
         self.rect.topleft = x, y
 
-        self.label = UIText(0, 0, label)
-        self.label.rect.bottom = 0
-        self.add_child(self.label)
+        if label:
+            self.label = UIText(0, 0, label)
+            self.label.rect.bottom = 0
+            self.add_child(self.label)
 
-        # Repositionement
-        self.rect.y += self.label.rect.h
+            # Repositionement
+            self.rect.y += self.label.rect.h
         
 
 

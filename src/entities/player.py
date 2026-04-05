@@ -24,13 +24,27 @@ class Player(Entity):
         self.image = self.game.spriteManager.get_custom_sprite(self.stats["sprite_id"], (w, h))
         
         # Stats
-        self.velocity = 500
         self.max_hp = self.stats['hp']
         self.current_hp = self.max_hp
         self.kills = 0
         self.alive = True
         self.is_moving = False
         
+        # STATS FOR THE UPGRADE
+        
+        ## DAMAGE SECTION
+        self.damage = 10
+        self.max_dm = 100
+        self.price_dm = 200
+        self.rate_dm = 10
+
+        ## VELOCITY SECTION
+        self.velocity = 500
+        self.max_vl = 1000
+        self.price_vl =300
+        self.rate_vl = 5
+
+
         # Logique de grille
         # self.current_cell: tuple[int, int] = self.game.grid.get_cell_pos(self.pos.x, self.pos.y)
 
@@ -183,7 +197,7 @@ class Player(Entity):
         self.game.sceneManager.entityManager.spawn(
             Bullet, self.rect.centerx, self.rect.centery, 
             uid="Player_Bullet", target_pos=(world_x, world_y), 
-            owner=self, bullet_damage=10
+            owner=self, bullet_damage=self.damage
         )
 
 
@@ -211,10 +225,15 @@ class Player(Entity):
      
         super().handle_event(event)
 
+
 Player.ui_config(
     ("ICON", "you", "image"),
     ("BAR", "Vie", "current_hp", "max_hp"),
     ("STAT", "kills", "kills"),
-    ("DOT", "Alive", (0, 255, 0)),
     ("STAT", "CHUNK", "chunk")
+)
+
+Player.upgrade_config(
+    ("Damage", "damage", "max_dm", "price_dm", "rate_dm"),
+    ("Velocity", "velocity", "max_vl", "price_vl", "rate_vl")
 )

@@ -26,6 +26,20 @@ class MenuPanel(UIPanel):
         btn_setting = UIButton(100, 100, "SETTINGS", self.open_settings, (255,0,0),size_text=70, uid=f"{child_uid}btn_restart")
         btn_quit = UIButton(100, 100, "QUIT", self.quit, (255,0,0),size_text=70, uid=f"{child_uid}btn_quit")
 
+        text_how_to_play = "HOW TO PLAY : use arrows/WASD to move around and G for open/close the shop..."
+        text_more_info = "for more information --> README of the repo on github : "
+        text_address = "https://github.com/Lumosity23/Blue_tower.git"
+        self.text = UIText(20, 400, text_how_to_play, uid="MENU_text_how_to_play", size_text=40)
+        self.info = UIText(20, 400, text_more_info, uid="MENU_text_more_info", size_text=40)
+        self.adress = UIText(20, 400, text_address, uid="MENU_text_adress", size_text=30)
+        
+        """ self.text.rect.bottomleft = 70, self.rect.h - 70
+        self.info.rect.bottomleft = 70, self.rect.h - 70
+        self.adress.rect.bottomleft = 70, self.rect.h - 70 """
+
+        self.add_child(self.info)
+        self.add_child(self.adress)
+        self.add_child(self.text)
         self.add_child(btn_quit)
         self.add_child(btn_setting)
         self.add_child(btn_play)

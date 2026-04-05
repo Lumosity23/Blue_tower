@@ -66,7 +66,10 @@ class Settings:
     "ICON": ("icon", "UIIcon",     ["icon_id"])
     }
 
+    REFERENT_UPGRADE = ["current", "max", "price", "rate"]
+
     UI_SCHEMA_PATH = "src/ui/ui_schema_entity.json"
+    UPGRADE_SCHEMA_PATH = "src/entities/upgrade_schema_entities.json"
 
     # Coût de passage pour le Pathfinding (Flow Field)
     # Plus c'est haut, plus l'ennemi évite la zone. 0 = Infranchissable.

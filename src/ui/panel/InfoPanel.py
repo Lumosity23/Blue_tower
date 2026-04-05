@@ -1,6 +1,7 @@
 import json
 from utils.path import resource_path as rp
 from ui.UIPanel import UIPanel
+from ui.UIButton import UIButton
 from ui import UIProgressBar, UIDot, UIStat, UIIcon
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -26,6 +27,14 @@ class InfoPanel( UIPanel ):
         self.set_label("INFO", 100)
         self.set_animation( (self.game.st.SCREEN_WIDTH - self.size[0], 0), (self.game.st.SCREEN_WIDTH, 0), 1000 )
         self.visible = False
+
+        action_up = lambda : self.game.eventManager.publish("ELEMENT_UPGRADE", self.game.ui_manager.info.current_entity)
+
+        self.upgrade_btn = UIButton(20, self.rect.h - 70, "UPGRADE", action_up, (255, 157, 0), border_radius=0, uid=f"{self.uid}_btn_upgrade")
+        self.sell_btn = UIButton(20, self.rect.h - (90 + self.upgrade_btn.rect.h), "SELL", self.sell_entity, (107, 9, 9), border_radius=0, uid=f"{self.uid}_btn_sell")
+
+        for e in [self.upgrade_btn, self.sell_btn]:
+            self.add_child(e)
 
         # Entity INFO
         self.current_entity: Entity = None
@@ -68,6 +77,10 @@ class InfoPanel( UIPanel ):
             child = self.active_children.pop(0)
             child.active = False
             self.remove_child(child)
+
+
+    def sell_entity(self) -> None:
+        print(f"l'element dois etre supprimer ( VENDU ) : {self.current_entity.tag}")
 
 
     def make_data(self, entity: "Entity") -> None:

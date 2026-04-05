@@ -1,15 +1,30 @@
-name: Build and Release BlueTower
+name: Multi-OS Release BlueTower
 
 on:
   push:
-    branches: [ main ] # Se déclenche uniquement sur main
+    branches: [ main ]
 
 permissions:
-  contents: write # Indispensable pour créer une Release
+  contents: write
 
 jobs:
   build:
-    runs-on: windows-latest
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # On définit les 3 systèmes d'exploitation
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        include:
+          - os: windows-latest
+            artifact_name: BlueTower.exe
+            sep: ";"
+          - os: ubuntu-latest
+            artifact_name: BlueTower-Linux
+            sep: ":"
+          - os: macos-latest
+            artifact_name: BlueTower-Mac
+            sep: ":"
 
     steps:
     - name: Checkout code
@@ -26,24 +41,55 @@ jobs:
         pip install pygame pyinstaller
 
     - name: Build with PyInstaller
+      shell: bash # On force bash pour avoir la même syntaxe de variables partout
       run: |
-        pyinstaller --noconsole --onefile `
-        --name "BlueTower" `
-        --add-data "assets/*.png;assets" `
-        --add-data "assets/font;assets/font" `
-        --add-data "src/ui/*.json;src/ui" `
-        --add-data "src/ui/panel/*.py;src/ui/panel" `
-        --paths src `
+        pyinstaller --noconsole --onefile \
+        --name "BlueTower" \
+        --add-data "assets/sprite/*.png${{ matrix.sep }}assets/sprite" \
+        --add-data "assets/font${{ matrix.sep }}assets/font" \
+        --add-data "src/ui/*.json${{ matrix.sep }}src/ui" \
+        --paths src \
         src/main.py
+
+    # On renomme le binaire pour qu'il soit clair dans la release
+    - name: Rename binary
+      shell: bash
+      run: |
+        mv dist/BlueTower* dist/${{ matrix.artifact_name }}
+
+    - name: Upload temporary artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: binary-${{ matrix.os }}
+        path: dist/${{ matrix.artifact_name }}
+
+  release:
+    needs: build # On attend que les 3 builds soient finis
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: all-binaries
+        merge-multiple: true
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
-        files: dist/BlueTower.exe
+        files: all-binaries/*
         tag_name: v1.0.${{ github.run_number }}
-        name: BlueTower Release v1.0.${{ github.run_number }}
+        name: "BlueTower v1.0.${{ github.run_number }} - Stable"
+        # MOT CUSTOM : Tu peux modifier ce texte ici
         body: |
-          Nouvelle version stable de BlueTower.
-          Générée automatiquement par GitHub Actions.
+          ### 🚀 BlueTower est enfin disponible !
+          
+          Cette version inclut les dernières mises à jour du système d'UI et de son.
+          
+          **Nouveautés :**
+          - Support Multi-OS (Windows, Linux, Mac)
+          - Système de réglages audio (Master/Music/SFX)
+          - Optimisation des performances de rendu
+          
+          *Note pour Mac : Il se peut que vous deviez faire un clic-droit > Ouvrir pour autoriser l'exécution.*
         draft: false
         prerelease: false

@@ -191,6 +191,20 @@ class Entity:
         save_entity_schema(name=cls.__name__.upper(), raw_data=elements)
 
 
+    @classmethod
+    def upgrade_config(cls, *element):
+        """ 
+        label = str(NAME of the UPGRADE)\n
+        mapping = "CURRENT", "MAX", "PRICE", "RATE"\n
+
+        use --> upgrade_config(label, *mapping)
+        """
+
+        from utils.upgrade_config import save_entity_upgrade
+
+        save_entity_upgrade(name=cls.__name__.upper(), raw_data=element)
+
+
     def __name__():
         ''' Permet de retourner le nom de la classe de notre entity'''
         return __class__.__name__()

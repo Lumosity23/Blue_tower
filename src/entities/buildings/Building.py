@@ -48,7 +48,7 @@ class Building(Entity):
         self.add_child(self.hp_bar)
 
         if self.data["range"] > 0:
-            self.range_circle = UIRange((0 - self.range) + (self.data["size"][0] / 2), (0 - self.range) + (self.data["size"][1] / 2), self.data['range'], f"{uid}_range")
+            self.range_circle = UIRange((0 - self.range) + (self.data["size"][0] / 2), (0 - self.range) + (self.data["size"][1] / 2), self.data['range'], self, f"{uid}_range")
             self.range_circle.visible = False
             self.add_child(self.range_circle)
         else:

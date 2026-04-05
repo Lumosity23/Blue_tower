@@ -25,6 +25,17 @@ class Kernel(Building):
         # Stats
         self.last_shoot = pygame.time.get_ticks()
         
+        ## DAMAGE SECTION
+        self.damage = 10
+        self.max_dm = 100
+        self.price_dm = 200
+        self.rate_dm = 10
+
+        ## RANGE SECTION
+        self.range = self.data["range"]
+        self.max_rg = 1000
+        self.price_rg =300
+        self.rate_rg = 5
 
 
     def update(self, dt):
@@ -36,7 +47,7 @@ class Kernel(Building):
             # On utilise le centre du Kernel pour chercher l'ennemi
             target = self.game.sceneManager.waveManager.nearest_enemy(self.rect.center)
             if target:
-                if self.pos.distance_to(target.pos) <= self.data["range"]:
+                if self.pos.distance_to(target.pos) <= self.range:
                     self.shoot(target.rect.center)
                     self.last_shoot = current_time
 
@@ -87,13 +98,17 @@ class Kernel(Building):
 
     def shoot(self, target: tuple) -> None:
         # Systeme de pooling
-        self.game.sceneManager.entityManager.spawn(Bullet, self.rect.centerx, self.rect.centery, uid="Kernel_Bullet", target_pos=target, owner=self, bullet_damage=15)
+        self.game.sceneManager.entityManager.spawn(Bullet, self.rect.centerx, self.rect.centery, uid="Kernel_Bullet", target_pos=target, owner=self, bullet_damage=self.damage)
 
 
 Kernel.ui_config(
     ("ICON", "your base", "image"),
     ("BAR", "Vie", "current_hp", "max_hp"),
     ("STAT", "kills", "kills"),
-    ("DOT", "Alive", (0, 255, 0)),
     ("STAT", "CHUNK", "chunk")
+)
+
+Kernel.upgrade_config(
+    ("Damage", "damage", "max_dm", "price_dm", "rate_dm"),
+    ("Range", "range", "max_rg", "price_rg", "rate_rg")
 )

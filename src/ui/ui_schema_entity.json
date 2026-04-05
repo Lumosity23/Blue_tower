@@ -26,18 +26,6 @@
             }
         },
         {
-            "type": "dot",
-            "ui_class": "UIDot",
-            "label": "Alive",
-            "mapping": {
-                "state": [
-                    0,
-                    255,
-                    0
-                ]
-            }
-        },
-        {
             "type": "stat",
             "ui_class": "UIStat",
             "label": "CHUNK",
@@ -73,18 +61,6 @@
             }
         },
         {
-            "type": "dot",
-            "ui_class": "UIDot",
-            "label": "Alive",
-            "mapping": {
-                "state": [
-                    0,
-                    255,
-                    0
-                ]
-            }
-        },
-        {
             "type": "stat",
             "ui_class": "UIStat",
             "label": "CHUNK",
@@ -117,18 +93,6 @@
             "label": "kills",
             "mapping": {
                 "string": "kills"
-            }
-        },
-        {
-            "type": "dot",
-            "ui_class": "UIDot",
-            "label": "Alive",
-            "mapping": {
-                "state": [
-                    0,
-                    255,
-                    0
-                ]
             }
         },
         {

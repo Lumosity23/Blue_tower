@@ -1,0 +1,62 @@
+{
+    "PLAYER": [
+        {
+            "label": "Damage",
+            "mapping": {
+                "current": "damage",
+                "max": "max_dm",
+                "price": "price_dm",
+                "rate": "rate_dm"
+            }
+        },
+        {
+            "label": "Velocity",
+            "mapping": {
+                "current": "velocity",
+                "max": "max_vl",
+                "price": "price_vl",
+                "rate": "rate_vl"
+            }
+        }
+    ],
+    "KERNEL": [
+        {
+            "label": "Damage",
+            "mapping": {
+                "current": "damage",
+                "max": "max_dm",
+                "price": "price_dm",
+                "rate": "rate_dm"
+            }
+        },
+        {
+            "label": "Range",
+            "mapping": {
+                "current": "range",
+                "max": "max_rg",
+                "price": "price_rg",
+                "rate": "rate_rg"
+            }
+        }
+    ],
+    "TURRET": [
+        {
+            "label": "Damage",
+            "mapping": {
+                "current": "damage",
+                "max": "max_dm",
+                "price": "price_dm",
+                "rate": "rate_dm"
+            }
+        },
+        {
+            "label": "Range",
+            "mapping": {
+                "current": "range",
+                "max": "max_rg",
+                "price": "price_rg",
+                "rate": "rate_rg"
+            }
+        }
+    ]
+}

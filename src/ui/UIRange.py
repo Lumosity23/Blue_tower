@@ -4,15 +4,24 @@ import pygame
 
 class UIRange(UIElement):
 
-    def __init__(self, x: int, y: int, range: int, uid = None):
+    def __init__(self, x: int, y: int, range: int, entity, uid = None):
         
         self.range = range
         self.pos = x, y
+        self.entity = entity
 
         w, h = self.range * 2, self.range * 2
 
         super().__init__(x, y, w, h, uid)
         self.type = "range"
+
+
+    def update(self, dt):
+        
+        self.range = getattr(self.entity, "range")
+        
+        super().update(dt)
+
 
     def custom_draw(self, surface: pygame.Surface, cam_offset: pygame.math.Vector2):
         """ Appelé UNIQUEMENT par la Caméra (OFFSET APPLIQUÉ) """

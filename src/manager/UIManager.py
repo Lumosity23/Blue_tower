@@ -10,6 +10,7 @@ from ui.panel.PausePanel import PausePanel
 from ui.panel.MenuPanel import MenuPanel
 from ui.panel.InfoPanel import InfoPanel
 from ui.panel.SettingsPanel import Settings
+from ui.panel.UpgradePanel import UpgradePanel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -46,9 +47,10 @@ class UIManager():
         self.menu = MenuPanel(game)
         self.info = InfoPanel(game)
         self.settings = Settings(game)
+        self.upgrade_panel = UpgradePanel(game)
 
         # Ajout des enfants dans l'odre de profondeur d'affichage
-        enfants = [self.shop_panel, self.info, self.OSD, self.game_over_panel, self.pause, self.menu, self.settings ]
+        enfants = [self.shop_panel, self.info, self.upgrade_panel, self.OSD, self.game_over_panel, self.pause, self.menu, self.settings ]
         for e in enfants:
             self.root.add_child(e)
 
@@ -82,6 +84,7 @@ class UIManager():
             if not self.shop_panel.open:
                 self.game.eventManager.publish( "OPEN_SHOP" )
                 self.game.eventManager.publish( "ELEMENT_UNSELECTED" )
+                self.game.eventManager.publish( "ELEMENT_UNUPGRADE" )
                 return True
             else : 
                 self.game.eventManager.publish( "CLOSE_SHOP" )

@@ -68,8 +68,9 @@ class SceneManager:
         # 2. Puis au BuildManager (pour la sélection de bâtiments existants)
         if self.buildManager.handle_event(event):
             return True
-        
+
         if self.game.player.handle_event(event):
             return True
         
+    
         return False
