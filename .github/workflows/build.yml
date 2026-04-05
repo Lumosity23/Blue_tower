@@ -49,7 +49,7 @@ jobs:
         pyinstaller --noconsole --onefile \
         --name "BlueTower" \
         --paths src \
-        --add-data "assets/*.png${{ matrix.sep }}assets" \
+        --add-data "assets/sprite/*.png${{ matrix.sep }}assets/sprite" \
         --add-data "assets/font${{ matrix.sep }}assets/font" \
         --add-data "src/ui/*.json${{ matrix.sep }}src/ui" \
         --add-data "src/entities/*.json${{ matrix.sep }}src/entities" \
