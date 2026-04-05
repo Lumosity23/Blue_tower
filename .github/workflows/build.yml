@@ -48,11 +48,11 @@ jobs:
       run: |
         pyinstaller --noconsole --onefile \
         --name "BlueTower" \
-        --add-data "assets/sprite/*.png${{ matrix.sep }}assets/sprite" \
+        --paths src \
+        --add-data "assets/*.png${{ matrix.sep }}assets" \
         --add-data "assets/font${{ matrix.sep }}assets/font" \
         --add-data "src/ui/*.json${{ matrix.sep }}src/ui" \
-        --add-data "src/entities/*.json${{ matrix.sep }}src/entities"\
-        --paths src \
+        --add-data "src/entities/*.json${{ matrix.sep }}src/entities" \
         src/main.py
 
     # RENOMMAGE PRECIS : On utilise le nom exact généré par PyInstaller
