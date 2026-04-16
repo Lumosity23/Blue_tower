@@ -63,9 +63,9 @@
         {
             "type": "stat",
             "ui_class": "UIStat",
-            "label": "CHUNK",
+            "label": "STATE",
             "mapping": {
-                "string": "chunk"
+                "string": "state"
             }
         }
     ],

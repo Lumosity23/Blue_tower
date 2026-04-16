@@ -12,15 +12,16 @@ jobs:
     name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false # EMPECHE l'annulation des autres OS si l'un plante
+      fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        # On remplace ubuntu-latest par ubuntu-22.04 ou ubuntu-20.04
+        os: [windows-latest, ubuntu-22.04, macos-latest] 
         include:
           - os: windows-latest
             bin_ext: ".exe"
             artifact_name: "BlueTower-Windows.exe"
             sep: ";"
-          - os: ubuntu-latest
+          - os: ubuntu-22.04 # <--- On change ici aussi
             bin_ext: ""
             artifact_name: "BlueTower-Linux"
             sep: ":"

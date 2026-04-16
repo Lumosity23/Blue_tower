@@ -14,8 +14,8 @@ class Kernel(Building):
         data =  game.st.BUILDINGS_DATA["KERNEL"]
         w, h = data['size']
 
-        spawn_x = (game.st.WORLD_WIDTH // 2) - (w // 2)
-        spawn_y = (game.st.WORLD_HEIGHT // 2) - (h // 2)
+        spawn_x = (game.st.WORLD_WIDTH // 2)
+        spawn_y = (game.st.WORLD_HEIGHT // 2) 
         
         super().__init__(spawn_x, spawn_y, data, game, tag="KERNEL", uid="KERNEL")
         
@@ -36,6 +36,10 @@ class Kernel(Building):
         self.max_rg = 1000
         self.price_rg =300
         self.rate_rg = 5
+        self.state = "IDLE"
+
+        # Set des animations
+        self.set_anim("IDLE", (w, h), 1, 2)
 
 
     def update(self, dt):
@@ -52,24 +56,17 @@ class Kernel(Building):
                     self.last_shoot = current_time
 
         # Propagation automatique de l'update aux enfants (comme la barre de vie)
+        self.update_animation(dt, self.state)
         super().update(dt)
 
 
     def take_damage(self, damage: int) -> None:
         
-        mapping = {
-            "xy" : self.rect.center,
-            "text" : damage
-        }
-
-        self.game.eventManager.publish("SHOW_FT", mapping)
-
-        self.current_hp -= damage
+        super().take_damage(damage)
         # Mise à jour visuelle de la barre (enfant)
         self.game.eventManager.publish("UPDATE_KERNEL_HP", self.current_hp)
         
         if self.current_hp <= 0:
-            self.alive = False
             self.active = False # On arrête de tirer
             self.visible = False # On disparaît
             # On pourrait déclencher un event GAME_OVER ici
@@ -79,8 +76,8 @@ class Kernel(Building):
     def reset(self):
         # On utilise spawn pour remettre l'entité en état "neuf"
         w, h = self.rect.size
-        spawn_x = (self.game.st.WORLD_WIDTH // 2) - (w // 2)
-        spawn_y = (self.game.st.WORLD_HEIGHT // 2) - (h // 2)
+        spawn_x = (self.game.st.WORLD_WIDTH // 2) - (w)
+        spawn_y = (self.game.st.WORLD_HEIGHT // 2) - (h)
         
         self.spawn(spawn_x, spawn_y, "KERNEL")
         self.current_hp = self.max_hp

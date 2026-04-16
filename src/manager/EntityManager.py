@@ -14,6 +14,10 @@ class EntityManager:
         self.st = self.game.st
         self.entities: list["Entity"] = []  # Notre pool global
 
+        # Donne l'acces a l'API au entities
+        Entity.get_eventBus(self.game.eventManager)
+        Entity.get_spriteManager(self.game.spriteManager)
+        
         self.game.eventManager.subscribe("NEW_GAME", self.new_game)
 
 

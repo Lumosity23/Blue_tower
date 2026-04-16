@@ -25,7 +25,6 @@ class UIManager():
         self.st = self.game.st
         self.edit_mode = False
         self.layout_path = rp(self.st.UI_LAYOUT_PATH)
-        print(self.layout_path)
         self.tree_path = self.st.UI_TREE_PATH
         self.layout = self.load_layout()
 

@@ -6,199 +6,109 @@
         "h": 1080
     },
     "ShopPanel": {
-        "x": 1920,
-        "y": 90,
-        "w": 490,
+        "x": 1640,
+        "y": 140,
+        "w": 250,
         "h": 800
     },
     "SHOP_text_panel": {
-        "x": 125,
+        "x": 15,
         "y": 15,
         "w": 224,
         "h": 100
     },
-    "ShopPanel_00": {
+    "ShopPanel__0": {
         "x": 25,
-        "y": 130,
+        "y": 120,
         "w": 200,
         "h": 200
     },
-    "ShopPanel_00_label": {
-        "x": 31,
+    "ShopPanel__0_label": {
+        "x": 44,
         "y": 0,
-        "w": 138,
+        "w": 112,
         "h": 50
     },
-    "ShopPanel_00_sprite": {
+    "ShopPanel__0_sprite": {
         "x": 68,
         "y": 68,
         "w": 64,
         "h": 64
     },
-    "ShopPanel_00_btn": {
-        "x": 46,
-        "y": 140,
-        "w": 109,
-        "h": 45
-    },
-    "ShopPanel_00_btn_text": {
-        "x": 20,
-        "y": 10,
-        "w": 69,
-        "h": 25
-    },
-    "ShopPanel_01": {
-        "x": 25,
-        "y": 360,
-        "w": 200,
-        "h": 200
-    },
-    "ShopPanel_01_label": {
-        "x": 53,
-        "y": 0,
-        "w": 94,
-        "h": 50
-    },
-    "ShopPanel_01_sprite": {
-        "x": 68,
-        "y": 68,
-        "w": 64,
-        "h": 64
-    },
-    "ShopPanel_01_btn": {
+    "ShopPanel__0_btn": {
         "x": 53,
         "y": 140,
         "w": 95,
         "h": 45
     },
-    "ShopPanel_01_btn_text": {
+    "ShopPanel__0_btn_text": {
         "x": 20,
         "y": 10,
         "w": 55,
         "h": 25
     },
-    "ShopPanel_02": {
+    "ShopPanel__1": {
+        "x": 25,
+        "y": 350,
+        "w": 200,
+        "h": 200
+    },
+    "ShopPanel__1_label": {
+        "x": 16,
+        "y": 0,
+        "w": 168,
+        "h": 50
+    },
+    "ShopPanel__1_sprite": {
+        "x": 68,
+        "y": 68,
+        "w": 64,
+        "h": 64
+    },
+    "ShopPanel__1_btn": {
+        "x": 46,
+        "y": 140,
+        "w": 109,
+        "h": 45
+    },
+    "ShopPanel__1_btn_text": {
+        "x": 20,
+        "y": 10,
+        "w": 69,
+        "h": 25
+    },
+    "ShopPanel__2": {
         "x": 25,
         "y": 580,
         "w": 200,
         "h": 200
     },
-    "ShopPanel_02_label": {
-        "x": 31,
+    "ShopPanel__2_label": {
+        "x": 44,
         "y": 0,
-        "w": 138,
+        "w": 112,
         "h": 50
     },
-    "ShopPanel_02_sprite": {
+    "ShopPanel__2_sprite": {
         "x": 68,
         "y": 68,
         "w": 64,
         "h": 64
     },
-    "ShopPanel_02_btn": {
+    "ShopPanel__2_btn": {
         "x": 46,
         "y": 140,
         "w": 109,
         "h": 45
     },
-    "ShopPanel_02_btn_text": {
+    "ShopPanel__2_btn_text": {
         "x": 20,
         "y": 10,
         "w": 69,
-        "h": 25
-    },
-    "ShopPanel_10": {
-        "x": 260,
-        "y": 130,
-        "w": 200,
-        "h": 200
-    },
-    "ShopPanel_10_label": {
-        "x": 53,
-        "y": 0,
-        "w": 94,
-        "h": 50
-    },
-    "ShopPanel_10_sprite": {
-        "x": 68,
-        "y": 68,
-        "w": 64,
-        "h": 64
-    },
-    "ShopPanel_10_btn": {
-        "x": 53,
-        "y": 140,
-        "w": 95,
-        "h": 45
-    },
-    "ShopPanel_10_btn_text": {
-        "x": 20,
-        "y": 10,
-        "w": 55,
-        "h": 25
-    },
-    "ShopPanel_11": {
-        "x": 260,
-        "y": 360,
-        "w": 200,
-        "h": 200
-    },
-    "ShopPanel_11_label": {
-        "x": 31,
-        "y": 0,
-        "w": 138,
-        "h": 50
-    },
-    "ShopPanel_11_sprite": {
-        "x": 68,
-        "y": 68,
-        "w": 64,
-        "h": 64
-    },
-    "ShopPanel_11_btn": {
-        "x": 46,
-        "y": 140,
-        "w": 109,
-        "h": 45
-    },
-    "ShopPanel_11_btn_text": {
-        "x": 20,
-        "y": 10,
-        "w": 69,
-        "h": 25
-    },
-    "ShopPanel_12": {
-        "x": 260,
-        "y": 580,
-        "w": 200,
-        "h": 200
-    },
-    "ShopPanel_12_label": {
-        "x": 53,
-        "y": 0,
-        "w": 94,
-        "h": 50
-    },
-    "ShopPanel_12_sprite": {
-        "x": 68,
-        "y": 68,
-        "w": 64,
-        "h": 64
-    },
-    "ShopPanel_12_btn": {
-        "x": 53,
-        "y": 140,
-        "w": 95,
-        "h": 45
-    },
-    "ShopPanel_12_btn_text": {
-        "x": 20,
-        "y": 10,
-        "w": 55,
         "h": 25
     },
     "InfoPanel": {
-        "x": 1520,
+        "x": 1920,
         "y": 0,
         "w": 400,
         "h": 1080
@@ -249,6 +159,18 @@
         "x": 20,
         "y": 10,
         "w": 28,
+        "h": 50
+    },
+    "Damage_text_panel": {
+        "x": 20,
+        "y": 10,
+        "w": 144,
+        "h": 50
+    },
+    "Velocity_text_panel": {
+        "x": 20,
+        "y": 10,
+        "w": 182,
         "h": 50
     },
     "OSD": {

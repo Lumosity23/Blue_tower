@@ -19,12 +19,14 @@ class VFXManager:
 
         # EndPoint ( API )
         self.event.subscribe("SHOW_FT", self.wake_up)
+
     
 
     def wake_up(self, mapping: dict[str, Any]) -> None:
 
         pos = mapping["xy"]
         text = str(mapping["text"])
+        static = mapping.get("static", False)
 
         new_ft = None
         for ft in self.pool_FTC:
@@ -34,22 +36,20 @@ class VFXManager:
         
         if not new_ft:
             new_ft = UIFloatingText(*pos, text)
-            new_ft.active = True
-            new_ft.visible = True
             self.pool_FTC.append(new_ft)
-            self.active_element.append(new_ft)
         
         else:
             new_ft.reset(*pos, text)
-            new_ft.active = True
-            new_ft.visible = True
-            self.active_element.append(new_ft)
-    
+
+        new_ft.active = True
+        new_ft.visible = True
+        new_ft.static = static
+        self.active_element.append(new_ft)
+
     
     def update(self, dt) -> None:
         
         dead_element = []
-        offset = self.game.sceneManager.main_camera.offset.xy
         for ft in self.active_element:
             # On verifie si fin de vie atteint
             if not ft.update(dt):
@@ -61,10 +61,14 @@ class VFXManager:
 
 
     def draw(self, screen: pygame.Surface) -> None:
-
+        
+        
         offset = self.game.sceneManager.main_camera.offset.xy
 
         for e in self.active_element:
+            if e.static:
+                e.draw(screen, (0, 0))
+                continue
             e.draw(screen, offset)
 
         

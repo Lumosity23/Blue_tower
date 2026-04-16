@@ -18,6 +18,12 @@ Bienvenue dans les coulisses de ce projet ! Ce jeu est une aventure d'apprentiss
 * **Amine** — Musicien, c'est a lui que reviens tout la vibe du jeu ! 
 * **Toi ?** — Si tu souhaites m'aider à tester l'équilibrage ou à chasser les bugs, n'hésite pas à ouvrir une *Issue* ou une *Pull Request* !
 
+### Testeurs
+
+* **Erion** — Merci a toi 1er testeur de la beta !!
+* **Yanis** — Merci a toi, pour ce retours en tant que Dev
+* **Amine** — Merci au musicien de ce jeu d'avoir pris le temps de tester en partie t'as creation
+
 ---
 
 ##  Ressources Graphiques & Sonores

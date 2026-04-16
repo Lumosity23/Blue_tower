@@ -47,11 +47,19 @@ L'idée derrière ce jeu est d’apprendre la programmation et le Game Dev.
 ## Future MAJ/Ajout pour le jeu (d'ici le debut avril)
 Un systeme d'upgrade pour les batiments et le joueurs.
 
-## Update du JOUR ( 4 avril )
-Ajout de text flotant et temporaire pour avoir un meilleur effet visuel lors des degats mis ou recu !
+## Update du JOUR ( 17 avril )
+Ajout d'animation ( enfin !!!, systeme assez solide avec possibiliter de upscale ou down scale)
 
 ### voici un petit screen de cet Ajouts :
-![](assets/ScreenShots/update_4_avril.png)
+![](assets/ScreenShots/update_17_avril.png)
+
+
+## [Challenge](CHALLENGE.md)
+
+* Je metrai ici tout les petits et grands defis du jeu que ceux qui ont le coeur de les relever et comme ca 
+participer au projet tout en apprenant de nouvelles choses !
+
+* comming soon...
 
 
 ## how to play
@@ -110,6 +118,9 @@ uv run src/main.py
 
 ## Appropos de moi
 
-Je suis un dev junior, j'apprend la programation depuis maintenant `3 mois`, j'essaye de faire ce qui me passe par la tete tout en ecoutant les retours de mes amis sur mon projet.
+Je suis un dev junior, j'apprend la programation depuis maintenant `4 mois`, j'essaye de faire ce qui me passe par la tete tout en ecoutant les retours de mes amis sur mon projet.
 
 ## [CREDITS](CREDITS.md)
+### Merci a tous les testeurs
+
+Retrouvez leur retours dans cette section : [FEEDBACK](FEEDBACK.md)

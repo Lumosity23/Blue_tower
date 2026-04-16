@@ -1,7 +1,6 @@
 import pygame
 from .UIElement import UIElement
 from .UIText import UIText
-from settings import Settings
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from main import App

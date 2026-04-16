@@ -1,7 +1,18 @@
 import pygame
+from manager.EventManager import EventManager
+from manager.SpriteManager import SpriteManager
 
 
 class Entity:
+
+    @classmethod
+    def get_eventBus(cls, eventBus: "EventManager"):
+        cls._EVENTBUS = eventBus
+    
+    @classmethod
+    def get_spriteManager(cls, spriteManager: "SpriteManager"):
+        cls._SPRITE = spriteManager
+
 
     def __init__(self, x: int, y: int, w: int, h: int, tag: str, uid: str | None) -> None:
         # ID de l'element
@@ -13,8 +24,17 @@ class Entity:
         self.pos = pygame.math.Vector2(x, y)
         self.chunk = None
         self.old_chunk = None
+
         # Surface de l'entite
-        self.image = pygame.Surface((w, h))
+        self.image = pygame.Surface((w, h)) # <------ A ne PLUS UTILISER
+        self.animations: dict[str, dict[tuple[int,int], pygame.Surface]] = {}
+        self.current_state = "None"
+        self.state = "None"
+        self.anim_timer = 0.0
+        self.anim_size = 0
+        self.anim_duration = 0.0
+        self.frame_duration = 0.0
+        self.frame_index = 0
         # self.flip_x = False
 
         # System de logic/rendu
@@ -37,6 +57,42 @@ class Entity:
         # Systeme de delay
         self.timers = {}
 
+    @property
+    def img(self):
+        return self.current_anim["ANIMATION"][self.frame_index]
+    
+
+    def set_anim(self, anim_name: str, rect_size: tuple[int, int], duration: float, scaling: int=1) -> None:
+        """ Configure une animation depuis une spritesheet """
+        name = f'anim_{self.__class__.__name__}_{anim_name}'
+        animation = self._SPRITE.get_animation(name.lower(), rect_size, scaling=scaling)
+        self.animations[anim_name] = {
+            "ANIMATION" : animation,
+            "DURATION"  : duration
+            }
+        print(f"Animation {anim_name} de {self.__class__.__name__} a bien ete charger")
+        #print(self.animations)
+
+
+    def update_animation(self, dt, new_anim) -> None:
+
+        if new_anim != self.current_state:
+                self.anim_timer = 0.0
+                self.frame_index = 0
+                self.current_state = new_anim
+                self.current_anim = self.animations[new_anim]
+                self.rect = self.img.get_rect()
+                self.rect.topleft = self.pos.xy
+                self.anim_duration = self.current_anim["DURATION"]
+                self.anim_size = len(self.current_anim["ANIMATION"])
+                self.frame_duration = self.anim_duration / self.anim_size
+        
+        self.anim_timer += dt
+        self.anim_timer %= self.anim_duration
+        
+        # On recupere la current frame et securise si on out of range
+        self.frame_index = min(self.anim_size , int(self.anim_timer / self.frame_duration))
+        
 
     def add_child(self, new_child: "Entity") -> None:
         if new_child not in self.children:
@@ -77,10 +133,18 @@ class Entity:
     
 
     def take_damage(self, amount: int) -> None:
+        
+        mapping = {
+            "xy" : self.rect.center,
+            "text" : amount
+        }
+
+        self._EVENTBUS.publish("SHOW_FT", mapping)
 
         self.current_hp -= amount
 
         if self.current_hp <= 0:
+            self.alive = False
             self.kill()
             return True
     
@@ -140,10 +204,10 @@ class Entity:
 
     def update(self, dt):
         if not self.visible: return
-
+    
         # Syncronisation de la pos logic avec le rendu
         self.rect.topleft = (round(self.pos.x), round(self.pos.y))
-
+        
         # Logique de mouvement, IA, etc.
         child: "Entity"
         for child in self.children:
@@ -205,6 +269,7 @@ class Entity:
         save_entity_upgrade(name=cls.__name__.upper(), raw_data=element)
 
 
+    @property
     def __name__():
         ''' Permet de retourner le nom de la classe de notre entity'''
         return __class__.__name__()

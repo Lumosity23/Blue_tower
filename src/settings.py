@@ -114,7 +114,7 @@ class Settings:
             "cooldown": 1000,
             "damage": 15,
             "sprite_id": "kernel",
-            "size": (128, 128)
+            "size": (64, 64)
         }
     })
 
@@ -126,14 +126,7 @@ class Settings:
             "hp": 100,
             "velocity": 500,
             "sprite_id": "player",
-            "size": (44, 76)
-        },
-        "KERNEL": {
-            "hp": 1000,
-            "cooldown": 1000,
-            "damage": 15,
-            "sprite_id": "kernel",
-            "size": (128, 128)
+            "size": (20, 37)
         }
     })
 
@@ -195,13 +188,16 @@ class Settings:
     
     # Dictionnaire des chemins pour le SpriteManager
     ASSET_PATHS: Dict[str, str] = field(default_factory=lambda: {
-        "player": 'assets/sprite/player.png',
-        "enemy" : 'assets/sprite/enemie.png',
+        "anim_player_move": 'assets/sprite/player.png',
+        "enemy" : 'assets/sprite/enemy.png',
         "kernel": 'assets/sprite/kernel.png',
         "chunk" : 'assets/sprite/chunk.png',
         "wall"  : 'assets/sprite/pillar_v1.png',
         "turret": 'assets/sprite/turret.png',
-        "bullet": 'assets/sprite/bullet.png'
+        "bank"  : 'assets/sprite/turret.png',
+        "bullet": 'assets/sprite/bullet.png',
+        "anim_player_idle" : 'assets/sprite_sheet/player_idle.png',
+        "anim_kernel_idle" : 'assets/sprite_sheet/kernel_idle.png'
     })
 
     SOUND_PATH: Dict[str, str] = field(default_factory=lambda: {
@@ -245,6 +241,7 @@ class Settings:
         # On s'assure que ROWS/COLS correspondent bien au WORLD et non au SCREEN
         self.COLS = self.WORLD_WIDTH // self.CELL_SIZE
         self.ROWS = self.WORLD_HEIGHT // self.CELL_SIZE
+        self.BUILDINGS_LIST = [ name.upper() for name in self.BUILDINGS_DATA.keys() if name != "KERNEL"]
 
     # On pourrait ajouter une méthode pour récupérer proprement les données
     def get_build_data(self, key: str) -> dict:

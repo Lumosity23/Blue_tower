@@ -104,3 +104,22 @@ class SpriteManager:
                 tiles[col, row] = bigSprite.subsurface(pygame.Rect(x, y, w, h))
             
         return tiles
+    
+    
+    def get_animation(self, sprite_id: str, sclicing: tuple[int, int], margin: int=0, spacing: int=0, scaling: int=1) -> dict[int, pygame.Surface]:
+        """ Permet de decouper un spritesheet en ligne droite (specialement pour les animation) """
+        
+        spritesheet = self.get_base_image(sprite_id)
+        lenght, _ = spritesheet.get_size()
+        w, h = (dim * scaling for dim in sclicing)
+        num_frames = int(lenght) // int(sclicing[0])
+        
+        spritesheet = self.get_sprite_resize(sprite_id, (num_frames * w, h))
+        tiles = {}
+        
+        for col in range(num_frames):
+            x = margin + col * (w + spacing)
+            tiles[col] = spritesheet.subsurface(pygame.Rect(x, 0, w, h))
+        # print(f"animation de : {num_frames} frames")
+
+        return tiles

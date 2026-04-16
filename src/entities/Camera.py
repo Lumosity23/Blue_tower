@@ -68,4 +68,7 @@ class Camera:
                 # --- comportement standard ---
                 rect = e.get_screen_rect()
                 pos_on_screen = (rect.x - self.offset.x, rect.y - self.offset.y)
-                fast_blit(e.image, pos_on_screen)
+                if e.tag == "PLAYER" or e.tag == "KERNEL":
+                    fast_blit(e.img, pos_on_screen)
+                else:
+                    fast_blit(e.image, pos_on_screen)

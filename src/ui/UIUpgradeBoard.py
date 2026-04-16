@@ -57,8 +57,9 @@ class UIUpgradeBoard(UIPanel):
         self.callBack()
 
         mapping = {
-            "xy" : self.rect.center,
-            "text" : f"+{self.rate * self.max_val}"
+            "xy" : self.get_screen_rect().topleft, # .center
+            "text" : f"+{self.rate * self.max_val}",
+            "static" : True
         }
 
         self._EVENTBUS.publish("SHOW_FT", mapping)

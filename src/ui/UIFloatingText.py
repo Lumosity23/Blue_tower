@@ -14,7 +14,8 @@ class UIFloatingText(UIText):
         self.lifespan = 1.0
         self.rest_time = self.lifespan
         self.velocity = 50
-    
+        self.static = False
+        
 
     def reset(self, x, y, text) -> None:
         

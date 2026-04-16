@@ -108,18 +108,9 @@ class Enemie(Entity):
 
     def take_damage(self, amount):
         if not self.active: return
-        
-        mapping = {
-            "xy" : self.rect.center,
-            "text" : amount
-        }
 
-        self.game.eventManager.publish("SHOW_FT", mapping)
-        self.current_hp -= amount
+        super().take_damage(amount)
         self.hp_bar.update_values(self.current_hp, self.max_hp)
-        
-        if self.current_hp <= 0:
-            self.kill()
 
 
     def kill(self):

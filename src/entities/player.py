@@ -21,7 +21,7 @@ class Player(Entity):
         super().__init__(spawn_x, spawn_y, w, h, tag=tag, uid=uid)
         
         # Setup de l'image
-        self.image = self.game.spriteManager.get_custom_sprite(self.stats["sprite_id"], (w, h))
+        # self.image = self.game.spriteManager.get_custom_sprite(self.stats["sprite_id"], (w, h))
         
         # Stats
         self.max_hp = self.stats['hp']
@@ -54,6 +54,10 @@ class Player(Entity):
         self.hp_bar.setup(w=self.rect.w, h=8, show_text=False)
         self.hp_bar.dynamic_color = True
         self.add_child(self.hp_bar)
+
+        # Set des animation de notre element
+        self.set_anim("IDLE", (w, h), 1.5, 2)
+        self.set_anim("MOVE", (w, h), 1, 2)
 
         # Souscription aux events
         self.game.eventManager.subscribe("NEW_GAME", self.reset)
@@ -122,13 +126,17 @@ class Player(Entity):
            or keys[pygame.K_UP] or keys[pygame.K_w]\
            or keys[pygame.K_DOWN] or keys[pygame.K_s]:
             self.is_moving = True
-        else : self.is_moving = False
+            self.state = "MOVE"
+        else : 
+            self.is_moving = False
+            self.state = "IDLE"
 
         # Play sound footstep
         if self.is_moving and self.delay(0.40, dt):
             self.game.eventManager.publish("PLAY_SFX", "WALK")
             
         # Appel de l'update d'Entity pour propager aux enfants (barre de vie)
+        self.update_animation(dt, self.state)
         super().update(dt)
     
 
@@ -160,18 +168,8 @@ class Player(Entity):
 
     def take_damage(self, amount):
         
-        mapping = {
-            "xy" : self.rect.center,
-            "text" : amount
-        }
-
-        self.game.eventManager.publish("SHOW_FT", mapping)
-        
-        self.current_hp -= amount
+        super().take_damage(amount)
         self.hp_bar.update_values(self.current_hp, self.max_hp)
-        if self.current_hp <= 0:
-            self.alive = False
-            self.kill() # On utilise la méthode de Entity pour le pooling
 
 
     def reset(self):
@@ -230,7 +228,7 @@ Player.ui_config(
     ("ICON", "you", "image"),
     ("BAR", "Vie", "current_hp", "max_hp"),
     ("STAT", "kills", "kills"),
-    ("STAT", "CHUNK", "chunk")
+    ("STAT", "STATE", "state")
 )
 
 Player.upgrade_config(

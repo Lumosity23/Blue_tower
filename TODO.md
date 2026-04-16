@@ -13,6 +13,15 @@ Pour que le jeu soit un minimum beau, il faut absolument trouver une DA !!!.
 
 
 
+## Animation
+
+Il me faut un systeme qui me peremet de gerer les animation et de pouvoir decouper des spritesheets
+
+- [ ] animation timer
+- [ ] spritesheet_licing
+
+
+
 ## Chunk LOGIC
 
 La mecanique des chunk est hyper important pour la stabiliter du jeu et avoir un bon Culling et eviter les drop FPS
@@ -27,6 +36,7 @@ Les Appel API, sont super important car il permet d'avoir une structure propre e
 
 - [ ] Cree un NotificationManager
   - [ ] permetre de faire apparaitre des message de debug ou d'info en generale
+
 
 
 ## SFX and MUSIC
@@ -52,11 +62,13 @@ La base de mon jeu repose sur les upgrade ( pour l'instant inexistant )
 - [ ] idem pour la tourelle et le kernel
 
 
+
 ## InfoPanel
 
 c'est un element essentiel, mais si peu attentdu par les joueur dans un premier temps
 
 - [ ] Ajouter un bouton Upgrade et Sell en bas de ce dernier
+
 
 
 # BACKLOG

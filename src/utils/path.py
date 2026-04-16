@@ -1,14 +1,26 @@
 import os
 import sys
 
+
 def resource_path(relative_path):
     """ Gestion des chemins pour le mode script et le mode .exe """
-    try:
-        # Dossier temporaire de PyInstaller
-        base_path = sys._MEIPASS
-    except Exception:
-        # On remonte de 'src/utils' vers la racine du projet
-        # __file__ est le chemin de paths.py, donc on remonte 2 fois
-        base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    # 1. On cherche d'abord le chemin de PyInstaller
+    base_path = getattr(sys, '_MEIPASS', None)
 
-    return os.path.join(base_path, relative_path)
+    # 2. Si on n'est pas en mode .exe, on calcule le chemin manuellement
+    if base_path is None:
+        # On part du dossier où se trouve path.py
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        # On remonte de 2 niveaux (utils -> src -> racine)
+        base_path = os.path.join(current_dir, "..", "..")
+
+    # 3. Sécurité ultime : on s'assure que base_path n'est pas None
+    if base_path is None:
+        base_path = os.path.abspath(".")
+
+    # Nettoyage du chemin final
+    if base_path is None or relative_path is None:
+        raise TypeError(f"ERREUR : base_path est {base_path} et relative_path est {relative_path}")
+    
+    full_path = os.path.join(base_path, relative_path)
+    return os.path.normpath(full_path)
