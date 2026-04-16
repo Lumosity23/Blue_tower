@@ -52,6 +52,8 @@ jobs:
         --paths src \
         --add-data "assets/sprite/*.png${{ matrix.sep }}assets/sprite" \
         --add-data "assets/font${{ matrix.sep }}assets/font" \
+        --add-data "assets/audio/music/*.wav${{ matrix.sep }}assets/audio/music" \
+        --add-data "assets/audio/sfx/*.mp3${{ matrix.sep }}assets/audio/sfx" \
         --add-data "src/ui/*.json${{ matrix.sep }}src/ui" \
         --add-data "src/entities/*.json${{ matrix.sep }}src/entities" \
         src/main.py
