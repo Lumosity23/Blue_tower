@@ -47,11 +47,11 @@ L'idée derrière ce jeu est d’apprendre la programmation et le Game Dev.
 ## Future MAJ/Ajout pour le jeu (d'ici le debut avril)
 Un systeme d'upgrade pour les batiments et le joueurs.
 
-## Update du JOUR ( 17 avril )
-Ajout d'animation ( enfin !!!, systeme assez solide avec possibiliter de upscale ou down scale)
+## Update du JOUR ( 19 avril )
+Ajout des mur dynamique !!!!
 
 ### voici un petit screen de cet Ajouts :
-![](assets/ScreenShots/update_17_avril.png)
+![](assets/ScreenShots/update_19_avril.png)
 
 
 ## [Challenge](CHALLENGE.md)

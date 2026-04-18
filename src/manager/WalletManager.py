@@ -9,7 +9,7 @@ class WalletManager:
     def __init__(self, game: "App"):
         self.game = game
         self.diff_mtp = self.game.st.DIFFICULTY_MTP.get(self.game.mode, "NORMAL")
-        self.init_amount = 1000 * self.diff_mtp
+        self.init_amount = 10000 * self.diff_mtp
         self.amount = self.init_amount
         self.creatif = False
         if not self.amount:
@@ -20,7 +20,8 @@ class WalletManager:
         self.game.eventManager.subscribe("ERROR_PAYMENT", self.error)
         self.game.eventManager.subscribe("NEW_GAME", self.reset)
         self.game.eventManager.subscribe("ENEMY_KILLED", self.earn_money)
-
+        self.game.eventManager.subscribe("EARN_MONEY", self.earn_money)
+        
     
     def buy(self, amount: int) -> bool:
         '''

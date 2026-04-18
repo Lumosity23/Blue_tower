@@ -15,6 +15,7 @@ class Building(Entity):
         super().__init_subclass__(**kwargs)
         cls.BUILDING_TYPES[cls.__name__.upper()] = cls
 
+
     def __init__(self, x, y, data: dict, game: "App", tag, uid: str = None):
         # 1. Init Entity (Position Monde)
         w, h = data.get("size", (game.st.CELL_SIZE, game.st.CELL_SIZE))
@@ -22,10 +23,11 @@ class Building(Entity):
         
         self.game = game
         self.data = data # On garde le dictionnaire de config
-        
+        self.grid_pos = (0, 0)
+
         # État
-        self.state = "IDLE" # IDLE, HOVER, SELECTED
-        
+        self.meta_state = "IDLE" # IDLE, HOVER, SELECTED
+
         # Visuel
         self.source_image = self.game.spriteManager.get_custom_sprite(
             data.get("sprite_id"), (w, h)
@@ -68,11 +70,11 @@ class Building(Entity):
 
         # 1. Gestion du Survol (Hover)
         if event.type == pygame.MOUSEMOTION:
-            if self.state != "SELECTED":
-                new_state = "HOVER" if is_hovered else "IDLE"
-                if new_state != self.state:
-                    self.state = new_state
-                    self.on_state_change()
+            if self.meta_state != "SELECTED":
+                new_meta_state = "HOVER" if is_hovered else "IDLE"
+                if new_meta_state != self.meta_state:
+                    self.meta_state = new_meta_state
+                    self.on_meta_state_change()
 
         # 2. Gestion du Clic (Sélection)
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -86,29 +88,29 @@ class Building(Entity):
 
 
     def select(self) -> None:
-        self.state = "SELECTED"
+        self.meta_state = "SELECTED"
         self.game.eventManager.publish("BUILDING_SELECTED", self)
-        self.on_state_change()
+        self.on_meta_state_change()
 
 
     def deselect(self) -> None:
-        if self.state == "SELECTED":
-            self.state = "IDLE"
-            self.on_state_change()
+        if self.meta_state == "SELECTED":
+            self.meta_state = "IDLE"
+            self.on_meta_state_change()
 
 
-    def on_state_change(self):
+    def on_meta_state_change(self):
         """ Gère les effets visuels selon l'état """
         # Visibilité de la barre de vie
-        self.hp_bar.visible = (self.state in ["HOVER", "SELECTED"])
+        self.hp_bar.visible = (self.meta_state in ["HOVER", "SELECTED"])
         if self.range_circle:
-            self.range_circle.visible = (self.state in ["HOVER", "SELECTED"])
+            self.range_circle.visible = (self.meta_state in ["HOVER", "SELECTED"])
         
         # On recrée l'image avec un feedback (ex: contour blanc si sélectionné)
-        self.image = self.source_image.copy()
-        if self.state == "SELECTED":
+        # self.image = self.source_image.copy()
+        if self.meta_state == "SELECTED":
             pygame.draw.rect(self.image, (255, 255, 255), (0, 0, self.rect.w, self.rect.h), 2)
-        elif self.state == "HOVER":
+        elif self.meta_state == "HOVER":
             # Petit effet de brillance/teinte légère
             self.image.fill((30, 30, 30), special_flags=pygame.BLEND_RGB_ADD)
 

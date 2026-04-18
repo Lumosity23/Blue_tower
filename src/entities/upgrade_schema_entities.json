@@ -58,5 +58,16 @@
                 "rate": "rate_rg"
             }
         }
+    ],
+    "BANK": [
+        {
+            "label": "Gain",
+            "mapping": {
+                "current": "gain",
+                "max": "max_gn",
+                "price": "price_gn",
+                "rate": "rate_gn"
+            }
+        }
     ]
 }

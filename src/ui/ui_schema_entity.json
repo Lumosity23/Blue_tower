@@ -130,5 +130,15 @@
                 "string": "chunk"
             }
         }
+    ],
+    "BANK": [
+        {
+            "type": "stat",
+            "ui_class": "UIStat",
+            "label": "Gain",
+            "mapping": {
+                "string": "gain"
+            }
+        }
     ]
 }

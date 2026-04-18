@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from main import App
     from entities.Entity import Entity
+    from entities.buildings.Building import Building
 
 
 class Grid:
@@ -29,7 +30,7 @@ class Grid:
 
     def init_grid(self) -> None:
         # Init de la grille ( CELLS )
-        self.grid = {(c, r): self.game.st.EMPTY for c in range(self.cols) for r in range(self.rows)}
+        self.grid: dict[tuple[int,int], str|"Building"] = {(c, r): self.game.st.EMPTY for c in range(self.cols) for r in range(self.rows)}
         # Init de la grille ( CHUNKS )
         self.chunks = {(c, r): set() for c in range(self.cols // self.game.st.CELLS_FOR_CHUNK) for r in range(self.rows // self.game.st.CELLS_FOR_CHUNK)}
         #print(len(self.chunks))
@@ -51,33 +52,59 @@ class Grid:
             world_x = col * self.cell_size
             # RÈGLE 1 : World -> Screen
             screen_x = world_x - cam_offset.x 
-            pygame.draw.line(surface, grid_color, (screen_x, 0), (screen_x, surface.get_height()))
+            pygame.draw.line(surface, grid_color, (screen_x, 0), (screen_x, surface.get_height()), width=2)
 
         # 3. Lignes horizontales
         for row in range(start_row, end_row + 1):
             world_y = row * self.cell_size
             # RÈGLE 1 : World -> Screen
             screen_y = world_y - cam_offset.y
-            pygame.draw.line(surface, grid_color, (0, screen_y), (surface.get_width(), screen_y))
+            pygame.draw.line(surface, grid_color, (0, screen_y), (surface.get_width(), screen_y), width=2)
 
 
     def get_cell_pos(self, world_x, world_y) -> tuple[int, int]:
-        ''' Renvoie la posisiotn cell du monde '''
+        ''' World to grid '''
         return int(world_x // self.cell_size), int(world_y // self.cell_size)
 
 
     def get_pos_cell(self, cx, cy) -> tuple[int, int]:
-        ''' Renvoie la posisiotn monde de la cell '''
+        ''' Grid to world '''
         return int(cx * self.cell_size), int(cy * self.cell_size)
     
 
     def get_cell_value(self, world_x, world_y, iscellpos=False):
+        # Recupere le batiment GRIDPOS
         if iscellpos:
-            return self.grid.get((world_x, world_y))
+            build = self.grid.get((world_x, world_y))
         
-        gx, gy = int(world_x // self.cell_size), int(world_y // self.cell_size)
-        return self.grid.get((gx, gy))
+        # Recupere le batiment CELLPOS
+        else : 
+            gx, gy = self.get_cell_pos(world_x, world_y)
+            build = self.grid.get((gx, gy))
 
+        if build is not None :
+            if type(build) != str:
+                return build.tag
+        
+            return self.game.st.EMPTY
+
+
+    def get_build_at(self, world_x, world_y, iscellpos=False):
+        # Recupere le batiment GRIDPOS
+        if iscellpos:
+            build = self.grid.get((world_x, world_y))
+        
+        # Recupere le batiment CELLPOS
+        else : 
+            gx, gy = self.get_cell_pos(world_x, world_y)
+            build = self.grid.get((gx, gy))
+
+        if build is not None :
+            if type(build) != str:
+                return build
+        
+            return self.game.st.EMPTY
+        
 
     def set_cell_value(self, world_x, world_y, value):
         gx, gy = int(world_x // self.cell_size), int(world_y // self.cell_size)
@@ -85,7 +112,14 @@ class Grid:
             self.grid[(gx, gy)] = value
             return
         # print(f"pas de cell a cet endroit la : {(gx, gy)}")
+    
 
+    def add_building(self, world_x, world_y, building: "Building") -> tuple[int, int]:
+        gx, gy = int(world_x // self.cell_size), int(world_y // self.cell_size)
+        if (gx, gy) in self.grid:
+            self.grid[(gx, gy)] = building
+            return (gx, gy)
+        
 
     def get_cell_isOccupied(self, world_x, world_y) -> bool:
         val = self.get_cell_value(world_x, world_y)
@@ -160,6 +194,24 @@ class Grid:
         
         return entities_around
 
+    
+    def get_neighbors_buildings(self, build: "Building") -> dict[tuple[int,int], "Building"]:
+        """ Renvoie la list des building autour d'un batiment donne """
+        gx, gy = build.grid_pos
+
+        neighbors = self.getValidNeighbors(gx, gy)
+        buildNeighbors = {}
+
+        for nx, ny in neighbors:
+            building = self.get_build_at(nx, ny, iscellpos=True)
+            # Direction relative du voisin par rapport à MOI
+            dx = nx - gx
+            dy = ny - gy
+            if building != self.game.st.EMPTY:
+                buildNeighbors[(dx, dy)] = building
+            
+        return buildNeighbors
+    
 
     def get_entity_at(self, wx, wy) -> "Entity":
         ''' Renvoi l'entity au corrdonne proposer, si personne renvoie None '''

@@ -75,7 +75,7 @@ class Settings:
     # Plus c'est haut, plus l'ennemi évite la zone. 0 = Infranchissable.
     TYPE_COST: Dict[str, int] = field(default_factory=lambda: {
         "EMPTY": 1,
-        "WALL": 50,    # 0 car infranchissable, l'ennemi doit contourner
+        "WALL": 50, 
         "TURRET": 25,
         "PLAYER": 1
     })
@@ -192,12 +192,13 @@ class Settings:
         "enemy" : 'assets/sprite/enemy.png',
         "kernel": 'assets/sprite/kernel.png',
         "chunk" : 'assets/sprite/chunk.png',
-        "wall"  : 'assets/sprite/pillar_v1.png',
-        "turret": 'assets/sprite/turret.png',
+        "wall"  : 'assets/sprite/wall_v2.png',
+        "turret": 'assets/sprite/turret_v2.png',
         "bank"  : 'assets/sprite/turret.png',
         "bullet": 'assets/sprite/bullet.png',
         "anim_player_idle" : 'assets/sprite_sheet/player_idle.png',
-        "anim_kernel_idle" : 'assets/sprite_sheet/kernel_idle.png'
+        "anim_kernel_idle" : 'assets/sprite_sheet/kernel_idle.png',
+        "anim_wall_sides"  : 'assets/sprite/side_wall.png'
     })
 
     SOUND_PATH: Dict[str, str] = field(default_factory=lambda: {

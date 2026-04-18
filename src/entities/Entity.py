@@ -27,7 +27,7 @@ class Entity:
 
         # Surface de l'entite
         self.image = pygame.Surface((w, h)) # <------ A ne PLUS UTILISER
-        self.animations: dict[str, dict[tuple[int,int], pygame.Surface]] = {}
+        self.animations: dict[str, dict[tuple[int], pygame.Surface]] = {}
         self.current_state = "None"
         self.state = "None"
         self.anim_timer = 0.0
@@ -191,7 +191,7 @@ class Entity:
             argument: attribut de UIElement bool en STR !\n
            state: l'etat dans le quel on veux aller
         '''
-        # Verification que UIElement a bien cet attribut
+        # Verification que Entity a bien cet attribut
         if hasattr(self, argument):
             # Verifier que l'attribut est un bien un bool
             if isinstance(getattr(self, argument), bool):    

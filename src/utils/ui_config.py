@@ -40,4 +40,4 @@ def save_entity_schema( name, raw_data: tuple ):
             json.dump(data, f, indent=4, ensure_ascii=False)
             
         # Petit feedback discret dans la console au lancement
-        print(f"⚙️  UI Auto-Config : {name} mise à jour.")
+        print(f"⚙️  UI      Auto-Config : {name} mise à jour.")

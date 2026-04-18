@@ -1,6 +1,6 @@
 import pygame
 from entities.buildings.Building import Building
-from entities.kernel import Kernel
+from entities.buildings.wall import Wall
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -18,6 +18,8 @@ class BuildManager:
         # État
         self.selected_build: Building | None = None
 
+        Wall.get_sides_sprite(game)
+
         # Souscriptions
         self.game.eventManager.subscribe("PLACE_BUILDING", self.attempt_build_from_event)
         self.game.eventManager.subscribe("NEW_GAME", self.new_game)
@@ -33,6 +35,7 @@ class BuildManager:
 
 
     def clean_chunk(self, building: Building) -> None:
+        self.check_buildings(building, True)
         self.game.sceneManager.main_camera.remove_entity(building)
         self.game.grid.remove_entity_chunk(building)
         self.game.grid.set_cell_value(*building.rect.center, self.game.st.EMPTY)
@@ -110,12 +113,15 @@ class BuildManager:
         self.game.sceneManager.main_camera.add_entity(build)
 
         # Mise à jour du monde
-        self.game.grid.set_cell_value(pos.x, pos.y, type_name)
+        build.grid_pos = self.game.grid.add_building(pos.x, pos.y, build)
         self.game.grid.set_entity_chunk(build)
         # print(self.game.grid.get_cell_pos(pos.x, pos.y))
 
         # On met à jour le chemin des ennemis vers le Kernel
         self.game.grid.update_flow_field(self.game.kernel.pos)
+
+        # Mise a jour des building autour (ex: mur)
+        self.check_buildings(build)
 
 
     def handle_event(self, event) -> bool:
@@ -151,6 +157,26 @@ class BuildManager:
 
         return False
     
+
+    def check_buildings(self, build: Building, destroyed: bool=False) -> None:
+        buildings_around = self.game.grid.get_neighbors_buildings(build)
+
+        for side, building in buildings_around.items():
+            if building.tag == "WALL":
+                # Le côté pour le voisin est l'opposé du côté pour nous
+                opposite_side = (-side[0], -side[1])
+
+                # Si on détruit, on met False. Sinon True.
+                building.config[opposite_side] = not destroyed
+                building.update_look()
+
+            # Si nous sommes un mur, on met à jour notre propre config
+            if not destroyed and build.tag == "WALL":
+                build.config[side] = True
+
+        if build.tag == "WALL": 
+            build.update_look()
+
 
     def clear_all(self):
         """ Désactive tous les bâtiments (pour le reset de partie) """
