@@ -14,6 +14,7 @@ class UIButton(UIElement):
             uid_text = f"{uid}_text"
         else: uid_text: str | None = None
         self.text = UIText(20, 10, text, size_text, text_color, uid=uid_text)
+        
         super().__init__(x, y, self.text.rect.w + 40, self.text.rect.h + 20, uid)
         self.add_child(self.text)
         self.text.rect.topleft = 20,10
@@ -27,25 +28,26 @@ class UIButton(UIElement):
         self.sound = "click_default"
 
         # Couleur
-        self.color_idle: tuple = color
-        self.color_hover: tuple = ()
-        self.color_pressed: tuple = ()
+        self.shape = {}
         self.set_color(color)
 
         # Etat
         self.state = "IDLE"
-        self.render()
+        self.image = self.shape[self.state]
         
 
     def set_color(self, color) -> None:
 
         # Savoir si c'est un couleur sombre ou claire
+        color_pressed = ()
+        color_hover = ()
+
         r, g, b = color
         l = (0.2126 * r) + (0.7152 * g) + (0.0722 * b)
         
         if l > 128:
             for c in list(color):
-                self.color_hover += (c * 0.9,)
+                color_hover += (c * 0.9,)
         
         else:
             for c in color:
@@ -54,10 +56,30 @@ class UIButton(UIElement):
                     new_color -= 50
                 elif new_color == 0:
                     new_color += 50
-                self.color_hover += (new_color,)
+                color_hover += (new_color,)
         
         for c in list(color):
-            self.color_pressed += (c * 0.8,)
+            color_pressed += (int(c * 0.8),)
+
+        state_color = {
+            "IDLE" : color,
+            "HOVER" : color_pressed,
+            "PRESSED" : color_hover
+        }
+
+        self.shape = self.make_shape_from_color(state_color)
+
+
+    def make_shape_from_color(self, dico_color) -> dict[str, pygame.Surface]:
+
+        panel = self._SPRITE.get_ui_panel
+        dico = {}
+
+        for state, color in dico_color.items():
+            img = panel(self.rect.w, self.rect.h, color)
+            dico[state] = img
+
+        return dico
 
 
     def set_sound(self, sound: str) -> None:
@@ -67,14 +89,15 @@ class UIButton(UIElement):
     def render(self) -> None:
 
         # On choisit la couleur selon l'état
-        color = self.color_idle
+        state = self.shape["IDLE"]
         if self.state == "HOVER":
-            color = self.color_hover
+            state = self.shape["HOVER"]
         elif self.state == "PRESSED":
-            color = self.color_pressed
+            state = self.shape["PRESSED"]
 
         # On dessine le rectangle arrondi avec la bonne couleur
-        pygame.draw.rect(self.image, color, (0, 0, self.rect.w, self.rect.h), border_radius=self.border_radius)  # (0, 0, self.rect.w, self.rect.h)
+        # pygame.draw.rect(self.image, color, (0, 0, self.rect.w, self.rect.h), border_radius=self.border_radius)  # (0, 0, self.rect.w, self.rect.h)
+        self.image = self.shape[state]
 
     
     def handle_event(self, event: pygame.event.EventType) -> bool:
@@ -95,7 +118,7 @@ class UIButton(UIElement):
                     self._EVENTBUS.publish("CLICK_BUTTON", self.sound)
                     self.callback()
                 # On force le render ici car l'état vient de changer
-                self.render() 
+                self.image = self.shape[self.state]
                 return True
 
         elif event.type == pygame.MOUSEBUTTONUP:
@@ -103,6 +126,6 @@ class UIButton(UIElement):
 
         # Si changement d'etat
         if self.state != old_state:
-            self.render()
+            self.image = self.shape[self.state]
 
         return False

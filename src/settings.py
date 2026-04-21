@@ -196,6 +196,8 @@ class Settings:
         "turret": 'assets/sprite/turret_v2.png',
         "bank"  : 'assets/sprite/turret.png',
         "bullet": 'assets/sprite/bullet.png',
+        "profile_ui" : 'assets/sprite/profile_ui_test.png',
+        "sample_ui" : 'assets/sprite/sample_ui.png',
         "anim_player_idle" : 'assets/sprite_sheet/player_idle.png',
         "anim_kernel_idle" : 'assets/sprite_sheet/kernel_idle.png',
         "anim_wall_sides"  : 'assets/sprite/side_wall.png'

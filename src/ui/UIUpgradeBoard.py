@@ -2,7 +2,6 @@ from ui.UIPanel import UIPanel
 from ui.UIButton import UIButton
 from ui.UIProgressBar import UIProgressBar
 from ui.UIText import UIText
-import pygame
 
 
 class UIUpgradeBoard(UIPanel):
@@ -21,8 +20,7 @@ class UIUpgradeBoard(UIPanel):
         # le nom du cadre
         self.rect.topleft = x, y
         self.rect.width, self.rect.height = w, h
-        self.image = pygame.Surface((self.rect.w, self.rect.h))
-        self.image.fill((50, 50, 50))
+        self.image = self._SPRITE.get_ui_panel(self.rect.w, self.rect.h, (50,50,50))
 
         self.set_label(label, 50)
         self.label.rect.topleft = 20, 10

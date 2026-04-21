@@ -38,20 +38,8 @@ class BuildManager:
         self.check_buildings(building, True)
         self.game.sceneManager.main_camera.remove_entity(building)
         self.game.grid.remove_entity_chunk(building)
-        self.game.grid.set_cell_value(*building.rect.center, self.game.st.EMPTY)
+        self.game.grid.remove_build_at(*building.grid_pos, True)
         # print(f"la cell a bien ete changer : {self.game.grid.get_cell_value(*building.rect.center)}")
-
-
-    """ def check_build_collisions(self):
-        active_buildings = [b for b in self.entities if b.active]
-        active_enemies = [e for e in self.entities if e.tag == "ENEMY" and e.active]
-
-        for b in active_buildings:
-            for e in active_enemies:
-                if b.rect.colliderect(e.rect):
-                    b: "Building"
-                    b.on_hit(e)
-                    break # Une balle ne touche qu'un ennemi à la fois (sauf pénétration) """
     
 
     def attempt_build_from_event(self, event_data: dict):

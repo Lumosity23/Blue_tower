@@ -3,6 +3,8 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from manager.EventManager import EventManager
+    from manager.SpriteManager import SpriteManager
+
 
 class UIElement:
 
@@ -24,6 +26,11 @@ class UIElement:
     @classmethod
     def get_eventBus(cls, eventBus: "EventManager"):
         cls._EVENTBUS = eventBus
+
+
+    @classmethod
+    def get_spriteManager(cls, SpriteManager: "SpriteManager"):
+        cls._SPRITE = SpriteManager
 
     
     def __init__(self, x: int, y: int, w: int, h: int, uid: str | None = None):

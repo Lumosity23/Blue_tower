@@ -14,7 +14,7 @@ class Settings(UIPanel):
         self.game = game
         self.st = self.game.st
         # On centre le panel
-        super().__init__(0, 0, self.st.SCREEN_WIDTH, self.st.SCREEN_HEIGHT, uid="SettingsPanel")
+        super().__init__(0, 0, self.st.SCREEN_WIDTH, self.st.SCREEN_HEIGHT, color=(50,50,50), uid="SettingsPanel")
 
         self.channels = {
             "Master": "masterV",

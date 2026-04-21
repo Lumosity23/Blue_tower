@@ -52,15 +52,14 @@ class Grid:
             world_x = col * self.cell_size
             # RÈGLE 1 : World -> Screen
             screen_x = world_x - cam_offset.x 
-            pygame.draw.line(surface, grid_color, (screen_x, 0), (screen_x, surface.get_height()), width=2)
+            pygame.draw.line(surface, grid_color, (screen_x, 0), (screen_x, surface.get_height())) # , width=2
 
         # 3. Lignes horizontales
         for row in range(start_row, end_row + 1):
             world_y = row * self.cell_size
             # RÈGLE 1 : World -> Screen
             screen_y = world_y - cam_offset.y
-            pygame.draw.line(surface, grid_color, (0, screen_y), (surface.get_width(), screen_y), width=2)
-
+            pygame.draw.line(surface, grid_color, (0, screen_y), (surface.get_width(), screen_y)) # , width=2
 
     def get_cell_pos(self, world_x, world_y) -> tuple[int, int]:
         ''' World to grid '''
@@ -89,6 +88,13 @@ class Grid:
             return self.game.st.EMPTY
 
 
+    def get_cell_cost(self, world_x, world_y, iscellpos=False) -> int:
+
+        value = self.get_cell_value(world_x, world_y)
+
+        return self.game.st.TYPE_COST.get(value, 1)
+    
+
     def get_build_at(self, world_x, world_y, iscellpos=False):
         # Recupere le batiment GRIDPOS
         if iscellpos:
@@ -104,7 +110,22 @@ class Grid:
                 return build
         
             return self.game.st.EMPTY
-        
+    
+
+    def remove_build_at(self, world_x, world_y, iscellpos=False) -> None:
+        # Recupere le batiment GRIDPOS
+        if iscellpos:
+            gx, gy = world_x, world_y
+            build = self.grid.get((gx, gy))
+    
+        # Recupere le batiment CELLPOS
+        else : 
+            gx, gy = self.get_cell_pos(world_x, world_y)
+            build = self.grid.get((gx, gy))
+
+        if build != self.game.st.EMPTY and not None :
+            self.grid[(gx, gy)] = self.game.st.EMPTY
+
 
     def set_cell_value(self, world_x, world_y, value):
         gx, gy = int(world_x // self.cell_size), int(world_y // self.cell_size)
@@ -139,8 +160,7 @@ class Grid:
 
     def update_flow_field(self, target_world_pos):
         # Même logique qu'avant, mais plus légère sans l'objet Cell
-        target_node = (int(target_world_pos[0] // self.cell_size), 
-                       int(target_world_pos[1] // self.cell_size))
+        target_node = self.get_cell_pos(*target_world_pos)
         
         self.flow_field = {target_node: 0}
         pq = [(0, target_node)]
@@ -151,11 +171,8 @@ class Grid:
 
             for neighbor in self.getValidNeighbors(*current_node):
                 # Récupère le coût depuis Settings via le type (String)
-                cell_type = self.grid[neighbor]
-                weight = self.game.st.TYPE_COST.get(cell_type, 1)
-                
-                # if weight == 0: continue # Infranchissable
-                
+                weight = self.get_cell_cost(*neighbor, iscellpos=True)
+
                 new_cost = current_cost + weight
                 if new_cost < self.flow_field.get(neighbor, float('inf')):
                     self.flow_field[neighbor] = new_cost

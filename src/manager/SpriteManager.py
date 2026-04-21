@@ -123,3 +123,82 @@ class SpriteManager:
         # print(f"animation de : {num_frames} frames")
 
         return tiles
+    
+
+    def get_ui_panel(self, target_width, target_height, color: pygame.Color=(91, 110, 225), sprite_id="sample_ui", slice_size=16):
+        
+        # Sécurité minimale pour éviter les crashs si la taille demandée est plus petite que les 4 coins
+        target_width = max(target_width, slice_size * 2)
+        target_height = max(target_height, slice_size * 2)
+
+        panel = pygame.Surface((target_width, target_height), pygame.SRCALPHA)
+        tiles = self.slice_sprite(sprite_id, (slice_size, slice_size))
+
+        top_left, top_mid, top_right = tiles[(0,0)], tiles[(1,0)], tiles[(2,0)]
+        mid_left, center,  mid_right = tiles[(0,1)], tiles[(1,1)], tiles[(2,1)]
+        bot_left, bot_mid, bot_right = tiles[(0,2)], tiles[(1,2)], tiles[(2,2)]
+
+        # 1. Dessiner les 4 coins (Pas de changement)
+        panel.blit(top_left, (0, 0))
+        panel.blit(top_right, (target_width - slice_size, 0))
+        panel.blit(bot_left, (0, target_height - slice_size))
+        panel.blit(bot_right, (target_width - slice_size, target_height - slice_size))
+
+        # --- NOUVELLE METHODE SANS OVERLAP ---
+        
+        # Limites où on doit s'arrêter de dessiner le centre et les bords
+        end_x = target_width - slice_size
+        end_y = target_height - slice_size
+
+        # 2. Bords horizontaux (Haut et Bas)
+        current_x = slice_size
+        while current_x < end_x:
+            # On calcule la largeur restante à remplir. 
+            # Si c'est plus grand que la tuile, on prend la taille de la tuile. Sinon, on prend juste le reste.
+            draw_width = min(slice_size, end_x - current_x)
+            
+            # On coupe la tuile si nécessaire
+            cropped_top = top_mid.subsurface((0, 0, draw_width, slice_size))
+            cropped_bot = bot_mid.subsurface((0, 0, draw_width, slice_size))
+            
+            panel.blit(cropped_top, (current_x, 0))
+            panel.blit(cropped_bot, (current_x, target_height - slice_size))
+            current_x += draw_width
+
+        # 3. Bords verticaux (Gauche et Droite)
+        current_y = slice_size
+        while current_y < end_y:
+            draw_height = min(slice_size, end_y - current_y)
+            
+            cropped_left = mid_left.subsurface((0, 0, slice_size, draw_height))
+            cropped_right = mid_right.subsurface((0, 0, slice_size, draw_height))
+            
+            panel.blit(cropped_left, (0, current_y))
+            panel.blit(cropped_right, (target_width - slice_size, current_y))
+            current_y += draw_height
+
+        # 4. Remplir le centre (Double boucle adaptative)
+        current_x = slice_size
+        while current_x < end_x:
+            draw_width = min(slice_size, end_x - current_x)
+            
+            current_y = slice_size
+            while current_y < end_y:
+                draw_height = min(slice_size, end_y - current_y)
+                
+                # On coupe le centre selon X ET selon Y !
+                cropped_center = center.subsurface((0, 0, draw_width, draw_height))
+                panel.blit(cropped_center, (current_x, current_y))
+                
+                current_y += draw_height
+            current_x += draw_width
+                
+        # --- COLORISATION ---
+        panel_color = pygame.Surface((target_width, target_height), pygame.SRCALPHA)
+        panel_color.fill(color)
+        
+        # Astuce : Utilise BLEND_RGBA_MULT ou BLEND_RGB_MULT
+        # BLEND_MULT basique peut parfois modifier l'alpha de tes coins transparents et faire des carrés bizarres.
+        panel.blit(panel_color, (0,0), special_flags=pygame.BLEND_RGBA_MULT)
+
+        return panel

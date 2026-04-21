@@ -18,6 +18,7 @@ class Entity:
         # ID de l'element
         self.uid: str = uid
         self.tag: str = tag
+        self.type = "ENTITY"
 
         # Position dans l'espace du niveau
         self.rect = pygame.Rect(x, y, w, h)
@@ -114,7 +115,9 @@ class Entity:
         self.set_child("active", True)
         self.set_child("visible", True)
         self.set_child("alive", True)
-
+        if hasattr(self, "hp_bar"):
+            self.hp_bar.visible = False
+            
 
     def kill(self):
         ''' Détruit l'entité et ses enfants en se retirant de l'ecran '''

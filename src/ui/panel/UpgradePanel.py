@@ -16,16 +16,16 @@ class UpgradePanel(UIPanel):
     def __init__( self, game: "App" ):
 
         self.game = game
-        w, h = 400, game.st.SCREEN_HEIGHT
+        w, h = 400, game.st.SCREEN_HEIGHT - 40
         self.size = w, h
 
         with open( rp(self.game.st.UPGRADE_SCHEMA_PATH), 'r') as f:
             self.schemas: dict[dict] = json.load(f)
 
-        super().__init__( game.st.SCREEN_WIDTH, 0, w, h, uid="InfoPanel" )
+        super().__init__( game.st.SCREEN_WIDTH - 20, 20, w, h, uid="InfoPanel" )
 
         self.set_label("Ugrade", 100)
-        self.set_animation( (self.game.st.SCREEN_WIDTH - self.size[0], 0), (self.game.st.SCREEN_WIDTH, 0), 1000 )
+        self.set_animation( (self.game.st.SCREEN_WIDTH - self.size[0] - 20, 20), (self.game.st.SCREEN_WIDTH, 20), 1000 )
         self.visible = False
 
         self.back_btn = UIButton(self.rect.width - 40, 10, "X", lambda: self.kill(True), (50, 50, 50), uid=f"{self.uid}_btn_back")

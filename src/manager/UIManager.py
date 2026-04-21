@@ -31,7 +31,8 @@ class UIManager():
         # On injecte les données dans la classe statique
         UIElement.load_layout_cache(self.layout)
         UIElement.get_eventBus(self.game.eventManager)
-
+        UIElement.get_spriteManager(self.game.spriteManager)
+        
         # Init de notre bloc logic pour le UI
         self.root = UIElement(0, 0, self.st.SCREEN_WIDTH, self.st.SCREEN_HEIGHT, uid="ROOT")
 
@@ -85,6 +86,7 @@ class UIManager():
                 self.game.eventManager.publish( "ELEMENT_UNSELECTED" )
                 self.game.eventManager.publish( "ELEMENT_UNUPGRADE" )
                 return True
+            
             else : 
                 self.game.eventManager.publish( "CLOSE_SHOP" )
                 return True
@@ -294,5 +296,5 @@ class UIManager():
         # On écrit dans le fichier
         with open(rp(self.layout_path), 'w') as f:
             json.dump(data_to_save, f, indent=4) # indent=4 pour que ce soit joli à lire
-            
+   
         print(f"Layout sauvegardé dans {self.layout_path} !")

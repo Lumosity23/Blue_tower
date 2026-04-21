@@ -68,11 +68,16 @@ class OSD(UIElement):
         self.msg_wave.stat_value.rect.midleft = self.msg_wave.rect.width, self.msg_wave.rect.h // 2
         self.msg_wave.visible = False
 
+        # Profile UI
+        self.profile = UIElement(0, 0, 189*2, 81*2, "profile_ui")
+        profile = self.game.spriteManager.get_sprite_resize("profile_ui", (189*2, 81*2))
+        self.profile.image.blit(profile, (0,0))
+
         # Liste des text enfants
         if not self.wallet:
-            self.text = [self.wave_text, self.number_wave, self.nmb, self.FPS, self.gameMode, self.kernel_hp_bar, self.msg_wave]
+            self.text = [self.wave_text, self.number_wave, self.nmb, self.FPS, self.gameMode, self.kernel_hp_bar, self.msg_wave, self.profile]
         else:
-            self.text = [self.wave_text, self.number_wave, self.nmb, self.FPS, self.gameMode, self.wallet, self.kernel_hp_bar, self.msg_wave]
+            self.text = [self.wave_text, self.number_wave, self.nmb, self.FPS, self.gameMode, self.wallet, self.kernel_hp_bar, self.msg_wave, self.profile]
 
         # ajout des text aux enfants
         for child in self.text:

@@ -27,12 +27,14 @@ class Building(Entity):
 
         # État
         self.meta_state = "IDLE" # IDLE, HOVER, SELECTED
+        self.type = "BUILDING"
 
         # Visuel
         self.source_image = self.game.spriteManager.get_custom_sprite(
             data.get("sprite_id"), (w, h)
         )
         self.image = self.source_image.copy()
+        self.current_image = self.source_image.copy()
 
         # Stats issues du dictionnaire
         self.max_hp = data.get("hp", 100)
@@ -107,7 +109,8 @@ class Building(Entity):
             self.range_circle.visible = (self.meta_state in ["HOVER", "SELECTED"])
         
         # On recrée l'image avec un feedback (ex: contour blanc si sélectionné)
-        # self.image = self.source_image.copy()
+        self.image = self.current_image.copy()
+
         if self.meta_state == "SELECTED":
             pygame.draw.rect(self.image, (255, 255, 255), (0, 0, self.rect.w, self.rect.h), 2)
         elif self.meta_state == "HOVER":
@@ -124,3 +127,13 @@ class Building(Entity):
         # Logique de destruction (libérer la grille)
         self.game.eventManager.publish("BUILDING_DESTROYED", self)
         super().kill()
+
+
+    def spawn(self, x, y, uid=None, **kwargs):
+        
+        self.current_hp = self.max_hp
+        self.kills = 0
+        self.hp_bar.update_values(self.current_hp, self.max_hp)
+        self.hp_bar.visible = False
+        self.alive = True
+        super().spawn(x, y, uid, **kwargs)

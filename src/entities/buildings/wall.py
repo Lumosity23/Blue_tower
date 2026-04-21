@@ -36,6 +36,21 @@ class Wall(Building):
                 side = self._SIDES[s]
                 self.image.blit(side, (0,0))
 
+        self.current_image = self.image
+        self.rect = self.current_image.get_rect()
+
+
+    def reset_config(self) -> None:
+
+        for side in self.config:
+            self.config[side] = False
+
+
+    def spawn(self, x, y, uid=None, **kwargs):
+        
+        self.reset_config()
+        super().spawn(x, y, uid, **kwargs)
+        
 
 Wall.ui_config(
     ("ICON", "WALL", "image"),

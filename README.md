@@ -1,3 +1,19 @@
+## Future MAJ/Ajout pour le jeu (d'ici la fin avril)
+Un systeme d'armes pour le joueurs.
+
+## Update du JOUR ( 19 avril )
+Ajout de surface pixel pour respecter plus la DA du jeu
+
+### voici un petit screen de cet Ajouts :
+![](assets/ScreenShots/update_21_avril.png)
+
+
+## [Challenge](CHALLENGE.md)
+
+* Je metrai ici tout les petits et grands defis du jeu que ceux qui ont le coeur de les relever et comme ca 
+participer au projet tout en apprenant de nouvelles choses !
+
+* comming soon...
 
 # BLUE TOWER #
 Est un jeu tower defense/degestion une sorte de `Bloon TD5` fusionner avec un `Clash of Clan` le tout code en python avec Pygame.
@@ -27,7 +43,7 @@ L'idée derrière ce jeu est d’apprendre la programmation et le Game Dev.
 ## Quelques images de mon jeu
 
 ### Blue 
-<img src="assets/player.png" alt="drawing" width="50">
+<img src="assets/sprite/player.png" alt="drawing" width="50">
  personnage principale [ vue de face ]
 
 ### Image (Menu/Pause/Shop/Ingame)
@@ -44,22 +60,6 @@ L'idée derrière ce jeu est d’apprendre la programmation et le Game Dev.
 ### SETTINGS
 ![](assets/ScreenShots/Screenshot_settings.png)
 
-## Future MAJ/Ajout pour le jeu (d'ici le debut avril)
-Un systeme d'upgrade pour les batiments et le joueurs.
-
-## Update du JOUR ( 19 avril )
-Ajout des mur dynamique !!!!
-
-### voici un petit screen de cet Ajouts :
-![](assets/ScreenShots/update_19_avril.png)
-
-
-## [Challenge](CHALLENGE.md)
-
-* Je metrai ici tout les petits et grands defis du jeu que ceux qui ont le coeur de les relever et comme ca 
-participer au projet tout en apprenant de nouvelles choses !
-
-* comming soon...
 
 
 ## how to play
