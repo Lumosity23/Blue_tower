@@ -1,7 +1,7 @@
 ## Future MAJ/Ajout pour le jeu (d'ici la fin avril)
 Un systeme d'armes pour le joueurs.
 
-## Update du JOUR ( 19 avril )
+## Update du JOUR ( 21 avril )
 Ajout de surface pixel pour respecter plus la DA du jeu
 
 ### voici un petit screen de cet Ajouts :
