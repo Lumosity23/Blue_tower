@@ -12,7 +12,8 @@ class UIIcon(UIElement):
     def setup(self, sprite: pygame.Surface) -> None:
 
         self.image = sprite
-        self.rect = self.image.get_rect()
+        x, y = self.rect.topleft
+        self.rect = self.image.get_rect(**{"topleft": (x, y)})
     
 
     def custom_setup(self, mid_pos, y, label, sprite: pygame.Surface, **kwargs) -> None:
@@ -22,8 +23,16 @@ class UIIcon(UIElement):
 
         # Setup des nouveaux parametres
         self.image = sprite
-        self.rect = self.image.get_rect()
-        self.rect.midtop = mid_pos, y
+        
+        # On ne redéfinit la position que si aucune config n'a été chargée
+        if not self.cfg_loaded:
+            self.rect = self.image.get_rect()
+            self.rect.midtop = mid_pos, y
+        else:
+            # Sinon on garde le topleft chargé mais on met à jour la taille via l'image
+            x, y = self.rect.topleft
+            self.rect = self.image.get_rect(topleft=(x, y))
+
         self.label = UIText(0, 0, label)
         self.label.rect.midtop = self.rect.width / 2, self.rect.height + 10
         self.add_child(self.label)

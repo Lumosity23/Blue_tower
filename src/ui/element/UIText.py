@@ -33,6 +33,7 @@ class UIText(UIElement):
         self.text = callback
         self.text_update = text_update
         self.color = color
+        self.align = align
         self.cache = {}
         self.st = Settings()
         self.font = self.set_font(size_text)
@@ -44,7 +45,8 @@ class UIText(UIElement):
             self.image = self.font.render(text, True, self.color)
 
         if not self.cfg_loaded:
-            self.rect = self.image.get_rect()
+            # On utilise les coordonnées x, y avec l'alignement demandé
+            self.rect = self.image.get_rect(**{self.align: (x, y)})
 
 
     def set_font(self, size) -> pygame.font.Font:
@@ -66,7 +68,8 @@ class UIText(UIElement):
             self.color = color
 
         self.image = self.font.render(text, True, self.color)
-        self.rect = self.image.get_rect()
+        # On met à jour la taille du rect tout en conservant la position actuelle
+        self.rect = self.image.get_rect(topleft=self.rect.topleft)
     
 
     def set_callback(self, cb) -> None:

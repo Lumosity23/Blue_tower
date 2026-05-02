@@ -1,15 +1,23 @@
-from ui.UIPanel import UIPanel
-from ui.UIButton import UIButton
-from ui.UIText import UIText
 from typing import TYPE_CHECKING
+
+from ui.element.UIButton import UIButton
+from ui.element.UIPanel import UIPanel
+from ui.element.UIText import UIText
+
 if TYPE_CHECKING:
     from main import App
 
 
 class PausePanel(UIPanel):
-
-    def __init__(self, game: "App", uid = None):
-        super().__init__(-50, -50, game.st.SCREEN_WIDTH + 100, game.st.SCREEN_HEIGHT + 100, (45, 45, 45), uid)
+    def __init__(self, game: "App", uid=None):
+        super().__init__(
+            -50,
+            -50,
+            game.st.SCREEN_WIDTH + 100,
+            game.st.SCREEN_HEIGHT + 100,
+            (45, 45, 45),
+            uid,
+        )
         self.game = game
         self.st = game.st
         self.visible = False
@@ -22,16 +30,38 @@ class PausePanel(UIPanel):
             child_uid = ""
 
         text = UIText(self.rect.w // 2, 40, "PAUSE", 100, uid=f"{child_uid}title_PAUSE")
-        btn_resume = UIButton(100, 100, "RESUME", self.resume, (100, 100, 100), uid=f"{child_uid}btn_resume")
-        btn_restart = UIButton(100, 100, "RESTART", self.restart_game, (255,0,0), uid=f"{child_uid}btn_restart")
-        btn_quit = UIButton(100, 100, "QUIT", self.quit, (255,0,0), uid=f"{child_uid}btn_quit")
-        btn_setting = UIButton(0, 0, "SETTINGS", self.setting, (25, 65, 135), uid=f"{self.uid}_btn_settings")
+        btn_resume = UIButton(
+            100,
+            100,
+            "RESUME",
+            self.resume,
+            (100, 100, 100),
+            uid=f"{child_uid}btn_resume",
+        )
+        btn_restart = UIButton(
+            100,
+            100,
+            "RESTART",
+            self.restart_game,
+            (255, 0, 0),
+            uid=f"{child_uid}btn_restart",
+        )
+        btn_quit = UIButton(
+            100, 100, "QUIT", self.quit, (255, 0, 0), uid=f"{child_uid}btn_quit"
+        )
+        btn_setting = UIButton(
+            0,
+            0,
+            "SETTINGS",
+            self.setting,
+            (25, 65, 135),
+            uid=f"{self.uid}_btn_settings",
+        )
 
         children = [text, btn_quit, btn_restart, btn_resume, btn_setting]
 
         for child in children:
             self.add_child(child)
-
 
     def restart_game(self) -> None:
 
@@ -44,11 +74,11 @@ class PausePanel(UIPanel):
         return
 
     def resume(self) -> None:
-        
+
         self.game.eventManager.publish("UNPAUSE")
         return
 
-    def setting(self) ->  None:
+    def setting(self) -> None:
 
         self._EVENTBUS.publish("OPEN_SETTINGS", "PAUSE")
         return

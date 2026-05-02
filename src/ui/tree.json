@@ -1,48 +1,33 @@
 {
     "ROOT": {
         "ShopPanel": {
-            "text_panel": "fin de branche",
-            "ShopPanel_00": {
-                "ShopPanel_00_label": "fin de branche",
-                "ShopPanel_00_sprite": "fin de branche",
-                "ShopPanel_00_btn": {
-                    "ShopPanel_00_btn_text": "fin de branche"
+            "SHOP_text_panel": "fin de branche",
+            "ShopPanel__0": {
+                "ShopPanel__0_label": "fin de branche",
+                "ShopPanel__0_sprite": "fin de branche",
+                "ShopPanel__0_btn": {
+                    "ShopPanel__0_btn_text": "fin de branche"
                 }
             },
-            "ShopPanel_01": {
-                "ShopPanel_01_label": "fin de branche",
-                "ShopPanel_01_sprite": "fin de branche",
-                "ShopPanel_01_btn": {
-                    "ShopPanel_01_btn_text": "fin de branche"
+            "ShopPanel__1": {
+                "ShopPanel__1_label": "fin de branche",
+                "ShopPanel__1_sprite": "fin de branche",
+                "ShopPanel__1_btn": {
+                    "ShopPanel__1_btn_text": "fin de branche"
                 }
             },
-            "ShopPanel_02": {
-                "ShopPanel_02_label": "fin de branche",
-                "ShopPanel_02_sprite": "fin de branche",
-                "ShopPanel_02_btn": {
-                    "ShopPanel_02_btn_text": "fin de branche"
+            "ShopPanel__2": {
+                "ShopPanel__2_label": "fin de branche",
+                "ShopPanel__2_sprite": "fin de branche",
+                "ShopPanel__2_btn": {
+                    "ShopPanel__2_btn_text": "fin de branche"
                 }
-            },
-            "ShopPanel_10": {
-                "ShopPanel_10_label": "fin de branche",
-                "ShopPanel_10_sprite": "fin de branche",
-                "ShopPanel_10_btn": {
-                    "ShopPanel_10_btn_text": "fin de branche"
-                }
-            },
-            "ShopPanel_11": {
-                "ShopPanel_11_label": "fin de branche",
-                "ShopPanel_11_sprite": "fin de branche",
-                "ShopPanel_11_btn": {
-                    "ShopPanel_11_btn_text": "fin de branche"
-                }
-            },
-            "ShopPanel_12": {
-                "ShopPanel_12_label": "fin de branche",
-                "ShopPanel_12_sprite": "fin de branche",
-                "ShopPanel_12_btn": {
-                    "ShopPanel_12_btn_text": "fin de branche"
-                }
+            }
+        },
+        "InfoPanel": {
+            "Ugrade_text_panel": "fin de branche",
+            "InfoPanel_btn_back": {
+                "InfoPanel_btn_back_text": "fin de branche"
             }
         },
         "OSD": {
@@ -54,7 +39,11 @@
             "OSD_creatif_text": "fin de branche",
             "OSD_KERNEL_HP": {
                 "OSD_KERNEL_HP_text": "fin de branche"
-            }
+            },
+            "OSD_msg_wave": {
+                "None": {}
+            },
+            "profile_ui": "fin de branche"
         },
         "GameOverPanel": {
             "GameOverPanel_btn_restart": {
@@ -66,6 +55,7 @@
             "GameOverPanel_title_gameOver": "fin de branche"
         },
         "PausePanel": {
+            "PausePanel_title_PAUSE": "fin de branche",
             "PausePanel_btn_quit": {
                 "PausePanel_btn_quit_text": "fin de branche"
             },
@@ -75,18 +65,178 @@
             "PausePanel_btn_resume": {
                 "PausePanel_btn_resume_text": "fin de branche"
             },
-            "PausePanel_title_PAUSE": "fin de branche"
+            "PausePanel_btn_settings": {
+                "PausePanel_btn_settings_text": "fin de branche"
+            }
         },
         "MenuPanel": {
-            "text_panel": "fin de branche",
+            "Blue Tower_text_panel": "fin de branche",
+            "MenuPanel_text_more_info": "fin de branche",
+            "MenuPanel_text_address": "fin de branche",
+            "MenuPanel_text_how_to_play": "fin de branche",
             "MenuPanel_btn_quit": {
                 "MenuPanel_btn_quit_text": "fin de branche"
             },
-            "MenuPanel_btn_restart": {
-                "MenuPanel_btn_restart_text": "fin de branche"
+            "MenuPanel_btn_character": {
+                "MenuPanel_btn_character_text": "fin de branche"
             },
-            "MenuPanel_btn_resume": {
-                "MenuPanel_btn_resume_text": "fin de branche"
+            "MenuPanel_btn_settings": {
+                "MenuPanel_btn_settings_text": "fin de branche"
+            },
+            "MenuPanel_btn_play": {
+                "MenuPanel_btn_play_text": "fin de branche"
+            }
+        },
+        "SettingsPanel": {
+            "Settings_text_panel": "fin de branche",
+            "Settings_DemoScroll": {
+                "scroll_txt_0": "fin de branche",
+                "scroll_btn_0": {
+                    "scroll_btn_0_text": "fin de branche"
+                },
+                "scroll_txt_1": "fin de branche",
+                "scroll_btn_1": {
+                    "scroll_btn_1_text": "fin de branche"
+                },
+                "scroll_txt_2": "fin de branche",
+                "scroll_btn_2": {
+                    "scroll_btn_2_text": "fin de branche"
+                },
+                "scroll_txt_3": "fin de branche",
+                "scroll_btn_3": {
+                    "scroll_btn_3_text": "fin de branche"
+                },
+                "scroll_txt_4": "fin de branche",
+                "scroll_btn_4": {
+                    "scroll_btn_4_text": "fin de branche"
+                },
+                "scroll_txt_5": "fin de branche",
+                "scroll_btn_5": {
+                    "scroll_btn_5_text": "fin de branche"
+                },
+                "scroll_txt_6": "fin de branche",
+                "scroll_btn_6": {
+                    "scroll_btn_6_text": "fin de branche"
+                },
+                "scroll_txt_7": "fin de branche",
+                "scroll_btn_7": {
+                    "scroll_btn_7_text": "fin de branche"
+                },
+                "scroll_txt_8": "fin de branche",
+                "scroll_btn_8": {
+                    "scroll_btn_8_text": "fin de branche"
+                },
+                "scroll_txt_9": "fin de branche",
+                "scroll_btn_9": {
+                    "scroll_btn_9_text": "fin de branche"
+                },
+                "scroll_txt_10": "fin de branche",
+                "scroll_btn_10": {
+                    "scroll_btn_10_text": "fin de branche"
+                },
+                "scroll_txt_11": "fin de branche",
+                "scroll_btn_11": {
+                    "scroll_btn_11_text": "fin de branche"
+                },
+                "scroll_txt_12": "fin de branche",
+                "scroll_btn_12": {
+                    "scroll_btn_12_text": "fin de branche"
+                },
+                "scroll_txt_13": "fin de branche",
+                "scroll_btn_13": {
+                    "scroll_btn_13_text": "fin de branche"
+                },
+                "scroll_txt_14": "fin de branche",
+                "scroll_btn_14": {
+                    "scroll_btn_14_text": "fin de branche"
+                },
+                "scroll_txt_15": "fin de branche",
+                "scroll_btn_15": {
+                    "scroll_btn_15_text": "fin de branche"
+                },
+                "scroll_txt_16": "fin de branche",
+                "scroll_btn_16": {
+                    "scroll_btn_16_text": "fin de branche"
+                },
+                "scroll_txt_17": "fin de branche",
+                "scroll_btn_17": {
+                    "scroll_btn_17_text": "fin de branche"
+                },
+                "scroll_txt_18": "fin de branche",
+                "scroll_btn_18": {
+                    "scroll_btn_18_text": "fin de branche"
+                },
+                "scroll_txt_19": "fin de branche",
+                "scroll_btn_19": {
+                    "scroll_btn_19_text": "fin de branche"
+                },
+                "scroll_txt_20": "fin de branche",
+                "scroll_btn_20": {
+                    "scroll_btn_20_text": "fin de branche"
+                },
+                "scroll_txt_21": "fin de branche",
+                "scroll_btn_21": {
+                    "scroll_btn_21_text": "fin de branche"
+                },
+                "scroll_txt_22": "fin de branche",
+                "scroll_btn_22": {
+                    "scroll_btn_22_text": "fin de branche"
+                },
+                "scroll_txt_23": "fin de branche",
+                "scroll_btn_23": {
+                    "scroll_btn_23_text": "fin de branche"
+                },
+                "scroll_txt_24": "fin de branche",
+                "scroll_btn_24": {
+                    "scroll_btn_24_text": "fin de branche"
+                }
+            },
+            "SettingsPanel_Master": {
+                "None": {}
+            },
+            "SettingsPanel_plus_Master": {
+                "SettingsPanel_plus_Master_text": "fin de branche"
+            },
+            "SettingsPanel_moins_Master": {
+                "SettingsPanel_moins_Master_text": "fin de branche"
+            },
+            "SettingsPanel_Music": {
+                "None": {}
+            },
+            "SettingsPanel_plus_Music": {
+                "SettingsPanel_plus_Music_text": "fin de branche"
+            },
+            "SettingsPanel_moins_Music": {
+                "SettingsPanel_moins_Music_text": "fin de branche"
+            },
+            "SettingsPanel_SFX": {
+                "None": {}
+            },
+            "SettingsPanel_plus_SFX": {
+                "SettingsPanel_plus_SFX_text": "fin de branche"
+            },
+            "SettingsPanel_moins_SFX": {
+                "SettingsPanel_moins_SFX_text": "fin de branche"
+            },
+            "SettingsPanel_MuteLabel": "fin de branche",
+            "SettingsPanel_MuteBtn": {
+                "SettingsPanel_MuteBtn_text": "fin de branche"
+            },
+            "Settings_Back": {
+                "Settings_Back_text": "fin de branche"
+            }
+        },
+        "CharacterPanel": {
+            "CHARACTER_text_panel": "fin de branche",
+            "CharacterPanel_player": "fin de branche",
+            "CharacterPanel_tourniquet": {
+                "CharacterPanel_tourniquet_title": "fin de branche"
+            },
+            "CharacterPanel_select_btn": {
+                "CharacterPanel_select_btn_text": "fin de branche"
+            },
+            "CharacterPanel_back": {
+                "CharacterPanel_back_text": "fin de branche"
             }
         }
     }

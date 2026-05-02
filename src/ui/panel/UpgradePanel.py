@@ -1,34 +1,46 @@
 import json
-from utils.path import resource_path as rp
-from ui.UIPanel import UIPanel
-from ui.UIProgressBar import UIProgressBar
-from ui.UIButton import UIButton
-from ui.UIUpgradeBoard import UIUpgradeBoard
 from typing import TYPE_CHECKING
+
+from ui.element.UIButton import UIButton
+from ui.element.UIPanel import UIPanel
+from ui.element.UIUpgradeBoard import UIUpgradeBoard
+from utils.path import resource_path as rp
+
 if TYPE_CHECKING:
-    from main import App
+    from element.UIElement import UIElement
+
     from entities.Entity import Entity
-    from UIElement import UIElement
+    from main import App
 
 
 class UpgradePanel(UIPanel):
-
-    def __init__( self, game: "App" ):
+    def __init__(self, game: "App"):
 
         self.game = game
         w, h = 400, game.st.SCREEN_HEIGHT - 40
         self.size = w, h
 
-        with open( rp(self.game.st.UPGRADE_SCHEMA_PATH), 'r') as f:
+        with open(rp(self.game.st.UPGRADE_SCHEMA_PATH), "r") as f:
             self.schemas: dict[dict] = json.load(f)
 
-        super().__init__( game.st.SCREEN_WIDTH - 20, 20, w, h, uid="InfoPanel" )
+        super().__init__(game.st.SCREEN_WIDTH - 20, 20, w, h, uid="InfoPanel")
 
         self.set_label("Ugrade", 100)
-        self.set_animation( (self.game.st.SCREEN_WIDTH - self.size[0] - 20, 20), (self.game.st.SCREEN_WIDTH, 20), 1000 )
+        self.set_animation(
+            (self.game.st.SCREEN_WIDTH - self.size[0] - 20, 20),
+            (self.game.st.SCREEN_WIDTH, 20),
+            1000,
+        )
         self.visible = False
 
-        self.back_btn = UIButton(self.rect.width - 40, 10, "X", lambda: self.kill(True), (50, 50, 50), uid=f"{self.uid}_btn_back")
+        self.back_btn = UIButton(
+            self.rect.width - 40,
+            10,
+            "X",
+            lambda: self.kill(True),
+            (50, 50, 50),
+            uid=f"{self.uid}_btn_back",
+        )
         self.add_child(self.back_btn)
 
         # Entity INFO
@@ -37,9 +49,9 @@ class UpgradePanel(UIPanel):
         self.active_children: list["UIElement"] = []
 
         # Souscription
-        self.game.eventManager.subscribe( "ELEMENT_UPGRADE", self.show_element )
-        self.game.eventManager.subscribe( "ELEMENT_UNUPGRADE", self.kill )     
-        
+        self.game.eventManager.subscribe("ELEMENT_UPGRADE", self.show_element)
+        self.game.eventManager.subscribe("ELEMENT_UNUPGRADE", self.kill)
+
         # Test de UIUpgradeBoard
         """ test_upboard = UIUpgradeBoard(20, 150, self.rect.width - 40, 220, "Test")
         test_upboard.set_progress_bar(100, lambda: 50) # max_val, curr_val
@@ -47,39 +59,34 @@ class UpgradePanel(UIPanel):
 
         self.add_child(test_upboard) """
 
-
     def test_call(self) -> None:
         print("Test du UIUpgradeBoard")
 
+    def show_element(self, entity: "Entity") -> None:
 
-    def show_element( self, entity: "Entity" ) -> None:
-
-        self.game.eventManager.publish( "ELEMENT_UNSELECTED" )
+        self.game.eventManager.publish("ELEMENT_UNSELECTED")
         self.current_entity = entity
         self.make_data(entity)
         super().show()
-    
 
-    def kill(self, back: bool=False):
-        
+    def kill(self, back: bool = False):
+
         if not self.visible:
             return
         if back:
             self._EVENTBUS.publish("ELEMENT_SELECTED", self.current_entity)
 
         super().kill()
-    
 
-    def reset_data_child( self ) -> None:
+    def reset_data_child(self) -> None:
 
         while self.active_children:
             child = self.active_children.pop(0)
             child.active = False
             self.remove_child(child)
 
-
     def make_data(self, entity: "Entity") -> None:
-        
+
         # Setup de notre nouvelle entite
         self.reset_data_child()
         self.current_entity = entity
@@ -87,13 +94,15 @@ class UpgradePanel(UIPanel):
         if entity.tag in self.schemas:
             entity_schema = self.schemas.get(entity.tag)
             # print(entity_schema)
-        else: 
+        else:
             # print("rien trouver dans les donner !")
             return
 
         # Variable de pos pour les different elements
-        pos_x = 20 # constante le long de notre infoPanel
-        pos_y = self.label.rect.bottom + 70 # valeur qui va augmenter au cours de la boucle de creation
+        pos_x = 20  # constante le long de notre infoPanel
+        pos_y = (
+            self.label.rect.bottom + 70
+        )  # valeur qui va augmenter au cours de la boucle de creation
         padding = 20
 
         for upgrade in entity_schema:
@@ -109,20 +118,27 @@ class UpgradePanel(UIPanel):
 
                     # Recupere les eventuelles pointers
                     def get_attribut(attr):
-                        if attr is None: return None
+                        if attr is None:
+                            return None
                         if hasattr(entity, attr):
-                             return entity.__getattribute__(attr)
-                        print(f"aucun attribut du nom de {attr} n'as ete trouver sur {entity.__name__()}")
-                    
+                            return entity.__getattribute__(attr)
+                        print(
+                            f"aucun attribut du nom de {attr} n'as ete trouver sur {entity.__name__()}"
+                        )
+
                     def get_attribut_pointer(attr):
-                        if attr is None: 
-                            return lambda: None # Retourne une fonction qui renvoie None
+                        if attr is None:
+                            return lambda: (
+                                None
+                            )  # Retourne une fonction qui renvoie None
 
                         if hasattr(entity, attr):
                             # On retourne une fonction (un "getter")
                             return lambda name=attr: getattr(entity, name)
 
-                        print(f"aucun attribut du nom de {attr} sur {type(entity).__name__}")
+                        print(
+                            f"aucun attribut du nom de {attr} sur {type(entity).__name__}"
+                        )
                         return lambda: None
 
                     # Recuperation des info utile
@@ -136,7 +152,9 @@ class UpgradePanel(UIPanel):
                     rate = get_attribut(map.get("rate", 0))
 
                     # La lambda ne sert plus qu'à "emballer" l'appel avec les variables capturées
-                    callback = lambda e=entity, a=attr_name, r=rate, p=price: self.apply_upgrade(e, a, r, p)
+                    callback = lambda e=entity, a=attr_name, r=rate, p=price: (
+                        self.apply_upgrade(e, a, r, p)
+                    )
 
                     element.setup(pos_x, pos_y, self.rect.w - 40, 220, label)
                     element.set_progress_bar(max_val, current_val)
@@ -145,7 +163,6 @@ class UpgradePanel(UIPanel):
                     pos_y += 220 + padding
                     # print(f" ma taille : {rect.h} et mon topleft = {rect.topleft} -> la soustraction des deux dois faire mon topleft = {element.rect.h - pos_y}")
                     break
-    
 
     def apply_upgrade(self, entity, attr_name, rate, price):
         # 1. Vérification du prix (via ton WalletManager par exemple)

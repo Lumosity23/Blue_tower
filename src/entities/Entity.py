@@ -23,6 +23,7 @@ class Entity:
         # Position dans l'espace du niveau
         self.rect = pygame.Rect(x, y, w, h)
         self.pos = pygame.math.Vector2(x, y)
+        self.scroll_offset = pygame.math.Vector2(0, 0)
         self.chunk = None
         self.old_chunk = None
 

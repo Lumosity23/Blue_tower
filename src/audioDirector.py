@@ -17,7 +17,8 @@ class AudioDirector:
             "CLICK_BUTTON": self.button,
             "MENU": self.menu,
             "NEW_GAME": self.in_game,
-            "NEW_WAVE": self.prepare_next_wave
+            "NEW_WAVE": self.prepare_next_wave,
+            "TOGGLE_MUTE": self.mute
         }
 
         # On s'inscrit a toute le event annoncer au debut
@@ -45,6 +46,13 @@ class AudioDirector:
     def in_game(self) -> None:    
         if not self.audio_manager.is_playing() or self.game.state != "PLAYING": 
             self.event_manager.publish("PLAY_MUSIC_LOOP", "MENU_THEME")
+
+
+    def mute(self, is_mute=False) -> None:
+        if is_mute:
+            self.event_manager.publish("SET_MASTER_VOLUME", 0.0)
+        else:
+            self.event_manager.publish("SET_MASTER_VOLUME", 0.5)
 
 
     # Dans ton AudioDirector ou AudioManager

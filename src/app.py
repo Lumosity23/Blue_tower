@@ -1,18 +1,20 @@
 import pygame
-#from pygame.locals import *
-from settings import Settings
-from manager.UIManager import UIManager
-from grid import Grid
-from entities.kernel import Kernel
-from manager.WalletManager import WalletManager
-from manager.EventManager import EventManager
-from manager.SpriteManager import SpriteManager
-from manager.SceneManager import SceneManager
+
 from audioDirector import AudioDirector
+from entities.kernel import Kernel
+from grid import Grid
+from manager.EventManager import EventManager
+from manager.SceneManager import SceneManager
+from manager.SpriteManager import SpriteManager
+from manager.UIManager import UIManager
+from manager.WalletManager import WalletManager
+from manager.SaveManager import SaveManager
+
+# from pygame.locals import *
+from settings import Settings
 
 
 class App:
-
     # initialise les variable important pour pygame
     def __init__(self):
         pygame.init()
@@ -20,37 +22,42 @@ class App:
         self._display_surf = None
         self.clock = pygame.time.Clock()
         self.st = Settings()
-        self.size = self.width, self.height  = self.st.SCREEN_WIDTH, self.st.SCREEN_HEIGHT
-    
+        self.size = self.width, self.height = (
+            self.st.SCREEN_WIDTH,
+            self.st.SCREEN_HEIGHT,
+        )
 
     # on initialise pygame et tout les object utile pour le jeu
     def on_init(self):
 
         # Init des composante de base de pygame
-        self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
-        pygame.display.set_caption('Blue Tower')
+        self._display_surf = pygame.display.set_mode(
+            self.size, pygame.HWSURFACE | pygame.DOUBLEBUF
+        )
+        pygame.display.set_caption("Blue Tower")
 
         # Variable d'etats
-        self.mode = "EASY" # NORMAL, HARD, INSANE, DEMON
-        self.state = "MENU" # PAUSE, GAME_OVER, PLAYING
+        self.mode = "EASY"  # NORMAL, HARD, INSANE, DEMON
+        self.state = "MENU"  # PAUSE, GAME_OVER, PLAYING
         self.edit_mode = False
 
         # Init des differents composante du jeu
+        self.save_manager = SaveManager(self)
         self.eventManager = EventManager()
         self.spriteManager = SpriteManager(self)
 
         # Declaration des variables de base
         self.player = None
-        
+
         self.grid = Grid(self)
-        
+
         self.sceneManager = SceneManager(self)
         self.audio_director = AudioDirector(self)
         self.ui_manager = UIManager(self)
         self.walletManager = WalletManager(self)
         self.kernel = Kernel(self)
 
-        ##### INIT KERNEL #####  <---------- A CHANGER CAR PAS PROPRE !!!! 
+        ##### INIT KERNEL #####  <---------- A CHANGER CAR PAS PROPRE !!!!
         self.sceneManager.buildManager.entities.append(self.kernel)
 
         # Init de HUD
@@ -59,7 +66,7 @@ class App:
         # Declaration des ecoute sur les event
         self.eventManager.subscribe("NEW_GAME", self.start_game)
         self.eventManager.subscribe("QUIT", self.quit)
-        self.eventManager.subscribe( "QUIT_GAME", self.on_menu )
+        self.eventManager.subscribe("QUIT_GAME", self.on_menu)
         self.eventManager.subscribe("PAUSE", self.freeze)
         self.eventManager.subscribe("UNPAUSE", self.unfreeze)
         self.eventManager.subscribe("BUILD_MODE", self.edit)
@@ -68,12 +75,11 @@ class App:
         self.eventManager.publish("MENU")
 
         return True
-        
 
     # Boucle qui va recupree les event
     def on_event(self, event):
         # --- CHAÎNE DE PRIORITÉ DES INPUTS ---
-        
+
         # 1. L'UI a la priorité absolue (ex: clic sur bouton pause)
         if self.ui_manager.handle_event(event):
             return
@@ -86,56 +92,52 @@ class App:
         # 3. Événements système globaux
         if event.type == pygame.QUIT:
             self._running = False
-        
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE and self.state == "PAUSE":
                 self.eventManager.publish("UNPAUSE")
                 return True
-            
+
             if event.key == pygame.K_ESCAPE and self.state == "PLAYING":
                 self.eventManager.publish("PAUSE")
                 return True
-            
+
             if event.key == pygame.K_c:
                 self.grid.show_chunk()
                 return True
 
-
     # la logic et tout le reste se trouve ici dans la boucle
     def on_loop(self, dt):
-        
+
         if self.state == "PLAYING":
             # Le SceneManager s'occupe du tri Z-Sort et du dessin via la caméra
             self.sceneManager.update(dt)
-        
+
             # Verifier si le joueur est toujours en vie
             if not self.player.alive or not self.kernel.alive:
                 self.game_over = True
                 self.eventManager.publish("GAME_OVER")
-        
-        self.ui_manager.root.update(dt)
 
+        self.ui_manager.root.update(dt)
 
     # Affichage et autre rendu visuel
     def on_render(self):
-        self._display_surf.fill((10, 10, 10)) # Fond neutre
-        
+        self._display_surf.fill((10, 10, 10))  # Fond neutre
+
         if self.state == "PLAYING" or self.state == "PAUSE":
             # Le SceneManager s'occupe du tri Z-Sort et du dessin via la caméra
             self.sceneManager.draw(self._display_surf)
 
         # L'UI se dessine par-dessus tout
         self.ui_manager.root.draw(self._display_surf)
-        
-        pygame.display.flip()
 
+        pygame.display.flip()
 
     def start_game(self):
         # Reinitialiser le manager et les entite unique via l'event "RESTART_GAME"
         self.state = "PLAYING"
         self.game_over = False
         self.edit_mode = False
-
 
     def quit(self) -> None:
         self._running = False
@@ -149,21 +151,19 @@ class App:
     def unfreeze(self) -> None:
         self.state = "PLAYING"
 
-    def edit(self, state: bool=False) -> None:
+    def edit(self, state: bool = False) -> None:
         self.edit_mode = state
-
 
     def on_cleanup(self):
         # fermeture propre de pygame
         pygame.quit()
-    
 
     # Boucle principal du jeu
     def on_execute(self):
-        if self.on_init() == False:
+        if not self.on_init():
             self._running = False
- 
-        while( self._running ):
+
+        while self._running:
             for event in pygame.event.get():
                 self.on_event(event)
             # deltaTime (temps par frame)
@@ -172,4 +172,3 @@ class App:
 
             self.on_render()
         self.on_cleanup()
- 

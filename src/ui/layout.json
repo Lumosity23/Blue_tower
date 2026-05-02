@@ -109,7 +109,7 @@
     },
     "InfoPanel": {
         "x": 1920,
-        "y": 0,
+        "y": 20,
         "w": 400,
         "h": 1080
     },
@@ -120,8 +120,8 @@
         "h": 100
     },
     "InfoPanel_btn_upgrade": {
-        "x": 85,
-        "y": 935,
+        "x": 90,
+        "y": 930,
         "w": 236,
         "h": 70
     },
@@ -129,6 +129,18 @@
         "x": 20,
         "y": 10,
         "w": 196,
+        "h": 50
+    },
+    "InfoPanel_btn_sell": {
+        "x": 125,
+        "y": 840,
+        "w": 152,
+        "h": 70
+    },
+    "InfoPanel_btn_sell_text": {
+        "x": 20,
+        "y": 10,
+        "w": 112,
         "h": 50
     },
     "Ugrade_text_panel": {
@@ -312,8 +324,8 @@
         "h": 50
     },
     "MenuPanel": {
-        "x": -50,
-        "y": -50,
+        "x": -40,
+        "y": -45,
         "w": 2020,
         "h": 1180
     },
@@ -323,27 +335,27 @@
         "w": 967,
         "h": 200
     },
-    "MENU_text_more_info": {
-        "x": 70,
-        "y": 1075,
-        "w": 1060,
+    "MenuPanel_text_more_info": {
+        "x": 55,
+        "y": 1060,
+        "w": 1075,
         "h": 40
     },
-    "MENU_text_adress": {
-        "x": 1140,
-        "y": 1080,
+    "MenuPanel_text_address": {
+        "x": 1120,
+        "y": 1065,
         "w": 581,
         "h": 30
     },
-    "MENU_text_how_to_play": {
-        "x": 70,
-        "y": 1015,
+    "MenuPanel_text_how_to_play": {
+        "x": 55,
+        "y": 990,
         "w": 1454,
         "h": 40
     },
     "MenuPanel_btn_quit": {
-        "x": 910,
-        "y": 730,
+        "x": 900,
+        "y": 770,
         "w": 196,
         "h": 90
     },
@@ -353,21 +365,33 @@
         "w": 156,
         "h": 70
     },
-    "MenuPanel_btn_restart": {
-        "x": 830,
-        "y": 600,
+    "MenuPanel_btn_character": {
+        "x": 805,
+        "y": 545,
+        "w": 391,
+        "h": 90
+    },
+    "MenuPanel_btn_character_text": {
+        "x": 20,
+        "y": 10,
+        "w": 351,
+        "h": 70
+    },
+    "MenuPanel_btn_settings": {
+        "x": 825,
+        "y": 655,
         "w": 352,
         "h": 90
     },
-    "MenuPanel_btn_restart_text": {
+    "MenuPanel_btn_settings_text": {
         "x": 20,
         "y": 10,
         "w": 312,
         "h": 70
     },
     "MenuPanel_btn_play": {
-        "x": 905,
-        "y": 475,
+        "x": 900,
+        "y": 430,
         "w": 196,
         "h": 90
     },
@@ -376,6 +400,18 @@
         "y": 10,
         "w": 156,
         "h": 70
+    },
+    "MenuPanel_btn_demo_ui": {
+        "x": 1705,
+        "y": 1040,
+        "w": 233,
+        "h": 70
+    },
+    "MenuPanel_btn_demo_ui_text": {
+        "x": 20,
+        "y": 10,
+        "w": 193,
+        "h": 50
     },
     "SettingsPanel": {
         "x": 0,
@@ -388,6 +424,462 @@
         "y": 20,
         "w": 546,
         "h": 150
+    },
+    "Settings_DemoScroll": {
+        "x": 50,
+        "y": 250,
+        "w": 400,
+        "h": 600
+    },
+    "scroll_txt_0": {
+        "x": 20,
+        "y": 10,
+        "w": 114,
+        "h": 30
+    },
+    "scroll_btn_0": {
+        "x": 220,
+        "y": 10,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_0_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_1": {
+        "x": 20,
+        "y": 70,
+        "w": 114,
+        "h": 30
+    },
+    "scroll_btn_1": {
+        "x": 220,
+        "y": 70,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_1_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_2": {
+        "x": 20,
+        "y": 130,
+        "w": 114,
+        "h": 30
+    },
+    "scroll_btn_2": {
+        "x": 220,
+        "y": 130,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_2_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_3": {
+        "x": 20,
+        "y": 190,
+        "w": 114,
+        "h": 30
+    },
+    "scroll_btn_3": {
+        "x": 220,
+        "y": 190,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_3_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_4": {
+        "x": 20,
+        "y": 250,
+        "w": 114,
+        "h": 30
+    },
+    "scroll_btn_4": {
+        "x": 220,
+        "y": 250,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_4_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_5": {
+        "x": 20,
+        "y": 310,
+        "w": 114,
+        "h": 30
+    },
+    "scroll_btn_5": {
+        "x": 220,
+        "y": 310,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_5_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_6": {
+        "x": 20,
+        "y": 370,
+        "w": 114,
+        "h": 30
+    },
+    "scroll_btn_6": {
+        "x": 220,
+        "y": 370,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_6_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_7": {
+        "x": 20,
+        "y": 430,
+        "w": 114,
+        "h": 30
+    },
+    "scroll_btn_7": {
+        "x": 220,
+        "y": 430,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_7_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_8": {
+        "x": 20,
+        "y": 490,
+        "w": 114,
+        "h": 30
+    },
+    "scroll_btn_8": {
+        "x": 220,
+        "y": 490,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_8_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_9": {
+        "x": 20,
+        "y": 550,
+        "w": 131,
+        "h": 30
+    },
+    "scroll_btn_9": {
+        "x": 220,
+        "y": 550,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_9_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_10": {
+        "x": 20,
+        "y": 610,
+        "w": 131,
+        "h": 30
+    },
+    "scroll_btn_10": {
+        "x": 220,
+        "y": 610,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_10_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_11": {
+        "x": 20,
+        "y": 670,
+        "w": 131,
+        "h": 30
+    },
+    "scroll_btn_11": {
+        "x": 220,
+        "y": 670,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_11_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_12": {
+        "x": 20,
+        "y": 730,
+        "w": 131,
+        "h": 30
+    },
+    "scroll_btn_12": {
+        "x": 220,
+        "y": 730,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_12_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_13": {
+        "x": 20,
+        "y": 790,
+        "w": 131,
+        "h": 30
+    },
+    "scroll_btn_13": {
+        "x": 220,
+        "y": 790,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_13_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_14": {
+        "x": 20,
+        "y": 850,
+        "w": 131,
+        "h": 30
+    },
+    "scroll_btn_14": {
+        "x": 220,
+        "y": 850,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_14_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_15": {
+        "x": 20,
+        "y": 910,
+        "w": 131,
+        "h": 30
+    },
+    "scroll_btn_15": {
+        "x": 220,
+        "y": 910,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_15_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_16": {
+        "x": 20,
+        "y": 970,
+        "w": 131,
+        "h": 30
+    },
+    "scroll_btn_16": {
+        "x": 220,
+        "y": 970,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_16_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_17": {
+        "x": 20,
+        "y": 1030,
+        "w": 131,
+        "h": 30
+    },
+    "scroll_btn_17": {
+        "x": 220,
+        "y": 1030,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_17_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_18": {
+        "x": 20,
+        "y": 1090,
+        "w": 131,
+        "h": 30
+    },
+    "scroll_btn_18": {
+        "x": 220,
+        "y": 1090,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_18_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_19": {
+        "x": 20,
+        "y": 1150,
+        "w": 131,
+        "h": 30
+    },
+    "scroll_btn_19": {
+        "x": 220,
+        "y": 1150,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_19_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_20": {
+        "x": 20,
+        "y": 1210,
+        "w": 131,
+        "h": 30
+    },
+    "scroll_btn_20": {
+        "x": 220,
+        "y": 1210,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_20_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_21": {
+        "x": 20,
+        "y": 1270,
+        "w": 131,
+        "h": 30
+    },
+    "scroll_btn_21": {
+        "x": 220,
+        "y": 1270,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_21_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_22": {
+        "x": 20,
+        "y": 1330,
+        "w": 131,
+        "h": 30
+    },
+    "scroll_btn_22": {
+        "x": 220,
+        "y": 1330,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_22_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_23": {
+        "x": 20,
+        "y": 1390,
+        "w": 131,
+        "h": 30
+    },
+    "scroll_btn_23": {
+        "x": 220,
+        "y": 1390,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_23_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
+    },
+    "scroll_txt_24": {
+        "x": 20,
+        "y": 1450,
+        "w": 131,
+        "h": 30
+    },
+    "scroll_btn_24": {
+        "x": 220,
+        "y": 1450,
+        "w": 96,
+        "h": 45
+    },
+    "scroll_btn_24_text": {
+        "x": 20,
+        "y": 10,
+        "w": 56,
+        "h": 25
     },
     "SettingsPanel_Master": {
         "x": 710,
@@ -479,6 +971,18 @@
         "w": 22,
         "h": 50
     },
+    "SettingsPanel_MuteBtn": {
+        "x": 1090,
+        "y": 660,
+        "w": 124,
+        "h": 70
+    },
+    "SettingsPanel_MuteBtn_text": {
+        "x": 0,
+        "y": 10,
+        "w": 84,
+        "h": 50
+    },
     "Settings_Back": {
         "x": 15,
         "y": 15,
@@ -489,6 +993,174 @@
         "x": 20,
         "y": 10,
         "w": 112,
+        "h": 50
+    },
+    "CharacterPanel": {
+        "x": 240,
+        "y": 135,
+        "w": 1440,
+        "h": 810
+    },
+    "CHARACTER_text_panel": {
+        "x": 435,
+        "y": 25,
+        "w": 612,
+        "h": 120
+    },
+    "CharacterPanel_player": {
+        "x": 115,
+        "y": 260,
+        "w": 200,
+        "h": 370
+    },
+    "CharacterPanel_tourniquet": {
+        "x": 420,
+        "y": 195,
+        "w": 970,
+        "h": 400
+    },
+    "CharacterPanel_tourniquet_title": {
+        "x": 370,
+        "y": 10,
+        "w": 238,
+        "h": 60
+    },
+    "CharacterPanel_select_btn": {
+        "x": 801,
+        "y": 690,
+        "w": 208,
+        "h": 70
+    },
+    "CharacterPanel_select_btn_text": {
+        "x": 20,
+        "y": 10,
+        "w": 168,
+        "h": 50
+    },
+    "CharacterPanel_back": {
+        "x": 15,
+        "y": 10,
+        "w": 68,
+        "h": 70
+    },
+    "CharacterPanel_back_text": {
+        "x": 20,
+        "y": 10,
+        "w": 28,
+        "h": 50
+    },
+    "DemoUIPanel": {
+        "x": 100,
+        "y": 100,
+        "w": 1720,
+        "h": 880
+    },
+    "Demo UI Scroll_text_panel": {
+        "x": 960,
+        "y": 70,
+        "w": 688,
+        "h": 100
+    },
+    "DemoUIPanel_scroll": {
+        "x": 50,
+        "y": 200,
+        "w": 1620,
+        "h": 630
+    },
+    "DemoUIPanel_btn_0": {
+        "x": 50,
+        "y": 130,
+        "w": 256,
+        "h": 55
+    },
+    "DemoUIPanel_btn_0_text": {
+        "x": 20,
+        "y": 10,
+        "w": 216,
+        "h": 35
+    },
+    "DemoUIPanel_btn_1": {
+        "x": 50,
+        "y": 210,
+        "w": 256,
+        "h": 55
+    },
+    "DemoUIPanel_btn_1_text": {
+        "x": 20,
+        "y": 10,
+        "w": 216,
+        "h": 35
+    },
+    "DemoUIPanel_btn_2": {
+        "x": 50,
+        "y": 290,
+        "w": 256,
+        "h": 55
+    },
+    "DemoUIPanel_btn_2_text": {
+        "x": 20,
+        "y": 10,
+        "w": 216,
+        "h": 35
+    },
+    "DemoUIPanel_sw_0": {
+        "x": 50,
+        "y": 480,
+        "w": 374,
+        "h": 50
+    },
+    "DemoUIPanel_sw_0_text": {
+        "x": 0,
+        "y": 8,
+        "w": 244,
+        "h": 35
+    },
+    "DemoUIPanel_sw_1": {
+        "x": 50,
+        "y": 570,
+        "w": 374,
+        "h": 50
+    },
+    "DemoUIPanel_sw_1_text": {
+        "x": 0,
+        "y": 8,
+        "w": 244,
+        "h": 35
+    },
+    "DemoUIPanel_sw_2": {
+        "x": 50,
+        "y": 660,
+        "w": 374,
+        "h": 50
+    },
+    "DemoUIPanel_sw_2_text": {
+        "x": 0,
+        "y": 8,
+        "w": 244,
+        "h": 35
+    },
+    "DemoUIPanel_tourniquet": {
+        "x": 85,
+        "y": 925,
+        "w": 610,
+        "h": 300
+    },
+    "DemoUIPanel_tourniquet_title": {
+        "x": 130,
+        "y": -65,
+        "w": 351,
+        "h": 50
+    },
+    "DemoUIPanel_back_btn": {
+        "x": 40,
+        "y": 40,
+        "w": 68,
+        "h": 70
+    },
+    "DemoUIPanel_back_btn_text": {
+        "x": 20,
+        "y": 10,
+        "w": 28,
         "h": 50
     }
 }

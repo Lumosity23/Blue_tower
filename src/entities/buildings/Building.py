@@ -1,11 +1,14 @@
-import pygame
-from entities.Entity import Entity
-from ui.UIProgressBar import UIProgressBar
-from ui.UIRange import UIRange
 from typing import TYPE_CHECKING
+
+import pygame
+
+from entities.Entity import Entity
+from ui.element.UIProgressBar import UIProgressBar
+from ui.element.UIRange import UIRange
 
 if TYPE_CHECKING:
     from main import App
+
 
 class Building(Entity):
     # Registre automatique des types de bâtiments
@@ -15,18 +18,17 @@ class Building(Entity):
         super().__init_subclass__(**kwargs)
         cls.BUILDING_TYPES[cls.__name__.upper()] = cls
 
-
     def __init__(self, x, y, data: dict, game: "App", tag, uid: str = None):
         # 1. Init Entity (Position Monde)
         w, h = data.get("size", (game.st.CELL_SIZE, game.st.CELL_SIZE))
         super().__init__(x, y, w, h, tag=tag, uid=uid)
-        
+
         self.game = game
-        self.data = data # On garde le dictionnaire de config
+        self.data = data  # On garde le dictionnaire de config
         self.grid_pos = (0, 0)
 
         # État
-        self.meta_state = "IDLE" # IDLE, HOVER, SELECTED
+        self.meta_state = "IDLE"  # IDLE, HOVER, SELECTED
         self.type = "BUILDING"
 
         # Visuel
@@ -46,21 +48,29 @@ class Building(Entity):
 
         # --- ENFANT : Barre de Vie ---
         # On la crée mais on la cache par défaut (elle ne s'affiche qu'au survol/clic)
-        self.hp_bar = UIProgressBar(x=5, y=self.rect.height - 12, uid=f"{uid}_hp" if uid else None)
+        self.hp_bar = UIProgressBar(
+            x=5, y=self.rect.height - 12, uid=f"{uid}_hp" if uid else None
+        )
         self.hp_bar.setup(w=self.rect.w - 10, h=6, show_text=False)
         self.hp_bar.visible = False
         self.add_child(self.hp_bar)
 
         if self.data["range"] > 0:
-            self.range_circle = UIRange((0 - self.range) + (self.data["size"][0] / 2), (0 - self.range) + (self.data["size"][1] / 2), self.data['range'], self, f"{uid}_range")
+            self.range_circle = UIRange(
+                (0 - self.range) + (self.data["size"][0] / 2),
+                (0 - self.range) + (self.data["size"][1] / 2),
+                self.data["range"],
+                self,
+                f"{uid}_range",
+            )
             self.range_circle.visible = False
             self.add_child(self.range_circle)
         else:
             self.range_circle = None
-            
 
     def handle_event(self, event) -> bool:
-        if not self.visible or not self.active: return False
+        if not self.visible or not self.active:
+            return False
 
         # On utilise get_screen_rect pour gérer le décalage caméra !
         mouse_pos = pygame.mouse.get_pos()
@@ -86,51 +96,47 @@ class Building(Entity):
             else:
                 self.deselect()
 
-        return super().handle_event(event) # Propagation aux enfants si besoin
-
+        return super().handle_event(event)  # Propagation aux enfants si besoin
 
     def select(self) -> None:
         self.meta_state = "SELECTED"
         self.game.eventManager.publish("BUILDING_SELECTED", self)
         self.on_meta_state_change()
 
-
     def deselect(self) -> None:
         if self.meta_state == "SELECTED":
             self.meta_state = "IDLE"
             self.on_meta_state_change()
 
-
     def on_meta_state_change(self):
-        """ Gère les effets visuels selon l'état """
+        """Gère les effets visuels selon l'état"""
         # Visibilité de la barre de vie
-        self.hp_bar.visible = (self.meta_state in ["HOVER", "SELECTED"])
+        self.hp_bar.visible = self.meta_state in ["HOVER", "SELECTED"]
         if self.range_circle:
-            self.range_circle.visible = (self.meta_state in ["HOVER", "SELECTED"])
-        
+            self.range_circle.visible = self.meta_state in ["HOVER", "SELECTED"]
+
         # On recrée l'image avec un feedback (ex: contour blanc si sélectionné)
         self.image = self.current_image.copy()
 
         if self.meta_state == "SELECTED":
-            pygame.draw.rect(self.image, (255, 255, 255), (0, 0, self.rect.w, self.rect.h), 2)
+            pygame.draw.rect(
+                self.image, (255, 255, 255), (0, 0, self.rect.w, self.rect.h), 2
+            )
         elif self.meta_state == "HOVER":
             # Petit effet de brillance/teinte légère
             self.image.fill((30, 30, 30), special_flags=pygame.BLEND_RGB_ADD)
 
-
     def take_damage(self, amount):
         self.hp_bar.update_values(self.current_hp, self.max_hp)
         super().take_damage(amount)
-
 
     def kill(self):
         # Logique de destruction (libérer la grille)
         self.game.eventManager.publish("BUILDING_DESTROYED", self)
         super().kill()
 
-
     def spawn(self, x, y, uid=None, **kwargs):
-        
+
         self.current_hp = self.max_hp
         self.kills = 0
         self.hp_bar.update_values(self.current_hp, self.max_hp)
