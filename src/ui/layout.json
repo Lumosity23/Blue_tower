@@ -335,24 +335,6 @@
         "w": 967,
         "h": 200
     },
-    "MenuPanel_text_more_info": {
-        "x": 55,
-        "y": 1060,
-        "w": 1075,
-        "h": 40
-    },
-    "MenuPanel_text_address": {
-        "x": 1120,
-        "y": 1065,
-        "w": 581,
-        "h": 30
-    },
-    "MenuPanel_text_how_to_play": {
-        "x": 55,
-        "y": 990,
-        "w": 1454,
-        "h": 40
-    },
     "MenuPanel_btn_quit": {
         "x": 900,
         "y": 770,
@@ -1014,8 +996,8 @@
         "h": 370
     },
     "CharacterPanel_tourniquet": {
-        "x": 420,
-        "y": 195,
+        "x": 395,
+        "y": 265,
         "w": 970,
         "h": 400
     },
@@ -1026,15 +1008,15 @@
         "h": 60
     },
     "CharacterPanel_select_btn": {
-        "x": 801,
+        "x": 748,
         "y": 690,
-        "w": 208,
+        "w": 264,
         "h": 70
     },
     "CharacterPanel_select_btn_text": {
         "x": 20,
         "y": 10,
-        "w": 168,
+        "w": 224,
         "h": 50
     },
     "CharacterPanel_back": {
@@ -1141,7 +1123,7 @@
     },
     "DemoUIPanel_tourniquet": {
         "x": 85,
-        "y": 925,
+        "y": 915,
         "w": 610,
         "h": 300
     },

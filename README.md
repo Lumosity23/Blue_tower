@@ -1,11 +1,16 @@
 ## Future MAJ/Ajout pour le jeu (d'ici la fin avril)
 Un systeme d'armes pour le joueurs.
 
-## Update du JOUR ( 21 avril )
-Ajout de surface pixel pour respecter plus la DA du jeu
+## Update du JOUR ( 2 may )
+Ajout d'un CharacterPanel avec de nouveau element de UI comme le scroll et le Tourniquet
 
 ### voici un petit screen de cet Ajouts :
-![](assets/ScreenShots/update_21_avril.png)
+#### Button dans le menu
+![](assets/ScreenShots/update_2_may_0.png)
+#### CharacterPanel
+![](assets/ScreenShots/update_2_may_1.png)
+#### Demo UI
+![](assets/ScreenShots/update_2_may_2.png)
 
 
 ## [Challenge](CHALLENGE.md)
