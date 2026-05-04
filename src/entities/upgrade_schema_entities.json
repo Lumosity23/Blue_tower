@@ -2,72 +2,74 @@
     "PLAYER": [
         {
             "label": "Damage",
-            "mapping": {
-                "current": "damage",
-                "max": "max_dm",
-                "price": "price_dm",
-                "rate": "rate_dm"
-            }
+            "attr": "damage",
+            "max": 100,
+            "price": 200,
+            "rate": 10
         },
         {
             "label": "Velocity",
-            "mapping": {
-                "current": "velocity",
-                "max": "max_vl",
-                "price": "price_vl",
-                "rate": "rate_vl"
-            }
+            "attr": "velocity",
+            "max": 1000,
+            "price": 300,
+            "rate": 5
+        },
+        {
+            "label": "Vie",
+            "attr": "current_hp",
+            "max": 1000,
+            "price": 500,
+            "rate": 5
         }
     ],
     "KERNEL": [
         {
             "label": "Damage",
-            "mapping": {
-                "current": "damage",
-                "max": "max_dm",
-                "price": "price_dm",
-                "rate": "rate_dm"
-            }
+            "attr": "damage",
+            "max": 100,
+            "price": 200,
+            "rate": 10
         },
         {
             "label": "Range",
-            "mapping": {
-                "current": "range",
-                "max": "max_rg",
-                "price": "price_rg",
-                "rate": "rate_rg"
-            }
+            "attr": "range",
+            "max": 1000,
+            "price": 300,
+            "rate": 5
         }
     ],
     "TURRET": [
         {
             "label": "Damage",
-            "mapping": {
-                "current": "damage",
-                "max": "max_dm",
-                "price": "price_dm",
-                "rate": "rate_dm"
-            }
+            "attr": "damage",
+            "max": 100,
+            "price": 200,
+            "rate": 10
         },
         {
             "label": "Range",
-            "mapping": {
-                "current": "range",
-                "max": "max_rg",
-                "price": "price_rg",
-                "rate": "rate_rg"
-            }
+            "attr": "range",
+            "max": 1000,
+            "price": 300,
+            "rate": 5
         }
     ],
     "BANK": [
         {
             "label": "Gain",
-            "mapping": {
-                "current": "gain",
-                "max": "max_gn",
-                "price": "price_gn",
-                "rate": "rate_gn"
-            }
+            "attr": "gain",
+            "max": 100,
+            "price": 400,
+            "rate": 5
+        }
+    ],
+    "WALL": [
+        {
+            "label": "Unbreaking",
+            "attr": "current_hp",
+            "max": 1000,
+            "price": 200,
+            "rate": 5
         }
     ]
 }

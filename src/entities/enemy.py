@@ -78,26 +78,24 @@ class Enemie(Entity):
         # Update des enfants (Barre de vie)
         super().update(dt)
 
-    def next_target(self, cell_pos=False) -> tuple[int, int]:
-        cx, cy = self.game.grid.get_cell_pos(self.rect.x, self.rect.y)
+    def next_target(self, cell_pos=False) -> tuple[float, float]:
+        cx, cy = self.game.grid.get_cell_pos(self.pos.x, self.pos.y)
         neighbors = self.game.grid.getNeighborsAndCost(cx, cy)
 
         cheapest_cell = float("inf")
+        nx, ny = cx, cy
 
-        for n, cost in neighbors.items():
-            if cost < cheapest_cell:
-                cheapest_cell = cost
-                nx, ny = n
+        if neighbors:
+            for n, cost in neighbors.items():
+                if cost < cheapest_cell:
+                    cheapest_cell = cost
+                    nx, ny = n
 
         if cell_pos:
             return nx, ny
 
-        dx = ((nx * self.game.st.CELL_SIZE) + self.game.st.CELL_SIZE / 2) - self.size[
-            0
-        ] / 2
-        dy = ((ny * self.game.st.CELL_SIZE) + self.game.st.CELL_SIZE / 2) - self.size[
-            1
-        ] / 2
+        dx = (nx * self.game.st.CELL_SIZE) + self.game.st.CELL_SIZE / 2
+        dy = (ny * self.game.st.CELL_SIZE) + self.game.st.CELL_SIZE / 2
 
         return dx, dy
 
@@ -122,34 +120,51 @@ class Enemie(Entity):
         super().kill()
 
     def _view(self) -> None:
+        self.is_obstacle = False
+        center = pygame.Vector2(self.rect.center)
+        
+        # 1. Regarder si target_prio (player) in range
+        if self.game.player in self.game.grid.get_entities_around(center, radius=2):
+            player_pos = pygame.Vector2(self.game.player.rect.center)
+            kernel_pos = pygame.Vector2(self.game.kernel.rect.center)
+            
+            if center.distance_to(player_pos) < center.distance_to(kernel_pos):
+                self.target_pos.update(player_pos)
+                
+                # Check si un bâtiment bloque le passage vers le joueur
+                dir_to_player = player_pos - center
+                if dir_to_player.length() > 0:
+                    check_pos = center + dir_to_player.normalize() * (self.rect.width / 2 + 10)
+                    if self.game.grid.get_cell_isOccupied(check_pos.x, check_pos.y):
+                        self.target_pos.update(check_pos)
+                        self.is_obstacle = True
+                        return
 
-        # Regarder si target_prio in range
-        if self.game.player in self.game.grid.get_entities_around(self.pos, radius=2):
-            if self.pos.distance_to(self.game.player.pos) < self.pos.distance_to(
-                self.game.kernel.pos
-            ):
-                self.target_pos.update(self.game.player.pos)
-            return
+                if center.distance_to(self.target_pos) <= (self.rect.width / 2 + 15):
+                    self.is_obstacle = True
+                return
 
-        if self.game.grid.get_cell_value(*self.next_target(), True) == "KERNEL":
-            print("a atteint le KERNEL")
-            self.target_pos.update(self.game.kernel.pos)
+        # 2. Verifier si on est pres du kernel
+        kernel_pos = pygame.Vector2(self.game.kernel.rect.center)
+        if center.distance_to(kernel_pos) <= (self.rect.width / 2 + self.game.kernel.rect.width / 2 + 10):
+            self.target_pos.update(kernel_pos)
             self.is_obstacle = True
             return
 
-        self.target_pos.update(self.next_target())
+        # 3. Prendre la prochaine case (centre) via Flow Field
+        nx, ny = self.next_target(cell_pos=True)
+        target_world_x = (nx * self.game.st.CELL_SIZE) + self.game.st.CELL_SIZE / 2
+        target_world_y = (ny * self.game.st.CELL_SIZE) + self.game.st.CELL_SIZE / 2
+        
+        self.target_pos.update(target_world_x, target_world_y)
 
-        # Regarder si un mur devant
-        if self.game.grid.get_cell_value(
-            *self.target_pos.xy
-        ) != self.game.st.EMPTY and self.pos.distance_to(self.target_pos) <= (
-            self.rect.width + 10
-        ):
-            self.is_obstacle = True
-        else:
-            self.is_obstacle = False
+        # 4. Regarder si un obstacle (bâtiment) est devant sur la grille
+        cell_value = self.game.grid.get_cell_value(nx, ny, iscellpos=True)
+        if cell_value != self.game.st.EMPTY:
+            if center.distance_to(self.target_pos) <= (self.rect.width / 2 + 15):
+                self.is_obstacle = True
 
-        # 1. Logique de Pathfinding (Flow Field / Grid)
+        # Logique de Pathfinding
         if self.arrived and not self.is_obstacle:
             self.arrived = False
 
@@ -157,29 +172,58 @@ class Enemie(Entity):
 
         if self.is_obstacle:
             self.state = "ATTACK"
-            return self.game.grid.get_entity_at(*self.target_pos)
+            # Si on attaque, retourner l'entite visee
+            if self.rect.colliderect(self.game.player.rect): return self.game.player
+            if self.rect.colliderect(self.game.kernel.rect): return self.game.kernel
+            return self.game.grid.get_entity_at(*self.target_pos.xy)
 
         else:
             self.state = "MOVE"
 
     def move(self, dt, output) -> None:
-
-        # Calcul du vecteur de direction
-        self.director_vector = self.target_pos - self.pos
+        # On utilise le centre actuel pour la direction
+        center = pygame.Vector2(self.rect.center)
+        self.director_vector = self.target_pos - center
         length = self.director_vector.length()
 
         if length > 0:
             self.director_vector.normalize_ip()
 
-        if (
-            length > 2
-        ):  # Seuil de proximité (un peu plus que 1 pour éviter les micro-saccades)
-            # Déplacement fluide sur self.pos (float)
-            self.pos += self.director_vector * self.velocity * dt
-            # Mise à jour du Rect pour les collisions et get_screen_rect
+        if length > 2:
+            velocity_vec = self.director_vector * self.velocity * dt
+            
+            # Mouvement X avec glissement
+            self.pos.x += velocity_vec.x
+            self.sync_rect()
+            if self.check_static_collision():
+                self.pos.x -= velocity_vec.x
+                self.sync_rect()
 
+            # Mouvement Y avec glissement
+            self.pos.y += velocity_vec.y
+            self.sync_rect()
+            if self.check_static_collision():
+                self.pos.y -= velocity_vec.y
+                self.sync_rect()
         else:
             self.arrived = True
+
+    def sync_rect(self):
+        """ Synchronise le Rect avec self.pos (topleft) """
+        self.rect.topleft = (round(self.pos.x), round(self.pos.y))
+
+    def check_static_collision(self) -> bool:
+        """ Vérifie les collisions avec la grille et le kernel """
+        # Check les coins du rect pour la grille
+        for pt in [self.rect.topleft, self.rect.topright, self.rect.bottomleft, self.rect.bottomright]:
+            if self.game.grid.get_cell_isOccupied(*pt):
+                return True
+
+        # Check collision avec le Kernel
+        if self.rect.colliderect(self.game.kernel.rect):
+            return True
+
+        return False
 
     def attack(self, dt, entity) -> None:
 

@@ -39,6 +39,7 @@ class BuildManager:
         self.game.sceneManager.main_camera.remove_entity(building)
         self.game.grid.remove_entity_chunk(building)
         self.game.grid.remove_build_at(*building.grid_pos, True)
+        self.game.grid.update_flow_field(self.game.kernel.pos)
         # print(f"la cell a bien ete changer : {self.game.grid.get_cell_value(*building.rect.center)}")
     
 

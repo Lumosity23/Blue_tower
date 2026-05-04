@@ -1,9 +1,11 @@
 from typing import TYPE_CHECKING
 
+import pygame
+
 from ui.element.UIButton import UIButton
 from ui.element.UIPanel import UIPanel
 from ui.element.UIScroll import UIScroll
-from ui.element.UIStat import UIStat
+from ui.element.UISlider import UISlider
 from ui.element.UISwitch import UISwitch
 from ui.element.UIText import UIText
 
@@ -15,167 +17,204 @@ class Settings(UIPanel):
     def __init__(self, game: "App"):
         self.game = game
         self.st = self.game.st
-        # On centre le panel
+
+        # On occupe tout l'écran avec un fond sombre style AAA
         super().__init__(
             0,
             0,
             self.st.SCREEN_WIDTH,
             self.st.SCREEN_HEIGHT,
-            color=(50, 50, 50),
+            color=(30, 30, 35),
             uid="SettingsPanel",
         )
 
-        self.channels = {"Master": "masterV", "Music": "musicV", "SFX": "sfxV"}
-
         self.last_state = "MENU"
-        self.set_label("Settings", 150)
+        self.set_label("SETTINGS", 120)
 
-        # --- DEMO UISCROLL ---
-        # On crée une zone scrollable sur la gauche
-        scroll_width, scroll_height = 400, 600
-        self.demo_scroll = UIScroll(
-            50,
-            250,
-            scroll_width,
-            scroll_height,
-            color=(40, 40, 40),
-            uid="Settings_DemoScroll",
+        # --- CRÉATION DU SCROLL PRINCIPAL ---
+        scroll_w = self.st.SCREEN_WIDTH - 100
+        scroll_h = self.st.SCREEN_HEIGHT - 200
+        self.scroll = UIScroll(
+            50, 100, scroll_w, scroll_h, color=(40, 40, 45), uid="Settings_Scroll"
         )
+        self.add_child(self.scroll)
 
-        # On y ajoute plein d'éléments pour tester le scroll
-        for i in range(25):
-            y_pos = 10 + i * 60
-            txt = UIText(
-                20, y_pos, f"Option {i + 1}", size_text=30, uid=f"scroll_txt_{i}"
-            )
-            btn = UIButton(
-                220,
-                y_pos,
-                "TEST",
-                lambda val=i: print(f"Action sur l'élément {val + 1}"),
-                size_text=25,
-                uid=f"scroll_btn_{i}",
-            )
+        self.rebind_action = None
+        self._init_settings_content(scroll_w)
 
-            self.demo_scroll.add_child(txt)
-            self.demo_scroll.add_child(btn)
-
-        self.add_child(self.demo_scroll)
-
-        # Calcul de la position de départ (sous le titre)
-        center_x = self.rect.centerx
-        current_y = self.label.rect.bottom + 250
-
-        for channel_name, attr_name in self.channels.items():
-            audio_manager = self.game.audio_director.audio_manager
-            ptr = self.get_attribut_pointer(attr_name, audio_manager)
-
-            vol_channel = UIStat(0, 0, f"{self.uid}_{channel_name}")
-            vol_channel.custom_setup(center_x - 250, current_y + 10, channel_name, ptr)
-            vol_channel.stat_value.rect.midleft = (
-                vol_channel.rect.width,
-                vol_channel.rect.height // 2,
-            )
-
-            # 2. Boutons + et -
-            # On utilise une lambda pour passer l'attribut spécifique (ex: "musicV")
-            btn_plus = UIButton(
-                center_x + 90,
-                current_y,
-                "+",
-                lambda a=attr_name: self.change_volume(a, 5),
-                (255, 0, 0),
-                uid=f"{self.uid}_plus_{channel_name}",
-            )
-
-            btn_moins = UIButton(
-                center_x + 200,
-                current_y,
-                "-",
-                lambda a=attr_name: self.change_volume(a, -5),
-                (0, 0, 255),
-                uid=f"{self.uid}_moins_{channel_name}",
-            )
-
-            # On ajoute les enfants
-            self.add_child(vol_channel)
-            self.add_child(btn_plus)
-            self.add_child(btn_moins)
-
-            current_y += 80  # Espace entre les lignes
-
-        # --- SWITCH MUTE ---
-        self.mute_btn = UISwitch(
-            center_x - 250,
-            current_y,
-            "Mute :",
-            self.toggle_mute,
-            start_state=False,
-            size_text=50,
-            color_on=(50, 150, 50),
-            color_off=(150, 50, 50),
-            uid=f"{self.uid}_MuteBtn",
-        )
-        self.add_child(self.mute_btn)
-
-        # 3. BOUTON RETOUR (en bas)
+        # --- BOUTON RETOUR (Fixé en bas) ---
         back_btn = UIButton(
-            center_x - 50,
+            self.st.SCREEN_WIDTH // 2 - 150,
             self.rect.bottom - 100,
-            "BACK",
+            "SAVE & BACK",
             self.go_back,
             (100, 100, 100),
             uid="Settings_Back",
         )
         self.add_child(back_btn)
 
+    def _init_settings_content(self, scroll_w: int):
+        """Initialise les réglages avec labels à gauche et contrôles à droite."""
+        current_y = 50
+        row_height = 100
+        control_x_right = scroll_w - 500
+
+        # --- AUDIO SECTION ---
+        self._add_section_title("AUDIO", current_y)
+        current_y += 80
+
+        for vol_type in ["master", "music", "sfx"]:
+            label = f"{vol_type.capitalize()} Volume"
+            initial = self.game.save_manager.get_setting(f"{vol_type}_volume")
+            slider = UISlider(
+                control_x_right,
+                current_y,
+                400,
+                40,
+                initial_value=initial,
+                on_change_callback=lambda v, t=vol_type: self.game.eventManager.publish(
+                    f"SET_{t.upper()}_VOLUME", v
+                ),
+                uid=f"Setting_{vol_type}_Slider",
+            )
+            self._add_setting_row(label, slider, current_y)
+            current_y += row_height
+
+        # Mute
+        is_mute = self.game.save_manager.get_setting("mute")
+        self._add_setting_row(
+            "Mute All Sounds",
+            UISwitch(
+                control_x_right + 300,
+                current_y,
+                "",
+                self.toggle_mute,
+                start_state=is_mute,
+                uid="Setting_Mute_Switch",
+            ),
+            current_y,
+        )
+        current_y += row_height + 50
+
+        # --- DISPLAY SECTION ---
+        self._add_section_title("DISPLAY", current_y)
+        current_y += 80
+
+        show_fps = self.game.save_manager.get_setting("show_fps")
+        self._add_setting_row(
+            "Show FPS Counter",
+            UISwitch(
+                control_x_right + 300,
+                current_y,
+                "",
+                self.toggle_fps,
+                start_state=show_fps,
+                uid="Setting_FPS_Switch",
+            ),
+            current_y,
+        )
+        current_y += row_height + 50
+
+        # --- CONTROLS SECTION ---
+        self._add_section_title("CONTROLS", current_y)
+        current_y += 80
+
+        for action in ["up", "down", "left", "right"]:
+            key_name = self.game.input_manager.get_key_name(action)
+            btn_key = UIButton(
+                control_x_right + 150,
+                current_y,
+                key_name,
+                lambda a=action: self.start_rebind(a),
+                (60, 60, 60),
+                size_text=55,
+                uid=f"Btn_Rebind_{action}",
+            )
+            self._add_setting_row(f"Move {action.capitalize()}", btn_key, current_y)
+            current_y += row_height
+
+        current_y += 50
+
+        # --- DATA SECTION ---
+        self._add_section_title("DATA", current_y)
+        current_y += 80
+
+        self._add_setting_row(
+            "Clear Save Data",
+            UIButton(
+                control_x_right + 200,
+                current_y,
+                "RESET",
+                lambda: print("Resetting Save..."),
+                (150, 50, 50),
+                size_text=30,
+                uid="Setting_Reset_Btn",
+            ),
+            current_y,
+        )
+
+    def _add_section_title(self, text: str, y: int):
+        title = UIText(
+            50,
+            y,
+            text,
+            size_text=50,
+            color=(200, 200, 255),
+            align="topleft",
+            uid=f"Title_{text}",
+        )
+        self.scroll.add_child(title)
+
+    def _add_setting_row(self, label_text: str, control_element: any, y: int):
+        """Ajoute une ligne avec label à gauche et contrôle à droite."""
+        label = UIText(
+            80,
+            y + 20,
+            label_text,
+            size_text=40,
+            align="midleft",
+            uid=f"Label_{label_text.replace(' ', '_')}",
+        )
+        self.scroll.add_child(label)
+        self.scroll.add_child(control_element)
+
     def toggle_mute(self) -> None:
-        """Gère l'activation/désactivation du mode silencieux."""
-        # Bascule l'état via la propriété state du switch
-        is_muted = self.mute_btn.state
-        print(f"Mute actif : {is_muted}")
-        # Publie l'événement pour que le reste du jeu s'adapte
-        self._EVENTBUS.publish("TOGGLE_MUTE", is_muted)
+        for child in self.scroll.children:
+            if child.uid == "Setting_Mute_Switch":
+                is_muted = child.state
+                self.game.save_manager.set_setting("mute", is_muted)
+                self._EVENTBUS.publish("TOGGLE_MUTE", is_muted)
+                break
 
-    def change_volume(self, attr_name: str, amount: int) -> None:
-        """Gère l'augmentation ou la diminution pour n'importe quel canal"""
-        audio_manager = self.game.audio_director.audio_manager
+    def toggle_fps(self) -> None:
+        for child in self.scroll.children:
+            if child.uid == "Setting_FPS_Switch":
+                show_fps = child.state
+                self.game.save_manager.set_setting("show_fps", show_fps)
+                break
 
-        current_float = getattr(audio_manager, attr_name)
-        current_int = int(round(current_float * 100))
+    def start_rebind(self, action: str) -> None:
+        self.rebind_action = action
+        for child in self.scroll.children:
+            if child.uid == f"Btn_Rebind_{action}":
+                child.set_text("PRESS KEY...")
+                break
 
-        # On applique la modification et on clamp entre 0 et 100
-        val = current_int + amount
-        if val > 100:
-            print("trop fort")
-            self._EVENTBUS.publish("PLAY_SFX", "ERROR")
-        new_int = max(0, min(100, val))
-
-        # On reconvertit en float 0.0 -> 1.0 avec 2 décimales
-        new_float = round(new_int / 100, 2)
-
-        setattr(audio_manager, attr_name, new_float)
-
-        # On notifie le bus d'événement pour mettre à jour le volume réel des sons
-        name = f"SET_{attr_name.upper()}"  # Ex : SET_MASTERV
-        event_name = f"{name[:-1]}_VOLUME"  # Ex: SET_MASTER_VOLUME
-        self._EVENTBUS.publish(event_name, new_float)
+    def handle_event(self, event: pygame.event.EventType) -> bool:
+        if self.rebind_action and event.type == pygame.KEYDOWN:
+            key_name = pygame.key.name(event.key)
+            self.game.input_manager.set_key(self.rebind_action, key_name)
+            for child in self.scroll.children:
+                if child.uid == f"Btn_Rebind_{self.rebind_action}":
+                    child.set_text(key_name.upper())
+                    break
+            self.rebind_action = None
+            return True
+        return super().handle_event(event)
 
     def go_back(self) -> None:
-        """Ferme les settings et retourne au menu pause"""
-        # Ici, utilise ton système de SceneManager ou EventBus pour changer de panel
         self._EVENTBUS.publish(self.last_state)
+        self._EVENTBUS.publish("SAVE_SETTINGS")
         self.visible = False
         if self.game.state == "PAUSE":
             self._EVENTBUS.publish("SHOW_OSD")
-
-    def get_attribut_pointer(self, attr, element):
-        if attr is None:
-            return lambda: None  # Retourne une fonction qui renvoie N
-
-        if hasattr(element, attr):
-            # On retourne une fonction (un "getter")
-            return lambda name=attr: getattr(element, name)
-
-        print(f"aucun attribut du nom de {attr} sur {element.__class__.__name__}")
-        return lambda: None

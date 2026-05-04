@@ -4,11 +4,12 @@ from audioDirector import AudioDirector
 from entities.kernel import Kernel
 from grid import Grid
 from manager.EventManager import EventManager
+from manager.InputManager import InputManager
+from manager.SaveManager import SaveManager
 from manager.SceneManager import SceneManager
 from manager.SpriteManager import SpriteManager
 from manager.UIManager import UIManager
 from manager.WalletManager import WalletManager
-from manager.SaveManager import SaveManager
 
 # from pygame.locals import *
 from settings import Settings
@@ -42,8 +43,9 @@ class App:
         self.edit_mode = False
 
         # Init des differents composante du jeu
-        self.save_manager = SaveManager(self)
         self.eventManager = EventManager()
+        self.save_manager = SaveManager(self)
+        self.input_manager = InputManager(self)
         self.spriteManager = SpriteManager(self)
 
         # Declaration des variables de base

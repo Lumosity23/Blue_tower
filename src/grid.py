@@ -26,6 +26,9 @@ class Grid:
         # Init de la grille et des chunks
         self.init_grid()
 
+        # Debug font
+        self.font = self.game.spriteManager.get_font(12)
+
         # Ecoute l'event de NEW_GAME
         self.game.eventManager.subscribe("NEW_GAME", self.restart)
 
@@ -49,11 +52,15 @@ class Grid:
         grid_color = (40, 40, 40)
 
         # 1. On calcule la première et la dernière case visible à l'écran
-        start_col = int(cam_offset.x // self.cell_size)
-        end_col = int((cam_offset.x + surface.get_width()) // self.cell_size) + 1
+        start_col = max(0, int(cam_offset.x // self.cell_size))
+        end_col = min(
+            self.cols, int((cam_offset.x + surface.get_width()) // self.cell_size) + 1
+        )
 
-        start_row = int(cam_offset.y // self.cell_size)
-        end_row = int((cam_offset.y + surface.get_height()) // self.cell_size) + 1
+        start_row = max(0, int(cam_offset.y // self.cell_size))
+        end_row = min(
+            self.rows, int((cam_offset.y + surface.get_height()) // self.cell_size) + 1
+        )
 
         # 2. Lignes verticales (On ne boucle QUE sur ce qui est à l'écran)
         for col in range(start_col, end_col + 1):
@@ -72,6 +79,28 @@ class Grid:
             pygame.draw.line(
                 surface, grid_color, (0, screen_y), (surface.get_width(), screen_y)
             )  # , width=2
+
+        # 4. Debug info (Si mode edit actif)
+        if self.game.edit_mode:
+            for col in range(start_col, end_col):
+                for row in range(start_row, end_row):
+                    if (col, row) in self.grid:
+                        val = self.get_cell_value(col, row, iscellpos=True)
+                        cost = self.get_cell_cost(col, row, iscellpos=True)
+                        flow = self.flow_field.get((col, row), -1)
+
+                        sx = col * self.cell_size - cam_offset.x
+                        sy = row * self.cell_size - cam_offset.y
+
+                        # Texte : Type[0]:Cout
+                        debug_txt = f"{val[0]}:{cost}"
+                        img = self.font.render(debug_txt, True, (255, 255, 255))
+                        surface.blit(img, (sx + 5, sy + 5))
+
+                        # Texte : Flow
+                        flow_txt = f"F:{flow}"
+                        img_flow = self.font.render(flow_txt, True, (150, 150, 150))
+                        surface.blit(img_flow, (sx + 5, sy + 20))
 
     def get_cell_pos(self, world_x, world_y) -> tuple[int, int]:
         """World to grid"""
@@ -99,7 +128,7 @@ class Grid:
 
     def get_cell_cost(self, world_x, world_y, iscellpos=False) -> int:
 
-        value = self.get_cell_value(world_x, world_y)
+        value = self.get_cell_value(world_x, world_y, iscellpos=iscellpos)
 
         return self.game.st.TYPE_COST.get(value, 1)
 
@@ -177,6 +206,9 @@ class Grid:
                 # Récupère le coût depuis Settings via le type (String)
                 weight = self.get_cell_cost(*neighbor, iscellpos=True)
 
+                if weight <= 0:
+                    continue
+
                 new_cost = current_cost + weight
                 if new_cost < self.flow_field.get(neighbor, float("inf")):
                     self.flow_field[neighbor] = new_cost
@@ -193,7 +225,8 @@ class Grid:
     def getNeighborsAndCost(self, gx, gy) -> dict[tuple[int, int], int]:
         NeighborsAndCost = {}
         for neighbor in self.getValidNeighbors(gx, gy):
-            NeighborsAndCost[neighbor] = self.flow_field[neighbor]
+            if neighbor in self.flow_field:
+                NeighborsAndCost[neighbor] = self.flow_field[neighbor]
         return NeighborsAndCost
 
     def get_entities_around(
@@ -201,15 +234,14 @@ class Grid:
     ) -> set["Entity"]:
 
         cx, cy = self.get_cell_pos(entity_pos.x, entity_pos.y)
-        area_cells = [
-            (c + cx, r + cy)
-            for c in range(1 + (2 * radius))
-            for r in range(1 + (2 * radius))
-        ]
 
         chunks = set()
-        for cell in area_cells:
-            chunks.add(self.get_chunk_cell(self.get_pos_cell(*cell)))
+        for dx in range(-radius, radius + 1):
+            for dy in range(-radius, radius + 1):
+                # Récupère le chunk pour la cellule (cx+dx, cy+dy)
+                # On passe par get_pos_cell pour avoir des coord mondes car get_chunk_cell attend du monde
+                world_pos = self.get_pos_cell(cx + dx, cy + dy)
+                chunks.add(self.get_chunk_cell(world_pos))
 
         entities_around = set()
         for chunk in chunks:

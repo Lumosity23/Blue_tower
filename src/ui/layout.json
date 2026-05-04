@@ -108,7 +108,7 @@
         "h": 25
     },
     "InfoPanel": {
-        "x": 1920,
+        "x": 1500,
         "y": 20,
         "w": 400,
         "h": 1080
@@ -133,7 +133,7 @@
     },
     "InfoPanel_btn_sell": {
         "x": 125,
-        "y": 840,
+        "y": 845,
         "w": 152,
         "h": 70
     },
@@ -143,22 +143,64 @@
         "w": 112,
         "h": 50
     },
-    "Ugrade_text_panel": {
-        "x": 25,
-        "y": 10,
-        "w": 276,
+    "UpgradePanel": {
+        "x": 1920,
+        "y": 20,
+        "w": 400,
+        "h": 1040
+    },
+    "Upgrades_text_panel": {
+        "x": 2100,
+        "y": -10,
+        "w": 364,
         "h": 100
     },
-    "InfoPanel_btn_back": {
-        "x": 315,
-        "y": 30,
+    "UpgradePanel_btn_back": {
+        "x": 20,
+        "y": 20,
         "w": 68,
         "h": 70
     },
-    "InfoPanel_btn_back_text": {
+    "UpgradePanel_btn_back_text": {
         "x": 20,
         "y": 10,
         "w": 28,
+        "h": 50
+    },
+    "UpgradePanel_scroll": {
+        "x": 10,
+        "y": 160,
+        "w": 380,
+        "h": 870
+    },
+    "Damage_text_panel": {
+        "x": 20,
+        "y": 10,
+        "w": 144,
+        "h": 50
+    },
+    "None_val_range": {
+        "x": 178,
+        "y": 20,
+        "w": 162,
+        "h": 30
+    },
+    "None_btn": {
+        "x": 20,
+        "y": 130,
+        "w": 124,
+        "h": 70
+    },
+    "None_btn_text": {
+        "x": 20,
+        "y": 10,
+        "w": 84,
+        "h": 50
+    },
+    "Range_text_panel": {
+        "x": 20,
+        "y": 10,
+        "w": 116,
         "h": 50
     },
     "OSD": {
@@ -220,12 +262,6 @@
         "y": 1015,
         "w": 389,
         "h": 50
-    },
-    "profile_ui": {
-        "x": 0,
-        "y": 0,
-        "w": 378,
-        "h": 162
     },
     "GameOverPanel": {
         "x": 50,
@@ -401,580 +437,232 @@
         "w": 1920,
         "h": 1080
     },
-    "Settings_text_panel": {
+    "SETTINGS_text_panel": {
         "x": 705,
-        "y": 20,
-        "w": 546,
-        "h": 150
+        "y": -10,
+        "w": 544,
+        "h": 120
     },
-    "Settings_DemoScroll": {
+    "Settings_Scroll": {
         "x": 50,
-        "y": 250,
+        "y": 100,
+        "w": 1820,
+        "h": 880
+    },
+    "Title_AUDIO": {
+        "x": 50,
+        "y": 50,
+        "w": 140,
+        "h": 50
+    },
+    "Label_Master_Volume": {
+        "x": 80,
+        "y": 130,
+        "w": 251,
+        "h": 40
+    },
+    "Setting_master_Slider": {
+        "x": 1320,
+        "y": 130,
         "w": 400,
-        "h": 600
+        "h": 40
     },
-    "scroll_txt_0": {
-        "x": 20,
-        "y": 10,
-        "w": 114,
+    "Setting_master_Slider_val": {
+        "x": 420,
+        "y": 5,
+        "w": 51,
         "h": 30
     },
-    "scroll_btn_0": {
-        "x": 220,
-        "y": 10,
-        "w": 96,
-        "h": 45
+    "Label_Music_Volume": {
+        "x": 80,
+        "y": 230,
+        "w": 233,
+        "h": 40
     },
-    "scroll_btn_0_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
+    "Setting_music_Slider": {
+        "x": 1320,
+        "y": 230,
+        "w": 400,
+        "h": 40
     },
-    "scroll_txt_1": {
-        "x": 20,
-        "y": 70,
-        "w": 114,
+    "Setting_music_Slider_val": {
+        "x": 420,
+        "y": 5,
+        "w": 51,
         "h": 30
     },
-    "scroll_btn_1": {
-        "x": 220,
-        "y": 70,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_1_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_2": {
-        "x": 20,
-        "y": 130,
-        "w": 114,
-        "h": 30
-    },
-    "scroll_btn_2": {
-        "x": 220,
-        "y": 130,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_2_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_3": {
-        "x": 20,
-        "y": 190,
-        "w": 114,
-        "h": 30
-    },
-    "scroll_btn_3": {
-        "x": 220,
-        "y": 190,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_3_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_4": {
-        "x": 20,
-        "y": 250,
-        "w": 114,
-        "h": 30
-    },
-    "scroll_btn_4": {
-        "x": 220,
-        "y": 250,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_4_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_5": {
-        "x": 20,
-        "y": 310,
-        "w": 114,
-        "h": 30
-    },
-    "scroll_btn_5": {
-        "x": 220,
-        "y": 310,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_5_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_6": {
-        "x": 20,
-        "y": 370,
-        "w": 114,
-        "h": 30
-    },
-    "scroll_btn_6": {
-        "x": 220,
-        "y": 370,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_6_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_7": {
-        "x": 20,
-        "y": 430,
-        "w": 114,
-        "h": 30
-    },
-    "scroll_btn_7": {
-        "x": 220,
-        "y": 430,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_7_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_8": {
-        "x": 20,
-        "y": 490,
-        "w": 114,
-        "h": 30
-    },
-    "scroll_btn_8": {
-        "x": 220,
-        "y": 490,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_8_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_9": {
-        "x": 20,
-        "y": 550,
-        "w": 131,
-        "h": 30
-    },
-    "scroll_btn_9": {
-        "x": 220,
-        "y": 550,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_9_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_10": {
-        "x": 20,
-        "y": 610,
-        "w": 131,
-        "h": 30
-    },
-    "scroll_btn_10": {
-        "x": 220,
-        "y": 610,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_10_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_11": {
-        "x": 20,
-        "y": 670,
-        "w": 131,
-        "h": 30
-    },
-    "scroll_btn_11": {
-        "x": 220,
-        "y": 670,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_11_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_12": {
-        "x": 20,
-        "y": 730,
-        "w": 131,
-        "h": 30
-    },
-    "scroll_btn_12": {
-        "x": 220,
-        "y": 730,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_12_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_13": {
-        "x": 20,
-        "y": 790,
-        "w": 131,
-        "h": 30
-    },
-    "scroll_btn_13": {
-        "x": 220,
-        "y": 790,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_13_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_14": {
-        "x": 20,
-        "y": 850,
-        "w": 131,
-        "h": 30
-    },
-    "scroll_btn_14": {
-        "x": 220,
-        "y": 850,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_14_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_15": {
-        "x": 20,
-        "y": 910,
-        "w": 131,
-        "h": 30
-    },
-    "scroll_btn_15": {
-        "x": 220,
-        "y": 910,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_15_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_16": {
-        "x": 20,
-        "y": 970,
-        "w": 131,
-        "h": 30
-    },
-    "scroll_btn_16": {
-        "x": 220,
-        "y": 970,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_16_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_17": {
-        "x": 20,
-        "y": 1030,
-        "w": 131,
-        "h": 30
-    },
-    "scroll_btn_17": {
-        "x": 220,
-        "y": 1030,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_17_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_18": {
-        "x": 20,
-        "y": 1090,
-        "w": 131,
-        "h": 30
-    },
-    "scroll_btn_18": {
-        "x": 220,
-        "y": 1090,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_18_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_19": {
-        "x": 20,
-        "y": 1150,
-        "w": 131,
-        "h": 30
-    },
-    "scroll_btn_19": {
-        "x": 220,
-        "y": 1150,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_19_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_20": {
-        "x": 20,
-        "y": 1210,
-        "w": 131,
-        "h": 30
-    },
-    "scroll_btn_20": {
-        "x": 220,
-        "y": 1210,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_20_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_21": {
-        "x": 20,
-        "y": 1270,
-        "w": 131,
-        "h": 30
-    },
-    "scroll_btn_21": {
-        "x": 220,
-        "y": 1270,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_21_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_22": {
-        "x": 20,
-        "y": 1330,
-        "w": 131,
-        "h": 30
-    },
-    "scroll_btn_22": {
-        "x": 220,
-        "y": 1330,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_22_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_23": {
-        "x": 20,
-        "y": 1390,
-        "w": 131,
-        "h": 30
-    },
-    "scroll_btn_23": {
-        "x": 220,
-        "y": 1390,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_23_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "scroll_txt_24": {
-        "x": 20,
-        "y": 1450,
-        "w": 131,
-        "h": 30
-    },
-    "scroll_btn_24": {
-        "x": 220,
-        "y": 1450,
-        "w": 96,
-        "h": 45
-    },
-    "scroll_btn_24_text": {
-        "x": 20,
-        "y": 10,
-        "w": 56,
-        "h": 25
-    },
-    "SettingsPanel_Master": {
-        "x": 710,
-        "y": 430,
+    "Label_Sfx_Volume": {
+        "x": 80,
+        "y": 330,
         "w": 197,
+        "h": 40
+    },
+    "Setting_sfx_Slider": {
+        "x": 1320,
+        "y": 330,
+        "w": 400,
+        "h": 40
+    },
+    "Setting_sfx_Slider_val": {
+        "x": 420,
+        "y": 5,
+        "w": 68,
+        "h": 30
+    },
+    "Label_Mute_All_Sounds": {
+        "x": 80,
+        "y": 430,
+        "w": 289,
+        "h": 40
+    },
+    "Setting_Mute_Switch": {
+        "x": 1620,
+        "y": 430,
+        "w": 130,
         "h": 50
     },
-    "SettingsPanel_plus_Master": {
-        "x": 1085,
-        "y": 420,
-        "w": 62,
-        "h": 70
-    },
-    "SettingsPanel_plus_Master_text": {
-        "x": 20,
-        "y": 10,
-        "w": 22,
-        "h": 50
-    },
-    "SettingsPanel_moins_Master": {
-        "x": 1160,
-        "y": 420,
-        "w": 62,
-        "h": 70
-    },
-    "SettingsPanel_moins_Master_text": {
-        "x": 20,
-        "y": 10,
-        "w": 22,
-        "h": 50
-    },
-    "SettingsPanel_Music": {
-        "x": 710,
-        "y": 510,
-        "w": 175,
-        "h": 50
-    },
-    "SettingsPanel_plus_Music": {
-        "x": 1085,
-        "y": 500,
-        "w": 62,
-        "h": 70
-    },
-    "SettingsPanel_plus_Music_text": {
-        "x": 20,
-        "y": 10,
-        "w": 22,
-        "h": 50
-    },
-    "SettingsPanel_moins_Music": {
-        "x": 1160,
-        "y": 500,
-        "w": 62,
-        "h": 70
-    },
-    "SettingsPanel_moins_Music_text": {
-        "x": 20,
-        "y": 10,
-        "w": 22,
-        "h": 50
-    },
-    "SettingsPanel_SFX": {
-        "x": 710,
-        "y": 590,
-        "w": 143,
-        "h": 50
-    },
-    "SettingsPanel_plus_SFX": {
-        "x": 1085,
-        "y": 580,
-        "w": 62,
-        "h": 70
-    },
-    "SettingsPanel_plus_SFX_text": {
-        "x": 20,
-        "y": 10,
-        "w": 22,
-        "h": 50
-    },
-    "SettingsPanel_moins_SFX": {
-        "x": 1160,
-        "y": 580,
-        "w": 62,
-        "h": 70
-    },
-    "SettingsPanel_moins_SFX_text": {
-        "x": 20,
-        "y": 10,
-        "w": 22,
-        "h": 50
-    },
-    "SettingsPanel_MuteBtn": {
-        "x": 1090,
-        "y": 660,
-        "w": 124,
-        "h": 70
-    },
-    "SettingsPanel_MuteBtn_text": {
+    "Setting_Mute_Switch_text": {
         "x": 0,
-        "y": 10,
-        "w": 84,
+        "y": 0,
+        "w": 0,
         "h": 50
+    },
+    "Title_DISPLAY": {
+        "x": 50,
+        "y": 580,
+        "w": 196,
+        "h": 50
+    },
+    "Label_Show_FPS_Counter": {
+        "x": 80,
+        "y": 660,
+        "w": 322,
+        "h": 40
+    },
+    "Setting_FPS_Switch": {
+        "x": 1620,
+        "y": 660,
+        "w": 130,
+        "h": 50
+    },
+    "Setting_FPS_Switch_text": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 50
+    },
+    "Title_CONTROLS": {
+        "x": 50,
+        "y": 810,
+        "w": 224,
+        "h": 50
+    },
+    "Label_Move_Up": {
+        "x": 80,
+        "y": 890,
+        "w": 138,
+        "h": 40
+    },
+    "Btn_Rebind_up": {
+        "x": 1470,
+        "y": 890,
+        "w": 71,
+        "h": 75
+    },
+    "Btn_Rebind_up_text": {
+        "x": 20,
+        "y": 10,
+        "w": 31,
+        "h": 55
+    },
+    "Label_Move_Down": {
+        "x": 80,
+        "y": 990,
+        "w": 179,
+        "h": 40
+    },
+    "Btn_Rebind_down": {
+        "x": 1470,
+        "y": 990,
+        "w": 71,
+        "h": 75
+    },
+    "Btn_Rebind_down_text": {
+        "x": 20,
+        "y": 10,
+        "w": 31,
+        "h": 55
+    },
+    "Label_Move_Left": {
+        "x": 80,
+        "y": 1090,
+        "w": 174,
+        "h": 40
+    },
+    "Btn_Rebind_left": {
+        "x": 1470,
+        "y": 1090,
+        "w": 71,
+        "h": 75
+    },
+    "Btn_Rebind_left_text": {
+        "x": 20,
+        "y": 10,
+        "w": 31,
+        "h": 55
+    },
+    "Label_Move_Right": {
+        "x": 80,
+        "y": 1190,
+        "w": 192,
+        "h": 40
+    },
+    "Btn_Rebind_right": {
+        "x": 1470,
+        "y": 1190,
+        "w": 71,
+        "h": 75
+    },
+    "Btn_Rebind_right_text": {
+        "x": 20,
+        "y": 10,
+        "w": 31,
+        "h": 55
+    },
+    "Title_DATA": {
+        "x": 50,
+        "y": 1340,
+        "w": 112,
+        "h": 50
+    },
+    "Label_Clear_Save_Data": {
+        "x": 80,
+        "y": 1420,
+        "w": 289,
+        "h": 40
+    },
+    "Setting_Reset_Btn": {
+        "x": 1520,
+        "y": 1420,
+        "w": 125,
+        "h": 50
+    },
+    "Setting_Reset_Btn_text": {
+        "x": 20,
+        "y": 10,
+        "w": 85,
+        "h": 30
     },
     "Settings_Back": {
-        "x": 15,
-        "y": 15,
-        "w": 152,
+        "x": 785,
+        "y": 995,
+        "w": 342,
         "h": 70
     },
     "Settings_Back_text": {
         "x": 20,
         "y": 10,
-        "w": 112,
+        "w": 302,
         "h": 50
     },
     "CharacterPanel": {
@@ -996,8 +684,8 @@
         "h": 370
     },
     "CharacterPanel_tourniquet": {
-        "x": 395,
-        "y": 265,
+        "x": 405,
+        "y": 195,
         "w": 970,
         "h": 400
     },
@@ -1008,7 +696,7 @@
         "h": 60
     },
     "CharacterPanel_select_btn": {
-        "x": 748,
+        "x": 758,
         "y": 690,
         "w": 264,
         "h": 70
@@ -1123,7 +811,7 @@
     },
     "DemoUIPanel_tourniquet": {
         "x": 85,
-        "y": 915,
+        "y": 835,
         "w": 610,
         "h": 300
     },

@@ -3,183 +3,191 @@ from typing import TYPE_CHECKING
 
 from ui.element.UIButton import UIButton
 from ui.element.UIPanel import UIPanel
+from ui.element.UIScroll import UIScroll  # ← nouveau
 from ui.element.UIUpgradeBoard import UIUpgradeBoard
 from utils.path import resource_path as rp
 
 if TYPE_CHECKING:
-    from element.UIElement import UIElement
-
     from entities.Entity import Entity
     from main import App
 
 
+# Hauteur fixe d'un UIUpgradeBoard + espacement entre deux cartes
+_BOARD_H = 220
+_BOARD_PAD = 20
+
+
 class UpgradePanel(UIPanel):
+    """
+    Panneau latéral affiché quand on clique sur "Upgrade" d'une entité.
+
+    • Lit le schéma depuis le JSON généré par upgrade_config.py
+    • Construit dynamiquement autant de UIUpgradeBoard que nécessaire
+    • Les cartes sont placées dans un UIScroll → nombre illimité d'upgrades
+    • Chaque carte grise automatiquement le bouton si :
+          - la stat est au maximum (valeur réelle atteinte)
+          - le joueur n'a pas assez d'argent
+    """
+
     def __init__(self, game: "App"):
-
         self.game = game
-        w, h = 400, game.st.SCREEN_HEIGHT - 40
-        self.size = w, h
+        w = 400
+        h = game.st.SCREEN_HEIGHT - 40
 
-        with open(rp(self.game.st.UPGRADE_SCHEMA_PATH), "r") as f:
-            self.schemas: dict[dict] = json.load(f)
+        # Chargement du schéma JSON (généré au lancement via upgrade_config)
+        with open(rp(game.st.UPGRADE_SCHEMA_PATH), "r", encoding="utf-8") as f:
+            self._schemas: dict = json.load(f)
 
-        super().__init__(game.st.SCREEN_WIDTH - 20, 20, w, h, uid="InfoPanel")
+        super().__init__(game.st.SCREEN_WIDTH - 20, 20, w, h, uid="UpgradePanel")
 
-        self.set_label("Ugrade", 100)
+        self.set_label("Upgrades", 100)
         self.set_animation(
-            (self.game.st.SCREEN_WIDTH - self.size[0] - 20, 20),
-            (self.game.st.SCREEN_WIDTH, 20),
+            (game.st.SCREEN_WIDTH - w - 20, 20),
+            (game.st.SCREEN_WIDTH, 20),
             1000,
         )
         self.visible = False
 
-        self.back_btn = UIButton(
-            self.rect.width - 40,
+        # Bouton fermeture
+        self._back_btn = UIButton(
+            w - 40,
             10,
             "X",
-            lambda: self.kill(True),
+            lambda: self.kill(back=True),
             (50, 50, 50),
             uid=f"{self.uid}_btn_back",
         )
-        self.add_child(self.back_btn)
+        self.add_child(self._back_btn)
 
-        # Entity INFO
-        self.current_entity: Entity = None
-        self.ui_pool = [UIUpgradeBoard() for _ in range(3)]
-        self.active_children: list["UIElement"] = []
+        # Zone scrollable — placée sous le titre
+        scroll_top = self.label.rect.bottom + 70
+        scroll_h = h - scroll_top - 10
 
-        # Souscription
-        self.game.eventManager.subscribe("ELEMENT_UPGRADE", self.show_element)
-        self.game.eventManager.subscribe("ELEMENT_UNUPGRADE", self.kill)
+        self._scroll = UIScroll(
+            x=10,
+            y=scroll_top,
+            w=w - 20,
+            h=scroll_h,
+            uid=f"{self.uid}_scroll",
+        )
+        self.add_child(self._scroll)
 
-        # Test de UIUpgradeBoard
-        """ test_upboard = UIUpgradeBoard(20, 150, self.rect.width - 40, 220, "Test")
-        test_upboard.set_progress_bar(100, lambda: 50) # max_val, curr_val
-        test_upboard.set_upgrade_button(self.test_call, 30, 20) # callback, price, rate
+        # État courant
+        self._current_entity: "Entity | None" = None
+        self._boards: list[UIUpgradeBoard] = []
 
-        self.add_child(test_upboard) """
+        # Abonnements
+        game.eventManager.subscribe("ELEMENT_UPGRADE", self.show_element)
+        game.eventManager.subscribe("ELEMENT_UNUPGRADE", self.kill)
 
-    def test_call(self) -> None:
-        print("Test du UIUpgradeBoard")
-
+    # ------------------------------------------------------------------
+    # API publique
+    # ------------------------------------------------------------------
     def show_element(self, entity: "Entity") -> None:
-
         self.game.eventManager.publish("ELEMENT_UNSELECTED")
-        self.current_entity = entity
-        self.make_data(entity)
+        self._current_entity = entity
+        self._build_boards(entity)
         super().show()
 
-    def kill(self, back: bool = False):
-
+    def kill(self, back: bool = False) -> None:
         if not self.visible:
             return
-        if back:
-            self._EVENTBUS.publish("ELEMENT_SELECTED", self.current_entity)
-
+        if back and self._current_entity is not None:
+            self._EVENTBUS.publish("ELEMENT_SELECTED", self._current_entity)
         super().kill()
 
-    def reset_data_child(self) -> None:
+    # ------------------------------------------------------------------
+    # Construction des cartes d'upgrade
+    # ------------------------------------------------------------------
+    def _clear_boards(self) -> None:
+        """Désactive et retire toutes les cartes précédentes."""
+        for board in self._boards:
+            board.active = False
+            board.visible = False
+            self._scroll.remove_child(board)
+        self._boards.clear()
 
-        while self.active_children:
-            child = self.active_children.pop(0)
-            child.active = False
-            self.remove_child(child)
+    def _build_boards(self, entity: "Entity") -> None:
+        self._clear_boards()
 
-    def make_data(self, entity: "Entity") -> None:
-
-        # Setup de notre nouvelle entite
-        self.reset_data_child()
-        self.current_entity = entity
-
-        if entity.tag in self.schemas:
-            entity_schema = self.schemas.get(entity.tag)
-            # print(entity_schema)
-        else:
-            # print("rien trouver dans les donner !")
+        entity_tag = entity.tag
+        if entity_tag not in self._schemas:
+            # Aucun upgrade déclaré pour cette entité
             return
 
-        # Variable de pos pour les different elements
-        pos_x = 20  # constante le long de notre infoPanel
-        pos_y = (
-            self.label.rect.bottom + 70
-        )  # valeur qui va augmenter au cours de la boucle de creation
-        padding = 20
+        upgrades = self._schemas[entity_tag]  # liste de dicts
+        pos_y = 0  # position Y relative dans le scroll
 
-        for upgrade in entity_schema:
-            # Recupere un element correspondant encore non utiliser
-            upgrade: dict
-            for e in self.ui_pool:
-                if not e.active:
-                    element: "UIUpgradeBoard" = e
-                    element.active = True
-                    element.visible = True
-                    self.add_child(element)
-                    self.active_children.append(element)
+        board_w = self._scroll.rect.w - 20  # marge intérieure du scroll
 
-                    # Recupere les eventuelles pointers
-                    def get_attribut(attr):
-                        if attr is None:
-                            return None
-                        if hasattr(entity, attr):
-                            return entity.__getattribute__(attr)
-                        print(
-                            f"aucun attribut du nom de {attr} n'as ete trouver sur {entity.__name__()}"
-                        )
+        for upgrade in upgrades:
+            label = upgrade["label"]
+            attr = upgrade["attr"]
+            max_val = upgrade["max"]
+            price = upgrade["price"]
+            rate = upgrade["rate"]
 
-                    def get_attribut_pointer(attr):
-                        if attr is None:
-                            return lambda: (
-                                None
-                            )  # Retourne une fonction qui renvoie None
+            # Getter live sur l'entité
+            def make_getter(a=attr):
+                return lambda: getattr(entity, a, 0)
 
-                        if hasattr(entity, attr):
-                            # On retourne une fonction (un "getter")
-                            return lambda name=attr: getattr(entity, name)
+            curr_val_fn = make_getter()
 
-                        print(
-                            f"aucun attribut du nom de {attr} sur {type(entity).__name__}"
-                        )
-                        return lambda: None
+            # Callback d'upgrade
+            def make_callback(e=entity, a=attr, r=rate, p=price):
+                return lambda: self._apply_upgrade(e, a, r, p)
 
-                    # Recuperation des info utile
-                    label = upgrade["label"]
-                    map: dict = upgrade["mapping"]
+            board = UIUpgradeBoard()
+            board.active = True
+            board.visible = True
 
-                    max_val = get_attribut(map.get("max"))
-                    current_val = get_attribut_pointer(map.get("current"))
-                    attr_name = map["current"]
-                    price = get_attribut(map.get("price"))
-                    rate = get_attribut(map.get("rate", 0))
+            board.setup(0, pos_y, board_w, _BOARD_H, label)
+            board.set_progress_bar(max_val, curr_val_fn)
+            board.set_upgrade_button(make_callback(), price, rate)
 
-                    # La lambda ne sert plus qu'à "emballer" l'appel avec les variables capturées
-                    callback = lambda e=entity, a=attr_name, r=rate, p=price: (
-                        self.apply_upgrade(e, a, r, p)
-                    )
+            self._scroll.add_child(
+                board
+            )  # update_content_size() appelé automatiquement
+            self._boards.append(board)
 
-                    element.setup(pos_x, pos_y, self.rect.w - 40, 220, label)
-                    element.set_progress_bar(max_val, current_val)
-                    element.set_upgrade_button(callback, price, rate)
+            pos_y += _BOARD_H + _BOARD_PAD
 
-                    pos_y += 220 + padding
-                    # print(f" ma taille : {rect.h} et mon topleft = {rect.topleft} -> la soustraction des deux dois faire mon topleft = {element.rect.h - pos_y}")
-                    break
+        # Remettre le scroll en haut à chaque nouvelle entité
+        self._scroll.scroll_offset.y = 0
+        self._scroll.target_scroll_offset.y = 0
 
-    def apply_upgrade(self, entity, attr_name, rate, price):
-        # 1. Vérification du prix (via ton WalletManager par exemple)
+    # ------------------------------------------------------------------
+    # Application d'un upgrade
+    # ------------------------------------------------------------------
+    def _apply_upgrade(
+        self,
+        entity: "Entity",
+        attr_name: str,
+        rate: int,
+        price: int,
+    ) -> None:
+        """
+        1. Vérifie le portefeuille
+        2. Calcule la nouvelle valeur (+rate %)
+        3. Plafonne à max (lu depuis le schéma)
+        4. Applique sur l'entité
+        """
         if not self.game.walletManager.buy(price):
             self._EVENTBUS.publish("PLAY_SFX", "ERROR")
             return
 
-        # 2. On récupère la valeur actuelle
-        current_val = getattr(entity, attr_name)
+        # Plafond depuis le schéma JSON
+        entity_schema = self._schemas.get(entity.tag, [])
+        max_val = next(
+            (u["max"] for u in entity_schema if u["attr"] == attr_name),
+            None,
+        )
 
-        # 3. Calcul de la nouvelle valeur (hausse en %)
-        # On arrondit pour éviter les flottants bizarres (ex: 10.00000004)
+        current_val = getattr(entity, attr_name)
         new_val = round(current_val * (1 + rate / 100))
 
-        # 4. Application
-        setattr(entity, attr_name, new_val)
+        if max_val is not None:
+            new_val = min(new_val, max_val)
 
-        # 5. Paiement et Feedback
+        setattr(entity, attr_name, new_val)
         # self._EVENTBUS.publish("PLAY_SFX", "UPGRADE_SUCCESS")
-        # print(f"Upgrade {attr_name} : {current_val} -> {new_val}")

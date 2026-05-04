@@ -19,6 +19,7 @@ class SpriteManager:
         self.image_cache = {}
 
         # 2. FONTS : Génération dynamique des tailles
+        self.font_path = None
         self.fonts = {}
         self.init_fonts(25, 200, 5)
 
@@ -26,16 +27,16 @@ class SpriteManager:
         """Génère des polices de caractères de façon dynamique"""
         pygame.font.init()
         # On récupère le chemin depuis les settings ou un défaut
-        font_path = rp("assets/font/boldpixels/BoldPixels.ttf")
+        self.font_path = rp("assets/font/boldpixels/BoldPixels.ttf")
 
-        if not os.path.exists(font_path):
+        if not os.path.exists(self.font_path):
             print(
-                f"Attention: Police introuvable à {font_path}. Utilisation de la police système."
+                f"Attention: Police introuvable à {self.font_path}. Utilisation de la police système."
             )
-            font_path = None  # Utilise la police par défaut de Pygame
+            self.font_path = None  # Utilise la police par défaut de Pygame
 
         for size in range(start, end + step, step):
-            self.fonts[size] = pygame.font.Font(font_path, size)
+            self.fonts[size] = pygame.font.Font(self.font_path, size)
 
         print(f"SpriteManager: {len(self.fonts)} tailles de polices chargées.")
 
@@ -44,6 +45,10 @@ class SpriteManager:
         )
 
         UIText.set_font_provider(self.fonts)
+
+    def get_font(self, font_size: int):
+        """Utilise que dans des cas extreme pour du Hot debug"""
+        return pygame.font.Font(self.font_path, font_size)
 
     # ==========================================
     # GESTION DES IMAGES

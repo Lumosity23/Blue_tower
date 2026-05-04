@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 import pygame
 
 from entities.bullet import Bullet
-from entities.Entity import Entity  # Import de ta nouvelle base
+from entities.Entity import Entity
 from ui.element.UIProgressBar import UIProgressBar
 
 if TYPE_CHECKING:
@@ -13,75 +13,59 @@ if TYPE_CHECKING:
 
 class Player(Entity):
     def __init__(self, spawn_x, spawn_y, uid, tag, game: "App"):
-        # On appelle le constructeur d'Entity
-        # Position initiale au centre du monde
         self.game = game
-
         self.stats = self.game.st.ENTITIES_DATA["PLAYER"]
         w, h = self.stats["size"]
 
         super().__init__(spawn_x, spawn_y, w, h, tag=tag, uid=uid)
 
-        # Setup de l'image
-        # self.image = self.game.spriteManager.get_custom_sprite(self.stats["sprite_id"], (w, h))
-
-        # Stats
+        # Stats vitales
         self.max_hp = self.stats["hp"]
         self.current_hp = self.max_hp
         self.kills = 0
         self.alive = True
         self.is_moving = False
 
-        # STATS FOR THE UPGRADE
-
-        ## DAMAGE SECTION
+        # ----------------------------------------------------------------
+        # Stats upgradables — uniquement la VALEUR COURANTE sur l'entité.
+        # max / price / rate vivent dans le JSON d'upgrade, pas ici.
+        # ----------------------------------------------------------------
         self.damage = 10
-        self.max_dm = 100
-        self.price_dm = 200
-        self.rate_dm = 10
-
-        ## VELOCITY SECTION
         self.velocity = 500
-        self.max_vl = 1000
-        self.price_vl = 300
-        self.rate_vl = 5
 
-        # Logique de grille
-        # self.current_cell: tuple[int, int] = self.game.grid.get_cell_pos(self.pos.x, self.pos.y)
-
-        # --- GESTION DES ENFANTS ---
-        # Plus besoin de gérer la position de la barre manuellement dans update !
+        # Barre de vie
         self.hp_bar = UIProgressBar(x=0, y=-15, uid="PLAYER_HP")
         self.hp_bar.setup(w=self.rect.w, h=8, show_text=False)
         self.hp_bar.dynamic_color = True
         self.add_child(self.hp_bar)
 
-        # Set des animation de notre element
+        # Animations
         self.set_anim("IDLE", (w, h), 1.5, 2)
         self.set_anim("MOVE", (w, h), 1, 2)
 
-        # Souscription aux events
+        # Events
         self.game.eventManager.subscribe("NEW_GAME", self.reset)
 
+    # ------------------------------------------------------------------
+    # Update
+    # ------------------------------------------------------------------
     def update(self, dt):
         if not self.active:
             return
 
-        keys = pygame.key.get_pressed()
+        im = self.game.input_manager
 
-        # ---------------------------------------------------------
-        # AXE X : Mouvement et Collisions
-        # ---------------------------------------------------------
-        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            self.pos.x -= self.velocity * dt
+        # --- Axe X ---
+        move_x = 0
+        if im.is_pressed("left"):
+            move_x -= 1
+        if im.is_pressed("right"):
+            move_x += 1
 
-        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            self.pos.x += self.velocity * dt
-
-        # Synchronisation immédiate du rect pour le test de collision X
+        if move_x != 0:
+            self.pos.x += move_x * self.velocity * dt
         self.rect.x = self.pos.x
 
-        # Check collisions bâtiments sur X
         hits = [
             b
             for b in self.game.sceneManager.buildManager.entities
@@ -89,25 +73,23 @@ class Player(Entity):
         ]
         if hits:
             hit = hits[0]
-            if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+            if move_x < 0:
                 self.rect.left = hit.rect.right
-            elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+            else:
                 self.rect.right = hit.rect.left
-            self.pos.x = self.rect.x  # On recale le float sur le rect
+            self.pos.x = self.rect.x
 
-        # ---------------------------------------------------------
-        # AXE Y : Mouvement et Collisions
-        # ---------------------------------------------------------
-        if keys[pygame.K_UP] or keys[pygame.K_w]:
-            self.pos.y -= self.velocity * dt
+        # --- Axe Y ---
+        move_y = 0
+        if im.is_pressed("up"):
+            move_y -= 1
+        if im.is_pressed("down"):
+            move_y += 1
 
-        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-            self.pos.y += self.velocity * dt
-
-        # Synchronisation immédiate du rect pour le test de collision Y
+        if move_y != 0:
+            self.pos.y += move_y * self.velocity * dt
         self.rect.y = self.pos.y
 
-        # Check collisions bâtiments sur Y
         hits = [
             b
             for b in self.game.sceneManager.buildManager.entities
@@ -115,81 +97,56 @@ class Player(Entity):
         ]
         if hits:
             hit = hits[0]
-            if keys[pygame.K_UP] or keys[pygame.K_w]:
+            if move_y < 0:
                 self.rect.top = hit.rect.bottom
-            elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
+            else:
                 self.rect.bottom = hit.rect.top
-            self.pos.y = self.rect.y  # On recale le float sur le rect
+            self.pos.y = self.rect.y
 
-        # ---------------------------------------------------------
-        # Finalisation (Contraintes, Grille, Enfants)
-        # ---------------------------------------------------------
+        # --- Finalisation ---
         self.constraints_world()
-        # self.update_grid_logic()
-
         self.check_chunk()
 
-        if (
-            keys[pygame.K_LEFT]
-            or keys[pygame.K_a]
-            or keys[pygame.K_RIGHT]
-            or keys[pygame.K_d]
-            or keys[pygame.K_UP]
-            or keys[pygame.K_w]
-            or keys[pygame.K_DOWN]
-            or keys[pygame.K_s]
-        ):
+        if move_x != 0 or move_y != 0:
             self.is_moving = True
             self.state = "MOVE"
         else:
             self.is_moving = False
             self.state = "IDLE"
 
-        # Play sound footstep
         if self.is_moving and self.delay(0.40, dt):
             self.game.eventManager.publish("PLAY_SFX", "WALK")
 
-        # Appel de l'update d'Entity pour propager aux enfants (barre de vie)
         self.update_animation(dt, self.state)
         super().update(dt)
 
-    def update_grid_logic(self):
-        new_cell = self.game.grid.get_cell_pos(self.rect.x, self.rect.y)
-        if new_cell != self.current_cell:
-            nx, ny = new_cell
-            oldx, oldy = self.current_cell
-            self.game.grid.set_cell_value(oldx, oldy, self.game.st.EMPTY, True)
-            self.game.grid.set_cell_value(nx, ny, self.type, True)
-            self.game.grid.update_flow_field(self.game.kernel.pos)
-            self.current_cell = new_cell
-
+    # ------------------------------------------------------------------
+    # Helpers
+    # ------------------------------------------------------------------
     def constraints_world(self):
-        # On limite aux bordures de la map (Settings)
         self.pos.x = max(0, min(self.pos.x, self.game.st.WORLD_WIDTH - self.rect.w))
         self.pos.y = max(0, min(self.pos.y, self.game.st.WORLD_HEIGHT - self.rect.h))
         self.rect.topleft = self.pos
 
     def check_chunk(self) -> None:
-        # Verifier si on a changer de chunk
         self.new_chunk = self.game.grid.get_chunk_cell(self.rect.center)
         if self.new_chunk != self.old_chunk:
             self.chunk_changed = True
             self.old_chunk = self.chunk
 
     def take_damage(self, amount):
-
         super().take_damage(amount)
         self.hp_bar.update_values(self.current_hp, self.max_hp)
 
     def reset(self):
-
         spawn_x = randint(
-            self.game.st.WORLD_WIDTH // 2 - 300, self.game.st.WORLD_WIDTH // 2 + 300
+            self.game.st.WORLD_WIDTH // 2 - 300,
+            self.game.st.WORLD_WIDTH // 2 + 300,
         )
         spawn_y = randint(
-            self.game.st.WORLD_HEIGHT // 2 - 300, self.game.st.WORLD_HEIGHT // 2 + 300
+            self.game.st.WORLD_HEIGHT // 2 - 300,
+            self.game.st.WORLD_HEIGHT // 2 + 300,
         )
-
         self.spawn(spawn_x, spawn_y, "PLAYER")
         self.current_hp = self.max_hp
         self.hp_bar.update_values(self.current_hp, self.max_hp)
@@ -199,8 +156,6 @@ class Player(Entity):
     def shoot(self) -> None:
         mx, my = pygame.mouse.get_pos()
         cam_offset = self.game.sceneManager.main_camera.offset
-
-        # RÈGLE 2 : Screen -> World (On AJOUTE l'offset)
         world_x = mx + cam_offset.x
         world_y = my + cam_offset.y
 
@@ -215,19 +170,19 @@ class Player(Entity):
         )
 
     def handle_event(self, event):
-
         mouse_pos = pygame.mouse.get_pos()
         cam_offset = self.game.sceneManager.main_camera.offset
-        world_mouse_pos = (mouse_pos[0] + cam_offset.x, mouse_pos[1] + cam_offset.y)
+        world_mouse_pos = (
+            mouse_pos[0] + cam_offset.x,
+            mouse_pos[1] + cam_offset.y,
+        )
 
-        # Exemple d'interaction basique : détection du clic sur l'entité
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.get_screen_rect().collidepoint(world_mouse_pos):
                 self.game.eventManager.publish("ELEMENT_SELECTED", self)
                 self.selected = True
                 return True
 
-            # Si clique ailleurs
             if self.selected:
                 self.game.eventManager.publish("ELEMENT_UNSELECTED")
 
@@ -239,6 +194,9 @@ class Player(Entity):
         super().handle_event(event)
 
 
+# ----------------------------------------------------------------------
+# Déclaration de l'UI info (inchangée)
+# ----------------------------------------------------------------------
 Player.ui_config(
     ("ICON", "you", "image"),
     ("BAR", "Vie", "current_hp", "max_hp"),
@@ -246,7 +204,13 @@ Player.ui_config(
     ("STAT", "STATE", "state"),
 )
 
+# ----------------------------------------------------------------------
+# Déclaration des upgrades — format propre :
+#   ("Label affiché", "attribut_entité", valeur_max, prix, taux_%")
+# Le JSON est généré automatiquement au lancement, rien d'autre à faire.
+# ----------------------------------------------------------------------
 Player.upgrade_config(
-    ("Damage", "damage", "max_dm", "price_dm", "rate_dm"),
-    ("Velocity", "velocity", "max_vl", "price_vl", "rate_vl"),
+    ("Damage", "damage", 100, 200, 10),
+    ("Velocity", "velocity", 1000, 300, 5),
+    ("Vie", "current_hp", 1000, 500, 5),
 )

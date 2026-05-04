@@ -1,0 +1,17 @@
+{
+    "settings": {
+        "master_volume": 0.22777777777777777,
+        "music_volume": 1.0,
+        "sfx_volume": 1.0,
+        "mute": true,
+        "controls": {
+            "up": "w",
+            "down": "s",
+            "left": "a",
+            "right": "d"
+        },
+        "show_fps": true
+    },
+    "high_score": 0,
+    "last_games": []
+}

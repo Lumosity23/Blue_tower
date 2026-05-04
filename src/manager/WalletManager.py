@@ -5,11 +5,10 @@ if TYPE_CHECKING:
 
 
 class WalletManager:
-
     def __init__(self, game: "App"):
         self.game = game
         self.diff_mtp = self.game.st.DIFFICULTY_MTP.get(self.game.mode, "NORMAL")
-        self.init_amount = 10000 * self.diff_mtp
+        self.init_amount = 1000 * self.diff_mtp
         self.amount = self.init_amount
         self.creatif = False
         if not self.amount:
@@ -21,12 +20,13 @@ class WalletManager:
         self.game.eventManager.subscribe("NEW_GAME", self.reset)
         self.game.eventManager.subscribe("ENEMY_KILLED", self.earn_money)
         self.game.eventManager.subscribe("EARN_MONEY", self.earn_money)
-        
-    
+        # Abonnement côté WalletManager
+        self.game.eventManager.subscribe("GET_WALLET_VAL", self.get_wallet_val)
+
     def buy(self, amount: int) -> bool:
-        '''
-            Acheter qqch -> confimer par un bool
-        '''
+        """
+        Acheter qqch -> confimer par un bool
+        """
         # Creatif mode
         if self.creatif:
             return True
@@ -34,27 +34,24 @@ class WalletManager:
         if self.amount - amount >= 0 and not self.creatif:
             self.amount -= amount
             return True
-        
+
         else:
             return False
 
     def earn_money(self, amount: int) -> None:
-        '''
-            Gagner de l'argent (ajout au portefeuille)
-        '''
+        """
+        Gagner de l'argent (ajout au portefeuille)
+        """
         self.amount += amount
 
-    
     def get_wallet_val(self) -> int:
-        '''
-            Savoir combien il rest dans le portefeuille
-        '''
+        """
+        Savoir combien il rest dans le portefeuille
+        """
         return int(self.amount)
-    
 
     def reset(self):
         self.amount = self.init_amount
-    
 
     def error(self):
         print("erreur de payement -> manque de cash !")

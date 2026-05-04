@@ -30,7 +30,6 @@ class OSD(UIElement):
         self.game.eventManager.subscribe("UPDATE_KERNEL_HP", self.update_hud_hp)
         self.game.eventManager.subscribe("SHOW_COOLDOWN", self.show_msg_wave)
         self.game.eventManager.subscribe("HIDE_COOLDOWN", self.hide_msg_wave)
-        self.game.eventManager.subscribe("SHOW_COOLDOWN", self.show_msg_wave)
 
     def post_init(self) -> None:
         # Nombre de vague
@@ -109,11 +108,11 @@ class OSD(UIElement):
         self.msg_wave.visible = False
 
         # Profile UI
-        self.profile = UIElement(0, 0, 189 * 2, 81 * 2, "profile_ui")
-        profile = self.game.spriteManager.get_sprite_resize(
-            "profile_ui", (189 * 2, 81 * 2)
-        )
-        self.profile.image.blit(profile, (0, 0))
+        # self.profile = UIElement(0, 0, 189 * 2, 81 * 2, "profile_ui")
+        # profile = self.game.spriteManager.get_sprite_resize(
+        #    "profile_ui", (189 * 2, 81 * 2)
+        # )
+        # self.profile.image.blit(profile, (0, 0))
 
         # Liste des text enfants
         if not self.wallet:
@@ -125,7 +124,7 @@ class OSD(UIElement):
                 self.gameMode,
                 self.kernel_hp_bar,
                 self.msg_wave,
-                self.profile,
+                # self.profile,
             ]
         else:
             self.text = [
@@ -137,7 +136,7 @@ class OSD(UIElement):
                 self.wallet,
                 self.kernel_hp_bar,
                 self.msg_wave,
-                self.profile,
+                # self.profile,
             ]
 
         # ajout des text aux enfants
@@ -147,6 +146,13 @@ class OSD(UIElement):
     def update_hud_hp(self, current_hp=0):
         # On met à jour la barre qui est dans le HUD
         self.kernel_hp_bar.update_values(current_hp, self.game.kernel.max_hp)
+
+    def update(self, dt):
+        super().update(dt)
+        # Gestion de la visibilité des FPS selon les paramètres
+        show_fps = self.game.save_manager.get_setting("show_fps")
+        if self.FPS.visible != show_fps:
+            self.FPS.visible = show_fps
 
     def get_wave_number(self) -> str:
         return str(self.game.sceneManager.waveManager.wave_number)

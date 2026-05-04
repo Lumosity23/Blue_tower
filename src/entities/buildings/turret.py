@@ -1,50 +1,51 @@
-from .Building import Building
-from ..bullet import Bullet
 from typing import TYPE_CHECKING
+
+from ..bullet import Bullet
+from .Building import Building
 
 if TYPE_CHECKING:
     from main import App
 
-class Turret(Building):
 
+class Turret(Building):
     def __init__(self, x: int, y: int, data: dict, game: "App", uid):
         super().__init__(x, y, data, game, tag="TURRET", uid=uid)
 
         ## DAMAGE SECTION
         self.damage = 10
-        self.max_dm = 100
-        self.price_dm = 200
-        self.rate_dm = 10
 
         ## RANGE SECTION
         self.range = self.data["range"]
-        self.max_rg = 1000
-        self.price_rg =300
-        self.rate_rg = 5
 
-    
     def update(self, dt):
 
         if self.delay(1, dt) and not self.game.sceneManager.waveManager.end_wave:
             target = self.game.sceneManager.waveManager.nearest_enemy(self.rect.center)
-            #target.pos: pygame.math.Vector2
+            # target.pos: pygame.math.Vector2
             if target:
                 if target.pos.distance_to(self.pos) <= self.range:
                     self.shoot(target.rect.center)
-        
-    
+
     def shoot(self, target: tuple):
-        self.game.sceneManager.entityManager.spawn(Bullet, self.rect.centerx, self.rect.centery, uid=f"{self.uid}_Bullet", target_pos=target, owner=self, bullet_damage=self.damage)
+        self.game.sceneManager.entityManager.spawn(
+            Bullet,
+            self.rect.centerx,
+            self.rect.centery,
+            uid=f"{self.uid}_Bullet",
+            target_pos=target,
+            owner=self,
+            bullet_damage=self.damage,
+        )
 
 
 Turret.ui_config(
     ("ICON", "TURRET", "image"),
     ("BAR", "Vie", "current_hp", "max_hp"),
     ("STAT", "kills", "kills"),
-    ("STAT", "CHUNK", "chunk")
+    ("STAT", "CHUNK", "chunk"),
 )
 
 Turret.upgrade_config(
-    ("Damage", "damage", "max_dm", "price_dm", "rate_dm"),
-    ("Range", "range", "max_rg", "price_rg", "rate_rg")
+    ("Damage", "damage", 100, 200, 10),
+    ("Range", "range", 1000, 300, 5),
 )
